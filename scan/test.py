@@ -2,6 +2,8 @@ import os
 import re
 import Levenshtein
 
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
 end_of_lines_to_search = r'\$?[\d]+[\.,][\d]{1,2}$'
 
 image_name = 'receipts3.jpg'

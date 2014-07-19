@@ -3,6 +3,10 @@ bin/
 bin-debug/
 bin-release/
 
+# Ignore images and txt while testing
+scan/*.jpg
+scan/*.txt
+
 # Other files and folders
 .settings/
 
