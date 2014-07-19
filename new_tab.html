@@ -21,9 +21,14 @@
     <section id='new-tab-container'>
       <h1>Create a New Tab</h1>
       <label>
-        Tab Title:
-        <input type='text' maxlength='20'>
+        {{user_name}}'s Tab
       </label>
+
+      <table>
+        <tr id='hb-friends-row'>
+        </tr>
+      </table>
+
       <div id='camera-container'>
         <img id='camera'src='img/camera.svg'>
       </div>
@@ -38,3 +43,15 @@
   </body>
 </html>
 
+<script id="new-user-template" type="text/x-handlebars-template">
+  template content
+</script>
+
+<script id="friend_block_template" type="text/x-handlebars-template">
+  {{#each friends}}
+    <td class="friend_block">
+      <div class="portrait" style="background-image: url(face.jpeg)"></div>
+      <div class="friend_name text-center">{{first_name}} {{last_name}}</div>
+    </td>
+  {{/each}}
+</script>

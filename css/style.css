@@ -42,7 +42,6 @@ h1.page-header {
 
 #new-tab-container {
   margin: 0 auto;
-  /*height: 50%;*/
   width: 86%;
   text-align: center;
 }
@@ -50,6 +49,20 @@ h1.page-header {
   #new-tab-container h1 {
     font-size: 2.1em;
     margin-bottom: 10%;
+  }
+
+  #new-tab-container .btn {
+    background-color: white;
+    color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+  }
+
+  #new-tab-container .btn:hover, .btn:focus {
+    background-color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+    outline: none;
   }
 
   #camera-container {
