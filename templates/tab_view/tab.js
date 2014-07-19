@@ -148,6 +148,13 @@ $(function() {
     });
   }
 
+  function update_tip(tip_val) {
+    $('#tip_input').val(tip_val.toFixed(2));
+    var total_val = (parseFloat(_tab.subtotal) + parseFloat(_tab.tax) + tip_val).toFixed(2);
+    $('#total').text(total_val);
+    _tab.total = total_val;
+  }
+
   // ---------------------- Event Bindings ----------------------
 
   //Add a user to the group
@@ -180,12 +187,9 @@ $(function() {
     }
   });
 
-  function update_tip(tip_val) {
-    $('#tip_input').val(tip_val.toFixed(2));
-    var total_val = (parseFloat(_tab.subtotal) + parseFloat(_tab.tax) + tip_val).toFixed(2);
-    $('#total').text(total_val);
-    _tab.total = total_val;
-  }
+  $('#finish_button').on('click', function(event) {
+    window.location.replace("http://stackoverflow.com");
+  });
 
 });
 
