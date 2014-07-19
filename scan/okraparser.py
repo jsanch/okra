@@ -82,7 +82,7 @@ def analyze_tab(tab_param):
 	elif (avail_total and avail_tax and avail_subtotal):
 		if (meta_total != meta_subtotal + meta_tax):
 			raise OkraParseException('4')
-		elif (meta_total !=  item_total):
+		elif (meta_subtotal !=  item_total):
 			raise OkraParseException('5')
 		else:
 			tab['meta'] = {string_total : meta_total, string_subtotal : meta_subtotal, string_tax : meta_tax}
@@ -150,6 +150,8 @@ def basic_scan(image_name):
 	tre_fuzzyness = tre.Fuzzyness(maxerr = 3)
 	tab_meta = {}
 
+	cut_off_meta = 0
+
 	for raw_item in raw_tab_data:
 		raw_item_description = raw_item['description']
 		matches_to_compare = []
@@ -164,13 +166,15 @@ def basic_scan(image_name):
 
 		if matches_to_compare:
 			# If there were matches
+			cut_off_meta += 1
 			min = matches_to_compare[0]
 			for match in matches_to_compare:
 				if match[0].cost < min[0].cost:
 					min = match
 			tab_meta[min[1]] = raw_item['value']
 		else:
-			tab_items.append(raw_item)
+			if cut_off_meta < 1:
+				tab_items.append(raw_item)
 
 	tab = {'tab_items' : tab_items, 'tab_meta' : tab_meta}
 	# print tab
