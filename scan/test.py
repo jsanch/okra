@@ -3,6 +3,7 @@ import re
 import Levenshtein
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+# f = open(os.path.join(__location__, 'bundled-resource.jpg'));
 
 end_of_lines_to_search = r'\$?[\d]+[\.,][\d]{1,2}$'
 
@@ -16,6 +17,3 @@ with open(image_name + '1.txt','r') as file:
 		match = re.search(end_of_lines_to_search, line)
 		if match != None:
 			raw_data.append({re.sub(r'(\s)$', '', line[:match.start()]) : match.group(0)})
-
-
-print raw_data
