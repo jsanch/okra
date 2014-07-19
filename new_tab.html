@@ -18,17 +18,45 @@
     <![endif]-->
   </head>
   <body>
+
+    <!-- Add Friends to tab modal -->
+    <div class="modal fade" id="js-add-friends-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">Add a Friend to the Tab</h4>
+          </div>
+          <div id='add_friends_body' class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button id='add_friends_button' type="button" class="btn btn-default" data-dismiss="modal">Confirm</button>
+          </div>
+        </div>
+        <div class="alert alert-success" role="alert" hidden></div>
+      </div>
+    </div>
+
+    <!-- Creating a new tab -->
     <section id='new-tab-container'>
       <h1>Create a New Tab</h1>
       <label>
         {{user_name}}'s Tab
       </label>
 
-      <table>
-        <tr id='hb-friends-row'>
-        </tr>
+      <!-- Friends in tab -->
+      <table class="friend_group content_container">
+        <tbody>
+          <tr class="friend_group_row">
+            <td class="button_cell">
+              <button id="open_add_friends" class="btn btn-primary butt">+</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
 
+      <!-- OCR button -->
       <div id='camera-container'>
         <img id='camera'src='img/camera.svg'>
       </div>
@@ -43,15 +71,27 @@
   </body>
 </html>
 
-<script id="new-user-template" type="text/x-handlebars-template">
-  template content
-</script>
-
+<!-- Handlebars -->
 <script id="friend_block_template" type="text/x-handlebars-template">
   {{#each friends}}
     <td class="friend_block">
-      <div class="portrait" style="background-image: url(face.jpeg)"></div>
-      <div class="friend_name text-center">{{first_name}} {{last_name}}</div>
+      <img src="img/face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
     </td>
   {{/each}}
+</script>
+
+          <!-- <div style="background-image: url('img/face.jpeg'); width='50px'; height='50px'; border-radius: '25px';"></div> -->
+
+<script id='add_friends_template' type='text/x-handlebars-template'>
+  <table>
+    {{#each friends}}
+      <div class='list-group friend_block'>
+        <a href='#' class='list-group-item js-add-friend'>
+          <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
+          <span class='glyphicon glyphicon-ok-circle'></span>
+        </a>
+      </div>
+    {{/each}}
+  </table>
 </script>

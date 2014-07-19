@@ -1,6 +1,9 @@
 $(document).ready(function() {
+  // session variables
+  var user_id = 999;
   var theTab = null;
 
+  // start asking server for outstanding invites
   // pollForInvite();
 
   // bind create tab event
@@ -18,23 +21,23 @@ $(document).ready(function() {
 * Continuously poll the server for any tab invitations from this user
 */
 function pollForInvite(){
-    $.get('http://app.grasscat.org:5000/ajax/pollforinvite', {user_id : 999})
+  setInterval(function() {
+    $.get('http://app.grasscat.org:5000/ajax/poll_for_invite', {user_id:user_id})
     .done(function(data) {
       // check for tab invite
       if (data['tab']) {
         showInvite(data);
-      } else { console.log('no new tabs'); }
-    })
-    .always(function() {
-      setTimeout(pollForInvite,5000);
+      } else {
+        console.log('no new tabs');
+      }
     });
+  }, 5000);
 }
 
 /**
 * create modal with the tab request
 */
 function showInvite(tab) {
-  console.log(tab);
   theTab = tab['tab'];
   $('.modal-body').text(theTab['user_id'] + ' has invited you to ' + theTab['tab_name']);
   $('#js-invite-modal').modal();

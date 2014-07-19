@@ -8,6 +8,13 @@ html,body {
   width: 100%
 }
 
+.content_container {
+  position: relative;
+  margin: auto;
+  padding: 15px 0;
+}
+
+/* -------------- Landing page -------------- */
 h1.page-header {
   border: none;
   height: 300px;
@@ -40,6 +47,7 @@ h1.page-header {
     color: #7edeb1;;
   }
 
+/* -------------- New Tab -------------- */
 #new-tab-container {
   margin: 0 auto;
   width: 86%;
@@ -62,19 +70,33 @@ h1.page-header {
     background-color: #7EDEB1;
     border-color: white;
     border-width: 2px;
+    color: white;
     outline: none;
   }
 
+  .friend_group .friend_block {
+    min-width: 50px;
+  }
+
+  .glyphicon-ok-circle {
+    width: 20px;
+    display: none;
+  }
+
+  /* -------------- Camera button -------------- */
   #camera-container {
     background-color: white;
     border-radius: 40px;
+    cursor: hand;
+    cursor: pointer;
     height: 100%;
-    margin-top: 25%;
-    padding: 25% 10%;
-    width: 100%;
+    margin: 0 auto;
+    margin-top: 40%;
+    padding: 10% 0;
+    width: 80%;
   }
 
     #camera {
       display: inline-block;
-      width: 40%;
+      width: 60%;
     }
