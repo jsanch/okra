@@ -11,14 +11,11 @@ app = Flask(__name__)
 def index():
     return 'HELLO'
 
-tab = [
-
-        'invitation_id' : 1,
+tab = {'invitation_id' : 1,
         'user_id' : 2,
         'tab_id' : 5,
         'tab_name': 'Wagamama'
-
-]
+    }
 
 @app.route('/ajax/polltab')
 def get_polltab():
@@ -51,19 +48,10 @@ def upload_file():
     '''
 ########################################################################
 
-####################### VENMO ##########################################
-
+################################ DB ####################################
 
 
 ########################################################################
-
-@app.route('/')
-def index():
-    if session.get('venmo_token'):
-        return 'Your Venmo token is %s' % session.get('venmo_token')
-    else:
-        return redirect('https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code' % CONSUMER_ID)
-
 
 
 
