@@ -38,11 +38,11 @@ def create_tab():
     db = get_db_conection("okra") #get conncection
     # tabs = db.tabs #get tabs collection
     tabs = get_db_collection('tabs')
-    # invites = db.invites #get invites collection 
+    # invites = db.invites #get invites collection
 
     if request.method == 'POST':
-        #MUST VALIDATE 
-        tab_id = request.form['id'] 
+        #MUST VALIDATE
+        tab_id = request.form['id']
         tab_group = request.form['group']
         tab_items = dumps(request.form['items']) #convert to json
 
@@ -53,9 +53,9 @@ def create_tab():
 
 
         #prepare for db entry
-        tab = { 
-                'id' : request.form['id'], 
-                'title' : request.form['title'], 
+        tab = {
+                'id' : request.form['id'],
+                'title' : request.form['title'],
                 'group' : request.form['group'], #array of user ids
                 'items' : tab_items,
                 'subtotal' : request.form['subtotal'],
@@ -100,7 +100,7 @@ def update_tab_items():
         print   le_tab['items'][1]
         return 'jello'
 
-# UPDATE TAB BILL 
+# UPDATE TAB BILL
 @app.route('/update_tab_bill', methods=['POST'])
 def update_tab_bill(bill_json):
     '''Updates tab to add each bill items description and value'''
@@ -109,14 +109,14 @@ def update_tab_bill(bill_json):
 
     tab_id = request.args.get('tab_id', '')
     le_tab = tabs.find_one({"id" : tab_id})
-    
+
     #whatever stevens json collection is called
     bill_json = get_db_collection('bill_json')
 
     #Insert bill items to tab
     le_tab['items_prices'] = bill_json['tab_items']
     le_tab['total'] = bill_json['tab_meta']
-    
+
     tabs.insert(le_tab)
 
 
@@ -131,10 +131,10 @@ def add_user():
     if request.method == 'POST':
         user_id = request.form['id']
         user_phone = request.form['phone']
-        user_name = request.form['name'] 
+        user_name = request.form['name']
         user_friends = request.form['friends'] #list
 
-        user = { 
+        user = {
                 'id' : user_id,
                 'phone' : user_phone,
                 'name' : user_name,
@@ -147,13 +147,26 @@ def add_user():
 #GET USER
 @app.route('/get_user')
 def get_user():
-    ''' gets a user_id and returns json info of user ''' 
+    ''' gets a user_id and returns json info of user '''
     users = get_db_collection('users')
     user_id = request.args.get('user_id')
     json = dumps(users.find_one({"id":user_id}))
     print 'hello'
     return  json
 
+#GET FRIENDS
+@app.route('/get_friends')
+def get_friends():
+    ''' gets the list of friends with their ids and names for a given user id '''
+    users = get_db_collection('users')
+    user_id = request.args.get('user_id')
+    user = users.fine_one({'id':user_id})
+    friend_ids = user['friends']
+    friends = {}
+    for friend_id in friend_ids:
+        name = users.find_one({'id':friend_id})['name']
+        friends[friend_id] = {name:'name'}
+    return friends
 
 ########################################################################
 
@@ -165,7 +178,7 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
     print "Creating invites for " +  group
     users = eval(group)
     for user_id in users:
-        print str(user_id) + " " + tab_id 
+        print str(user_id) + " " + tab_id
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
@@ -240,7 +253,7 @@ def uploaded_file(filename):
 
 ############################## VENMO ###################################
 
-### init 
+### init
 @app.route('/')
 def index():
     if session.get('venmo_token'):
@@ -293,7 +306,7 @@ def oauth_authorized():
 
     # phone_number = request.args.get('phone_number', '')
     # print phone_number
-    # user = { 
+    # user = {
     #         'phone_number' :   ''
     #     }
 
