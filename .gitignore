@@ -6,6 +6,10 @@ bin-release/
 # Ignore images and txt while testing
 scan/*.jpg
 scan/*.txt
+images/*.jpg
+images/*.txt
+
+*.pyc
 
 # Other files and folders
 .settings/
