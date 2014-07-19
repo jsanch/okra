@@ -1,5 +1,5 @@
 #!/bin/sh
-tesseract $1 $1'1'
+tesseract $1 $1'1' letters
 # ./textcleaner -g $1 'e_'$1
 # tesseract 'e_'$1 $1'2'
 
