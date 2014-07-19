@@ -2,13 +2,15 @@ import os
 from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
+from threading import Thread
 import json
 from bson import Binary, Code
 from bson.json_util import dumps
 from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
-
+import scan.okraparser
+import scan.okraparser.OkraParseException
 
 app = Flask(__name__)
 
@@ -237,8 +239,41 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        return redirect(url_for('uploaded_file',
-                                filename=filename))
+        thr = Thread(target = async_parse, args = [filename])
+        thr.start()
+        return 'uploaded - async analyzing'
+        # return redirect(url_for('uploaded_file',
+                                # filename=filename))
+
+def async_parse(filename):
+    try:
+        tabs = scan.okraparser.full_scan()
+        db = get_db_conection("okra")   #get conncection
+        # tabs = get_db_collection('tabs')#get tabs collection
+
+        tab_id = request.args.get('tab_id', '')
+        le_tab = tabs.find_one({"id" : tab_id})
+
+        #whatever stevens json collection is called
+        bill_json = get_db_collection('bill_json')
+
+        #Insert bill items to tab
+        le_tab['items_prices'] = bill_json['tab_items']
+        le_tab['total'] = bill_json['tab_meta']
+
+    except OkraParseException:
+        print 'the scan was bad'
+
+
+
+    
+
+def send_email(subject, sender, recipients, text_body, html_body):
+    msg = Message(subject, sender = sender, recipients = recipients)
+    msg.body = text_body
+    msg.html = html_body
+    thr = Thread(target = send_async_email, args = [msg])
+    thr.start()
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
