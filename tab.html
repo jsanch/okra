@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="bootstrap.js"></script>
+  <script type="text/javascript" src="handlebars-v1.3.0.js"></script>
+  <script type="text/javascript" src="tab.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="tab.css">
+</head>
+
+<body>
+	<div class="container-fluid">
+    <div class="header text-center">
+      <div class="title">
+        Dinner at Centerfolds
+      </div>
+      <div class="border"></div>
+      <div class="sub_title">
+        Tab
+      </div>
+    </div>
+
+		<div class="content_panel">
+
+      <table class="friend_group content_container">
+        <tbody>
+          <tr class="friend_group_row">
+            <td class="button_cell">
+              <button id="add_friend_button" class="btn btn-primary butt">+</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="content_container">
+        <ul class="item_list list-group"></ul>
+      </div>
+		</div>
+
+	</div>
+</body>
+</html>
+
+<script id="friend_block_template" type="text/x-handlebars-template">
+  {{#each friends}}
+    <td class="friend_block">
+      <img src="face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
+    </td>
+  {{/each}}
+</script>
+
+<script id="item_list_template" type="text/x-handlebars-template">
+  {{#each items}}
+    <li class="list-group-item tab_item" data-id={{@key}} data-assigned_to_id={{assigned_to_id}}>
+      <div class="row">
+        <div class="col-xs-5">{{name}}</div>
+        <div class="col-xs-3 price_cell">{{price}}</div>
+        <div class="item_assigned_block col-xs-4 pull-right">
+          <div class="pull-right">
+            <img src="face.jpeg" class="pull-right" width='20px' height='20px'>
+          </div>
+          <div class="pull-right text-right inline_element">
+            {{assigned_to_name}}
+          </div>
+        </div>
+      </div>
+    </li>
+  {{/each}}
+</script>
+
+
+
