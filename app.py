@@ -1,25 +1,47 @@
 import os
 from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
-
+from pymongo import MongoClient
 
 
 
 app = Flask(__name__)
 
 
-############################## get tab ################################
+################################ DB ####################################
+# app.config["MONGODB_SETTINGS"] = {'DB':"okra"}
+# app.config["SECRET_KEY"] = "orcasftw"
+# db = MongoEngine(app)
+
+def connect():
+    client = MongoClient();
+
+########################################################################
+
+
+############################## Insert to db ############################
+@app.route('/post', methods=['POST', 'GET'])
+def post():
+    if request.method == 'POST':
+        arg1 = request.args.get('arg')
+        print arg1
+
+
+
+############################## poll for invite  ###########################
 tab = {'invitation_id' : 1,
         'user_id' : 2,
         'tab_id' : 5,
         'tab_name': 'Wagamama'
     }
 
-@app.route('/ajax/polltab')
+@app.route('/ajax/pollforivite')
 def get_polltab():
     return jsonify( { 'tab': tab } )
 
 ########################################################################
+
+
 
 ############################## get tab ################################
 
@@ -77,9 +99,7 @@ def uploaded_file(filename):
 
 ########################################################################
 
-################################ DB ####################################
 
-########################################################################
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
