@@ -160,7 +160,7 @@ def get_friends():
     ''' gets the list of friends with their ids and names for a given user id '''
     users = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users.fine_one({'id':user_id})
+    user = users.find_one({'id':user_id})
     friend_ids = user['friends']
     friends = {}
     for friend_id in friend_ids:
@@ -170,6 +170,38 @@ def get_friends():
 
 ########################################################################
 
+##############################    ITEMS   #############################
+#ASSIGN ITEM
+@app.route('/assign_item')
+def assign_item(tab_id, item_id, user_id):
+    ''' gets the list of friends with their ids and names for a given user id '''
+    tabs = get_db_collection('tabs')
+    tab_id = request.form['tab_id']
+    le_tab = tabs.find_one({"id" : tab_id})
+    
+    le_tab['items'][2].append(user_id)
+    tabs.insert(le_tab)
+
+#UNASSIGN ITEM
+@app.route('/unassign_item')
+def unassign_item(tab_id, item_id, user_id):
+    ''' gets the list of friends with their ids and names for a given user id '''
+    tabs = get_db_collection('tabs')
+    tab_id = request.form['tab_id']
+    le_tab = tabs.find_one({"id" : tab_id})
+    
+    le_tab['items'][2].append(user_id)
+    number_of_users = len(le_tab['items'][2])
+    remove_location = -1
+    i=0
+    for i in range(0, number_of_users):
+        if (le_tab['items'][2][i] == user_id):
+            remove_location = i
+            break
+    if (remove_location > 0):
+        le_tab['items'][2].pop(remove_location)      
+
+    tabs.insert(le_tab)    
 
 ############################## INVITE shit  ############################
 
