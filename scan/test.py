@@ -5,4 +5,4 @@ import okraparser
 image_name = 'receipts3.jpg'
 # f = open(os.path.join(parser_location, image_name))
 
-okraparser.basic_scan(image_name)
+print okraparser.full_scan(image_name)
