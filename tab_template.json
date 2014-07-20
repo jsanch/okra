@@ -1,16 +1,47 @@
 {
-"title" : "Tab Format Example",
-"master_user_id": "1111",
-"group" : ["000", "001", "003"],
-"items" : [
-    {"1" :{ "name": "item1" , "price": "0.00", "assigned_to": ["000","001", "002"]}},
-    {"2" :{ "name": "item2" , "price": "0.00", "assigned_to": ["000","001", "002"]}},
-    {"3" :{ "name": "item2" , "price": "0.00", "assigned_to": ["000","001", "002"]}}
+    "group": [
+        "000",
+        "001",
+        "003"
     ],
-"subtotal" : "00",
-"total" : "00",
-"tip" : "00",
-"tax" : "00",
-"paid_users" : ["000","001", "002"],
-"paid": "true/false"
+    "items": {     
+        "1": {
+            "assigned_to": [
+                "000",
+                "001",
+                "002"
+            ],
+            "name": "item1",
+            "price": "0.00"
+        },
+        "2": {
+            "assigned_to": [
+                "000",
+                "001",
+                "002"
+            ],
+            "name": "item2",
+            "price": "0.00"
+        },
+        "3": {
+            "assigned_to": [
+                "000",
+                "001",
+                "002"
+            ],
+            "name": "item2",
+            "price": "0.00"
+        }
+    },
+    "paid": "true/false",
+    "paid_users": [
+        "000",
+        "001",
+        "002"
+    ],
+    "subtotal": "00",
+    "tax": "00",
+    "tip": "00",
+    "title": "Tab Format Example",
+    "total": "00"
 }

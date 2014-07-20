@@ -1,0 +1,108 @@
+html,body {
+  background-color: #7edeb1;
+  height: 100%;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+  width: 100%
+}
+
+.content_container {
+  position: relative;
+  margin: auto;
+  padding: 15px 0;
+}
+
+/* -------------- Landing page -------------- */
+h1.page-header {
+  border: none;
+  height: 300px;
+  line-height: 300px;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+.main-content {
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#start-buttons {
+  padding: 0 20%;
+}
+
+  #start-buttons button {
+    border: 0px;
+    background-color: white;
+    color: #7edeb1;;
+    margin-bottom: 10%;
+    outline: none;
+  }
+
+  #start-tab {
+    text-decoration: none;
+    color: #7edeb1;;
+  }
+
+/* -------------- New Tab -------------- */
+#new-tab-container {
+  margin: 0 auto;
+  width: 86%;
+  text-align: center;
+}
+
+  #new_tab_name {
+    border-bottom: 2px solid white;
+    color: white;
+    display: inline-block;
+    font-size: 2.1em;
+    margin: 0 auto;
+    width: 50%;
+  }
+
+  #new-tab-container .btn {
+    background-color: white;
+    color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+  }
+
+  #new-tab-container .btn:hover, .btn:focus {
+    background-color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+    color: white;
+    outline: none;
+  }
+
+  .friend_group .friend_block {
+    min-width: 50px;
+  }
+
+  .glyphicon-ok-circle {
+    display: none;
+  }
+
+  /* -------------- Camera button -------------- */
+  #camera-container {
+    background-color: white;
+    border-radius: 40px;
+    cursor: hand;
+    cursor: pointer;
+    height: 100%;
+    margin: 15% auto;
+    padding: 10% 0;
+    width: 80%;
+  }
+
+    #camera {
+      display: inline-block;
+      width: 60%;
+    }
+
+    #take-picture {
+      display: none;
+    }

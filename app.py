@@ -17,7 +17,9 @@ app.jinja_env.autoescape = False
 
 app.secret_key = APP_SECRET
 
-########################## VIEWS #######################################
+###############################################################################
+################################   VIEWS      #################################
+###############################################################################
 
 #landing page
 @app.route('/')
@@ -41,8 +43,9 @@ def img_upload():
     return render_template('img-upload.html')
 
 
-
-################################ DB ####################################
+###############################################################################
+################################     DB      ##################################
+###############################################################################
 
 
 def get_db_connection(db):
@@ -51,10 +54,12 @@ def get_db_connection(db):
 def get_db_collection(collection):
     return get_db_connection('okra')[collection]
 
-########################################################################
 
 
-#############################   TAB      #########################
+
+###############################################################################
+###############################     TAB      ##################################
+###############################################################################
 
 # CREATE TAB
 @app.route('/create_tab', methods=['POST', 'GET'])
@@ -143,21 +148,13 @@ def update_tab():
         tab_id = request.args.get('tab_id', '')
         le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-        #insert to db 
-        tab_id = tabs.insert(tab)
-        print str(tab_id)
-        # create invites from group.
-        create_invites(tab_group, tab_id)
-
-        # return msg
-        print 'Inserted tab with tab_id: ' + str(tabs.find_one({"_id":tab_id})['_id'])
-        return '{ "_id":' + str(tabs.find_one({"_id":tab_id})['_id']) + '}'
+        return "NOT IMPLEMENTED YET"
     else:
-        return 'error'
+        return "not a post req"
 
 
 
-# get TAB
+# GET TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
     tabs = get_db_collection('tabs')
@@ -191,44 +188,67 @@ def get_tab():
 
         return  jsonify(tab)
 
+###############################################################################
+################################## ITEMS  #####################################
+###############################################################################
 
-
-# UPDATE TAB ITEMS
-@app.route('/update_tab_items', methods=['POST'])
-def update_tab_items():
-    ''' updates items in a tab '''
+# ADD USER TO TAB'S ITEMS
+# NEEDS: tab_id, user_id, item_id
+@app.route('/add_user_to_item', methods=['POST'])
+def add_user_to_item():
+    ''' add user to  items in a tab '''
+    #get db collection
     tabs = get_db_collection('tabs')
+    
+    #get args
     tab_id = request.form['tab_id']
-    le_tab = tabs.find_one({"id" : tab_id})
+    user_id = request.form['user_id']
+    item_id = request.form['item_id']
+
+    #get tab 
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+
+
     if (le_tab == None):
-        return 'Tab not found'
+        return 'Fail'
     else:
-        print   le_tab['items'][1]
-        return 'jello'
+        le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        print le_tab['items'][str(item_id)]['assigned_to']
+        tabs.save(le_tab)
+        return "True"
 
-# UPDATE TAB BILL
-@app.route('/update_tab_bill', methods=['POST'])
-def update_tab_bill(bill_json):
-    '''Updates tab to add each bill items description and value'''
-    db = get_db_connection("okra")   #get conncection
-    tabs = get_db_collection('tabs')#get tabs collection
+# REMOVE USER 
+# NEEDS: tab_id, user_id, item_id
+@app.route('/remove_user_from_item', methods=['POST'])
+def remove_user_to_item():
+    ''' remove user of items in a tab '''
+    #get db collection
+    tabs = get_db_collection('tabs')
+    
+    #get args
+    tab_id = request.form['tab_id']
+    user_id = request.form['user_id']
+    item_id = request.form['item_id']
 
-    tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find_one({"id" : tab_id})
-
-    #whatever stevens json collection is called
-    bill_json = get_db_collection('bill_json')
-
-    #Insert bill items to tab
-    le_tab['items_prices'] = bill_json['tab_items']
-    le_tab['total'] = bill_json['tab_meta']
-
-    tabs.insert(le_tab)
+    #get tab 
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
 
-##################################################################
-############################## USERS   ###########################
-##################################################################
+    if (le_tab == None):
+        return 'Fail'
+    else:
+        le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        print le_tab['items'][str(item_id)]['assigned_to']
+        tabs.save(le_tab)
+        return "True"
+
+
+
+
+###############################################################################
+################################## USERS  #####################################
+###############################################################################
+
 @app.route('/add_user' , methods=['POST', 'GET'])
 def add_user():
     users = get_db_collection('users')
@@ -268,42 +288,11 @@ def get_friends():
         friends[friend_id] = users_collection.find_one({'_id':friend_id})
     return friends
 
-########################################################################
 
-##############################    ITEMS   #############################
-#ASSIGN ITEM
-@app.route('/assign_item')
-def assign_item(tab_id, item_id, user_id):
-    ''' gets the list of friends with their ids and names for a given user id '''
-    tabs = get_db_collection('tabs')
-    tab_id = request.form['tab_id']
-    le_tab = tabs.find_one({"id" : tab_id})
-    
-    le_tab['items'][2].append(user_id)
-    tabs.insert(le_tab)
 
-#UNASSIGN ITEM
-@app.route('/unassign_item')
-def unassign_item(tab_id, item_id, user_id):
-    ''' gets the list of friends with their ids and names for a given user id '''
-    tabs = get_db_collection('tabs')
-    tab_id = request.form['tab_id']
-    le_tab = tabs.find_one({"id" : tab_id})
-    
-    le_tab['items'][2].append(user_id)
-    number_of_users = len(le_tab['items'][2])
-    remove_location = -1
-    i=0
-    for i in range(0, number_of_users):
-        if (le_tab['items'][2][i] == user_id):
-            remove_location = i
-            break
-    if (remove_location > 0):
-        le_tab['items'][2].pop(remove_location)      
-
-    tabs.insert(le_tab)    
-
-############################## INVITE shit  ############################
+###############################################################################
+################################ INVITES  #####################################
+###############################################################################
 
 def create_invites(group, tab_id): #used by create tab to invite users that are added.
     invites = get_db_collection('invites')
@@ -330,8 +319,10 @@ def poll_for_invite():
     else:
         return inv['tab_id']
 
-
-############################# UPLAOD IMAGE #############################
+###############################################################################
+################################## OCR  #####################################
+###############################################################################
+#
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'images/'
 # These are the extension that we are accepting to be uploaded
@@ -389,12 +380,11 @@ def upload():
 
 
 
-########################################################################
+###############################################################################
+################################## VENMO  #####################################
+###############################################################################
 
-
-############################## VENMO ###################################
-
-### init
+### INIT 
 @app.route('/venmo_login')
 def venmo_login():
     if session.get('venmo_token'):
@@ -406,7 +396,7 @@ def venmo_login():
       return redirect('https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code' % CONSUMER_ID)
 
 
-#### Charge
+#### CHARGE
 @app.route('/master_charge')
 def master_charge(master):
   if session.get('venmo_token'):
@@ -468,8 +458,10 @@ def oauth_authorized():
     # return 'You were signed in as %s' % session['venmo_token']
     return response
     
-#########################################################################
 
+###############################################################################
+################################## FLASK  #####################################
+###############################################################################
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)

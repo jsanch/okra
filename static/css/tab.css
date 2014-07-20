@@ -20,10 +20,16 @@ body {
   font-size: 18px;
 }
 
-.border {
+.border_line_white {
   margin: auto;
   width: 30%;
   border-top: solid 2px white;
+}
+
+.border_line_lime {
+  margin: auto;
+  width: 30%;
+  border-top: solid 2px #7EDEB1;
 }
 
 .content_panel {
@@ -35,12 +41,33 @@ body {
   padding-bottom: 15px;
 }
 
+.padded_panel {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .name_assigned {
   text-overflow: ellipsis;
 }
 
-.costs {
+.costs_panel {
+  background-color: white;
+  color: #7EDEB1;
   font-size: 18px;
+  /*border: 2px solid white;*/
+  border-radius: 4px;
+}
+
+.user_pay_amt_panel {
+  margin-top: 15px;
+  background-color: white;
+  color: #7EDEB1;
+  font-size: 24px;
+  border-radius: 4px;
+}
+
+.footer {
+  margin-top: 30px;
 }
 
 /* -------------- Components -------------- */
@@ -66,7 +93,7 @@ table td {
   display: inline-block;
 }
 .tab_item.selected {
-  border-color: #E95D3E;
+  border-color: #FFD9B3;
 }
 
 .friend_group {
@@ -168,7 +195,7 @@ table td {
   padding-left: 15px;
 }
 
-.paid_icon {
+.paid_icon, .friend_add_icon {
   position: absolute;
   right: 0; top: 3px; bottom: 0;
 }
