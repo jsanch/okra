@@ -48,7 +48,7 @@ def get_db_connection(db):
     client = MongoClient()
     return client[db]
 def get_db_collection(collection):
-    return get_db_connection('okra').okra[collection]
+    return get_db_connection('okra')[collection]
 
 ########################################################################
 
@@ -64,45 +64,54 @@ def create_tab():
     # invites = db.invites #get invites collection
 
     if request.method == 'POST':
-        #MUST VALIDATE
-        tab_group = request.form['group']
-        tab_items = dumps(request.form['items']) #convert to json
+        #Get JSON
+        data = request.get_json(True)
 
-        tab_subtotal = request.form['subtotal']
-        tab_total = request.form['total']
-        tab_tip = request.form['tip']
-        tab_tax = request.form['tax']
+        #Get wanted data
+        tab_title = data['title']
+        tab_group = data['group'] #array of user ids
+        tab_items = data['items']
+        tab_subtotal = data['subtotal']
+        tab_total = data['total']
+        tab_tip = data['tip']
+        tab_tax = data['tax']
+        tab_paid_users = data['paid_users']
+        tab_paid = data['paid']
 
-
-        #prepare for db entry
+        # prepare data for db 
         tab = {
-                'title' : request.form['title'],
-                'group' : request.form['group'], #array of user ids
-                'items' : tab_items,
-                'subtotal' : request.form['subtotal'],
-                'total' : request.form['total'],
-                'tip' : request.form['tip'],
-                'tax' : request.form['tax']
-                }
-        tabs_id = tabs.insert(tab)
-
-
+                "title" : tab_title,
+                "group" : tab_group,
+                "items" : tab_items,
+                "subtotal" : tab_subtotal,
+                "total" : tab_total,
+                "tip" : tab_tip,
+                "tax" : tab_tax,
+                "paid_users" : tab_paid_users,
+                "paid" : tab_paid,    
+            }
+        #insert to db 
+        tab_id = tabs.insert(tab)
+        print str(tab_id)
         # create invites from group.
         create_invites(tab_group, tab_id)
-        print 'items = ' + tabs.find_one({"_id":tabs_id})['items']
 
-        return 'inserted tab with tab_id: ' + tabs.find_one({"_id":tabs_id})['id']
+        # return msg
+        print 'Inserted tab with tab_id: ' + str(tabs.find_one({"_id":tab_id})['_id'])
+        return '{ "_id":' + str(tabs.find_one({"_id":tab_id})['_id']) + '}'
     else:
-        return "not a post request"
+        return 'error'
 
 # GET TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
     tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find_one({"_id" : tab_id})
-    tab_json = json.dumps(le_tab)
-    return tab_json
+    le_tab = tabs.find( { "_id" : 'ObjectId('+tab_id+')' } )
+    if (le_tab == None):
+        return 'Tab not found'
+    else: 
+        return "Tab Found"
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
@@ -218,10 +227,10 @@ def unassign_item(tab_id, item_id, user_id):
 
 def create_invites(group, tab_id): #used by create tab to invite users that are added.
     invites = get_db_collection('invites')
-    print "Creating invites for " +  group
-    users = eval(group)
-    for user_id in users:
-        print str(user_id) + " " + tab_id
+    print group
+    # print "Creating invites for " +  str(group)
+    for user_id in group:
+        print str(user_id) + " " + str(tab_id)
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
