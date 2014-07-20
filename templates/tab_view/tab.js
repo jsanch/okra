@@ -30,13 +30,34 @@ $(function() {
 
   var _tab;
   var _friends;
+  var db_poll_interval;
 
   // ---------------------- Init ----------------------
 
-  // Initially populate page
-  populatePage();
-  // Update page periodically
-  setInterval(function() { updatePage() }, 100);
+  initTabView();
+
+  function initTabView() {
+    // Initially populate page
+    populatePage();
+    // Update page periodically
+    db_poll_interval = setInterval(function() { updateTabView() }, 100);
+  }
+
+  // Initialize the pay view
+  function initPayView() {
+   // Initialize payment progress knob
+    var payment_progress = $('#payment_progress_chart');
+    payment_progress.knob(
+      {
+        'fgColor': 'white',
+        'inputColor': 'white',
+        'bgColor': 'transparent',
+        'readOnly': true,
+      }
+    );
+    clearInterval(db_poll_interval);
+    db_poll_interval = setInterval(function() { updatePayView() }, 100);
+  }
 
   // ---------------------- Functions ----------------------
 
@@ -95,7 +116,7 @@ $(function() {
     });
   }
 
-  function updatePage() {
+  function updateTabView() {
     if(!_tab) return;
     getTab().done(function(data) {
       var new_tab = JSON.parse(data);
@@ -148,7 +169,25 @@ $(function() {
     });
   }
 
-  function update_tip(tip_val) {
+  function updatePayView() {
+    if(!_tab) return;
+    getTab().done(function(data) {
+      var new_tab = JSON.parse(data);
+
+      new_tab = _tab; // TEMP -- REMOVE THIS LATER
+
+      var paid = parseFloat(1230.00);//_tab.paid);
+      var total = parseFloat(_tab.total);
+      $('#payment_progress_chart').val((paid/total*100).toFixed(2)).trigger('change');
+
+      $('#payment_amount').text(500.00);
+      $('#payment_rem_amt').text((total - paid).toFixed(2));
+      $('#payment_rem_tot').text(total);
+
+    });
+  }
+
+  function updateTip(tip_val) {
     $('#tip_input').val(tip_val.toFixed(2));
     var total_val = (parseFloat(_tab.subtotal) + parseFloat(_tab.tax) + tip_val).toFixed(2);
     $('#total').text(total_val);
@@ -177,18 +216,24 @@ $(function() {
   });
 
   $('.tip_button').on('click', function() {
-    update_tip(parseFloat($(this).data('percentage')) * parseFloat(_tab.subtotal));
+    updateTip(parseFloat($(this).data('percentage')) * parseFloat(_tab.subtotal));
   });
 
   $('#tip_input').keydown(function(event) {
     if(event.which == 13) {
       event.preventDefault();
-      update_tip(parseFloat($('#tip_input').val()));
+      updateTip(parseFloat($('#tip_input').val()));
     }
   });
 
-  $('#finish_button').on('click', function(event) {
-    window.location.replace("http://stackoverflow.com");
+  // CHANGE VIEWS
+  $('#tab_view #finish_button').on('click', function(event) {
+    // window.location.replace("http://stackoverflow.com");
+    $('#add_friend_button').fadeOut(200);
+    $('#tab_view').fadeOut(200, function() {
+      initPayView();
+      $('#pay_view').fadeIn(200);
+    });
   });
 
 });
