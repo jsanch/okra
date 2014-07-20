@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session
+from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session, make_response
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from threading import Thread
@@ -32,7 +32,9 @@ def new_tab_view():
 
 @app.route('/tab')
 def tab_view():
-    return render_template('tab.html')
+    resp = make_response(render_template('tab.html'))
+    resp.set_cookie('user_id', 'poo')
+    return resp
 
 @app.route('/start')
 def start():
