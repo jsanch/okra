@@ -12,12 +12,20 @@ import requests
 import scan.okraparser
 # import scan.okraparser.OkraParseException
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = '')
 
 app.secret_key = APP_SECRET
 
+########################## VIEWS #######################################
 
+#landing page
+@app.route('/')
+def landing():
+   return render_template('landing_page/landing_page.html')
 
+@app.route('/new_tab')
+def new_tab_view():
+    return render_template('new_tab_view/index.html')
 
 
 ################################ DB ####################################
@@ -327,7 +335,7 @@ def uploaded_file(filename):
 ############################## VENMO ###################################
 
 ### init
-@app.route('/')
+@app.route('/venmo_login')
 def index():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
