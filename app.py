@@ -31,11 +31,11 @@ def new_tab_view():
 ################################ DB ####################################
 
 
-def get_db_conection(db):
+def get_db_connection(db):
     client = MongoClient()
     return client[db]
 def get_db_collection(collection):
-    return get_db_conection('okra').okra[collection]
+    return get_db_connection('okra').okra[collection]
 
 ########################################################################
 
@@ -45,7 +45,7 @@ def get_db_collection(collection):
 # CREATE TAB
 @app.route('/create_tab', methods=['POST', 'GET'])
 def create_tab():
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     # tabs = db.tabs #get tabs collection
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
@@ -88,7 +88,7 @@ def create_tab():
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
     '''Returns tab object in json for requested tab_id'''
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     tabs = db.tabs #get tabs collection
     tab_id = request.args.get('tab_id', '')
 
@@ -114,7 +114,7 @@ def update_tab_items():
 @app.route('/update_tab_bill', methods=['POST'])
 def update_tab_bill(bill_json):
     '''Updates tab to add each bill items description and value'''
-    db = get_db_conection("okra")   #get conncection
+    db = get_db_connection("okra")   #get conncection
     tabs = get_db_collection('tabs')#get tabs collection
 
     tab_id = request.args.get('tab_id', '')
@@ -276,7 +276,7 @@ def upload():
         # will basicaly show on the browser the uploaded file
         parsed_tabs = scan.okraparser.full_scan(filename)
         print parsed_tabs
-        db = get_db_conection("okra")   #get conncection
+        okratabs = get_db_collection("tabs")   #get conncection
 
         insert_tabs = {}
         insert_tabs['total'] = float(parsed_tabs['meta']['total'])
@@ -294,8 +294,6 @@ def upload():
 
         print insert_tabs
 
-        okratabs = get_db_collection('tabs')
-
         # okratabs = db.tabs
         tab_id = okratabs.insert(insert_tabs)
 
@@ -308,7 +306,7 @@ def upload():
 # def async_parse(filename):
 #     tabs = scan.okraparser.full_scan(filename)
 #     print tabs
-#     db = get_db_conection("okra")   #get conncection
+#     db = get_db_connection("okra")   #get conncection
 #     # tabs = get_db_collection('tabs')#get tabs collection
 
 #     tab_id = request.args.get('tab_id', '')
@@ -360,7 +358,7 @@ def index():
 @app.route('/master_charge')
 def master_charge(master):
   if session.get('venmo_token'):
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     users = db.users #get tabs collection
 
     for user in users:
