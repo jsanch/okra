@@ -1,0 +1,264 @@
+/* -------------- Panels -------------- */
+
+body {
+  background-color: #7EDEB1;
+}
+
+.header {
+  font-family: "Raleway";
+  color: white;
+  width: 400px;
+  margin: auto;
+  margin-top: 30px;
+}
+
+.title {
+  font-size: 24px;
+}
+
+.sub_title {
+  font-size: 18px;
+}
+
+.border {
+  margin: auto;
+  width: 30%;
+  border-top: solid 2px white;
+}
+
+.content_panel {
+  color: white;
+}
+
+.content_container {
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.name_assigned {
+  text-overflow: ellipsis;
+}
+
+.costs {
+  font-size: 18px;
+}
+
+/* -------------- Components -------------- */
+
+ul {
+  list-style-type: none;
+}
+
+li {
+}
+
+table td {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.row {
+  width: 100%;
+  margin-left: 0;
+}
+
+.tab_item div {
+  display: inline-block;
+}
+.tab_item.selected {
+  border-color: #E95D3E;
+}
+
+.friend_group {
+  overflow: auto;
+  position: relative;
+}
+
+.friend_block {
+  width: 50px;
+  height: 60px;
+}
+
+.friend_name {
+  font-size: 12px;
+  width: 50px;
+  height: 20px;
+  text-overflow: ellipsis;
+}
+
+.button_cell {
+  /*position: absolute;*/
+  top: 20px;
+  right: 0;
+}
+
+.item_assigned_block {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  background-color: white;
+  color: #7EDEB1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.item_name_block {
+  max-height: 1em;
+  /*position: absolute;*/
+  /*height: 100%;*/
+  /*top: 0;*/
+  /*background-color: white;*/
+  /*color: #7EDEB1;*/
+}
+
+.item_assigned_name {
+  width: 70%;
+}
+
+.portrait {
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+  background-size: 50px 50px;
+}
+
+.small_portrait {
+  top: 0;
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  background-size: 30px 30px;
+}
+
+#payment_progress_chart {
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  position: relative;
+}
+
+#payment_progress_chart_inner {
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 0;
+  background-color: #7EDEB1;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.payment_progress_wrapper {
+  width: 200px;
+  position: relative;
+}
+
+#payment_rem_block {
+  position: absolute;
+  top: 30%; bottom: 0; right: 0; left: 0;
+  text-align: center;
+}
+
+#payment_rem_amt {
+  font-size: 24px;
+}
+
+.paid_indicator_block {
+  position: relative;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.paid_icon {
+  position: absolute;
+  right: 0; top: 3px; bottom: 0;
+}
+
+
+/* -------------- Style classes -------------- */
+
+.inline_element {
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.col_centered {
+  float: none;
+  margin: 0 auto;
+}
+
+.text_limit {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  right: 0;
+}
+
+.fill_height {
+  height: 100%;
+}
+
+.fill_width {
+  width: 100%;
+}
+
+.text_green {
+  color: green;
+}
+.text_red {
+  color: red;
+}
+
+/* -------------- Views -------------- */
+
+#pay_view {
+  display: none;
+}
+
+/* -------------- Overrides -------------- */
+
+.btn {
+  background-color: white;
+  color: #7EDEB1;
+  border-color: white;
+  border-width: 2px;
+}
+
+.btn:focus {
+  background-color: white;
+  color: #7EDEB1;
+  border-color: white;
+  outline: none;
+}
+
+.btn:hover {
+  background-color: #7EDEB1;
+  color: white;
+  border-color: white;
+  border-width: 2px;
+  outline: none;
+}
+
+.list-group {
+  margin-bottom: 0;
+}
+
+.list-group-item {
+  border-width: 2px;
+  border-color: white;
+  border-radius: 4px;
+  background-color: transparent;
+  margin-bottom: 5px;
+  padding-left: 0;
+  padding-right: 0;
+  /*padding: 0;*/
+}
+
+.input-group-addon {
+  background-color: white;
+  color: #7EDEB1;
+}
+
+
+
+

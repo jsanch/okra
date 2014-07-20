@@ -1,0 +1,56 @@
+{% raw %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Okra</title>
+
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <!-- Invitation Modal -->
+    <div class="modal fade" id="js-invite-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id='js-accept-tab' class="btn btn-primary">Accept Tab</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Page content -->
+    <section class='main-content'>
+      <header class='main-header'>
+        <span class='vertical'><h1 class='page-header'>Okra</h1></span>
+      </header>
+
+      <!-- Main page buttons -->
+      <div id='start-buttons'>
+        <button type='button' class="btn btn-primary btn-lg btn-block">Profile</button>
+        <a id='start-tab' href='new_tab.html'><button type='button' id='js-start-tab' class="btn btn-primary btn-lg btn-block">Start Tab</button></a>
+      </div>
+    </section>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src='/static/js/main.js'></script>
+  </body>
+</html>
+{% endraw %}

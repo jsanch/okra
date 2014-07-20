@@ -1,0 +1,208 @@
+{% raw %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap.js"></script>
+  <script type="text/javascript" src="/static/js/handlebars-v1.3.0.js"></script>
+  <script type="text/javascript" src="/static/js/jquery.knob.min.js"></script>
+  <script type="text/javascript" src="/static/js/tab.js"></script>
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/tab.css">
+</head>
+
+<body>
+	<div class="container-fluid">
+    <div class="header content_container text-center">
+      <div id="title" class="title"></div>
+      <div class="border"></div>
+      <div class="sub_title">Tab</div>
+    </div>
+    
+		<div class="content_panel">
+      <div class="row content_container">
+        <div class="col-xs-10 col_centered">
+          <div class="friend_group">
+            <table class="col_centered">
+              <tbody>
+                <tr class="friend_group_row">
+                  <td class="button_cell">
+                    <button id="add_friend_button" class="btn btn-primary pull-right">+</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="button_cell pulld-left">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab_view">
+        <div class="content_container">
+          <ul class="item_list list-group"></ul>
+        </div>
+
+        <div class="border content_container"></div>
+
+        <div class="costs content_container"> 
+          <div class="row content_container">
+            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Sub Total:</div>
+            <div id="subtotal" class="col-xs-8"></div>
+          </div>
+
+          <div class="row content_container">
+            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Tax:</div>
+            <div id="tax" class="col-xs-8"></div>
+          </div>
+
+          <div class="row content_container col_centered">
+            <div class="col-xs-2 text-right inline_element">Tip:</div>
+            <div class="col-xs-4">
+              <form class="form-inline inline_element pull-right" role="form">
+                <div class="form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" id="tip_input" placeholder="Tip">
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="col-xs-6">
+              <button class="tip_button btn btn-primary" data-percentage="0.15">15%</button>
+              <button class="tip_button btn btn-primary" data-percentage="0.18">18%</button>
+              <button class="tip_button btn btn-primary" data-percentage="0.20">20%</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row content_container">
+          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Total:</div>
+          <div id="total" class="col-xs-8"></div>
+        </div>
+
+        <div class="content_container pull-right">
+          <button id="finish_button" class="btn btn-primary">Finish and Pay ></button>
+        </div>
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
+        </div>
+      </div>
+
+      <div id="pay_view" class="content_panel">
+        <div class="row content_container">
+          <div class="payment_progress_wrapper col_centered">
+            <div id="payment_progress_chart"></div>
+            <div id="payment_rem_block">
+              <div id="payment_rem_label">Remaining</div>
+              <div id="payment_rem_amt"></div>
+              <div id="payment_rem_tot"></div>
+            </div>
+          </div>
+          <!-- <input type="text" val="75" class="payment_progress_chart"/> -->
+          <div class="content_container col_centered text-center">
+            <div>You owe $<span id="payment_amount"></span></div>
+          </div>
+          <div class="content_container col_centered text-center">
+            <button id="make_payment_button" class="btn btn-primary">Make Payment</button>
+          </div>
+
+          <div class="content_container">
+            <ul class="paid_user_list list-group"></ul>
+          </div>
+        </div>
+
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
+        </div>
+      </div>
+
+		</div>
+  </div>
+</body>
+</html>
+
+<script id="friend_row_template" type="text/x-handlebars-template">
+  {{#each friends}}
+    <td class="friend_block" data-id={{@key}}>
+      <div class="portrait" style="background-image: url(face.jpeg)"></div>
+      <div class="friend_name text_limit text-center">{{first_name}}</div>
+    </td>
+  {{/each}}
+</script>
+
+<script id="friend_block_template" type="text/x-handlebars-template">
+  <td class="friend_block" data-id={{@key}}>
+    <div class="portrait" style="background-image: url(face.jpeg)"></div>
+    <div class="friend_name text_limit text-center">{{first_name}}</div>
+  </td>
+</script>
+
+<script id="item_list_template" type="text/x-handlebars-template">
+  {{#each items}}
+    {{> item_template}}
+  {{/each}}
+</script>
+
+<script id="item_template" type="text/x-handlebars-template">
+  {{#if (user_selected assigned_to)}}
+  <li class="list-group-item tab_item selected" data-id={{@key}}>
+  {{else}}
+  <li class="list-group-item tab_item" data-id={{@key}}>
+  {{/if}}
+    <div class="row">
+      <div class="item_name_block col-xs-5 pdull-left">
+        <div class="text_limit fill_width">{{name}}</div>
+      </div>
+      <div class="col-xs-2 text-right">{{price}}</div>
+      <div class="item_assigned_block col-xs-5 pull-right">
+      {{#each assigned_to}}
+        <div class="small_portrait pull-right" style="background-image: url({{get_pic_url this}})"></div>
+      {{/each}}
+      </div>
+    </div>
+  </li>
+</script>
+
+<script id="paid_user_list_template" type="text/x-handlebars-template">
+  {{#each users}}
+    {{> paid_user_entry_template}}
+  {{/each}}
+</script>
+
+<script id="paid_user_entry_template" type="text/x-handlebars-template">
+  <li class="user_entry list-group-item" data-id={{@key}}>
+    <div class="row">
+      <div class="col-xs-2">
+        <div class="small_portrait pull-left" style="background-image: url({{get_pic_url this}})"></div>
+      </div>
+      <div class="col-xs-6">
+        <div class="paid_user_name text_limit">{{first_name}} {{last_name}}</div>
+      </div>
+      <div class="col-xs-4">
+        <div class="paid_indicator_block">
+        {{#if (check_paid this ../paid_users)}}
+          <i class="paid_icon fa fa-check text_green"></i>
+          <div class="paid_text text_green">Paid</div>
+        {{else}}
+          <i class="paid_icon fa fa-circle-o pull-right text_red"></i>
+          <div class="paid_text pull-rsight text_red">Waiting</div>
+        {{/if}}
+        </div>
+      </div>
+    </div>
+  </li>
+</script>
+
+<!-- 
+        <div class="item_assigned_name text_limit text-left">
+          {{get_name this}}
+        </div> -->
+
+
+{% endraw %}

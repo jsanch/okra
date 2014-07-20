@@ -6,13 +6,14 @@ from threading import Thread
 import json
 from bson import Binary, Code
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
-# import scan.okraparser.OkraParseException
 
-app = Flask(__name__, static_url_path = '')
+app = Flask(__name__)
+app.jinja_env.autoescape = False
 
 app.secret_key = APP_SECRET
 
@@ -20,22 +21,35 @@ app.secret_key = APP_SECRET
 
 #landing page
 @app.route('/')
-def landing():
+def index():
    return render_template('landing_page/landing_page.html')
 
 @app.route('/new_tab')
 def new_tab_view():
-    return render_template('new_tab_view/index.html')
+    return render_template('new_tab.html')
+
+@app.route('/tab')
+def tab_view():
+    return render_template('tab.html')
+
+@app.route('/start')
+def start():
+    return render_template('index.html')
+
+@app.route('/img-upload')
+def img_upload():
+    return render_template('img-upload.html')
+
 
 
 ################################ DB ####################################
 
 
-def get_db_conection(db):
+def get_db_connection(db):
     client = MongoClient()
     return client[db]
 def get_db_collection(collection):
-    return get_db_conection('okra').okra[collection]
+    return get_db_connection('okra')[collection]
 
 ########################################################################
 
@@ -45,57 +59,85 @@ def get_db_collection(collection):
 # CREATE TAB
 @app.route('/create_tab', methods=['POST', 'GET'])
 def create_tab():
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     # tabs = db.tabs #get tabs collection
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
 
     if request.method == 'POST':
-        #MUST VALIDATE
-        tab_id = request.form['id']
-        tab_group = request.form['group']
-        tab_items = dumps(request.form['items']) #convert to json
+        #Get JSON
+        data = request.get_json(True)
 
-        tab_subtotal = request.form['subtotal']
-        tab_total = request.form['total']
-        tab_tip = request.form['tip']
-        tab_tax = request.form['tax']
+        #Get wanted data
+        tab_title = data['title']
+        tab_group = data['group'] #array of user ids
+        tab_items = data['items']
+        tab_subtotal = data['subtotal']
+        tab_total = data['total']
+        tab_tip = data['tip']
+        tab_tax = data['tax']
+        tab_paid_users = data['paid_users']
+        tab_paid = data['paid']
 
-
-        #prepare for db entry
+        # prepare data for db 
         tab = {
-                'id' : request.form['id'],
-                'title' : request.form['title'],
-                'group' : request.form['group'], #array of user ids
-                'items' : tab_items,
-                'subtotal' : request.form['subtotal'],
-                'total' : request.form['total'],
-                'tip' : request.form['tip'],
-                'tax' : request.form['tax']
-                }
-        tabs_id = tabs.insert(tab)
-
-
+                "title" : tab_title,
+                "group" : tab_group,
+                "items" : tab_items,
+                "subtotal" : tab_subtotal,
+                "total" : tab_total,
+                "tip" : tab_tip,
+                "tax" : tab_tax,
+                "paid_users" : tab_paid_users,
+                "paid" : tab_paid,    
+            }
+        #insert to db 
+        tab_id = tabs.insert(tab)
+        print str(tab_id)
         # create invites from group.
         create_invites(tab_group, tab_id)
-        print 'items = ' + tabs.find_one({"_id":tabs_id})['items']
 
-        return 'inserted tab with tab_id: ' + tabs.find_one({"_id":tabs_id})['id']
+        # return msg
+        print 'Inserted tab with tab_id: ' + str(tabs.find_one({"_id":tab_id})['_id'])
+        return '{ "_id":' + str(tabs.find_one({"_id":tab_id})['_id']) + '}'
     else:
-        return "not a post request"
+        return 'error'
 
 # GET TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
-    '''Returns tab object in json for requested tab_id'''
-    db = get_db_conection("okra") #get conncection
-    tabs = db.tabs #get tabs collection
+    tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    if (le_tab == None):
+        return 'Tab not found'
+    else: 
+        #Get wanted data
+        tab_title = le_tab['title']
+        tab_group = le_tab['group'] #array of user ids
+        tab_items = le_tab['items']
+        tab_subtotal = le_tab['subtotal']
+        tab_total = le_tab['total']
+        tab_tip = le_tab['tip']
+        tab_tax = le_tab['tax']
+        tab_paid_users = le_tab['paid_users']
+        tab_paid = le_tab['paid']
 
-    le_tab = tabs.find_one({"id" : tab_id})
-    json1 = dumps(le_tab)
+        tab = {
+            "title" : tab_title,
+            "group" : tab_group,
+            "items" : tab_items,
+            "subtotal" : tab_subtotal,
+            "total" : tab_total,
+            "tip" : tab_tip,
+            "tax" : tab_tax,
+            "paid_users" : tab_paid_users,
+            "paid" : tab_paid,    
+        }
 
-    return json1
+        return  jsonify(tab)
+
+
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
@@ -114,7 +156,7 @@ def update_tab_items():
 @app.route('/update_tab_bill', methods=['POST'])
 def update_tab_bill(bill_json):
     '''Updates tab to add each bill items description and value'''
-    db = get_db_conection("okra")   #get conncection
+    db = get_db_connection("okra")   #get conncection
     tabs = get_db_collection('tabs')#get tabs collection
 
     tab_id = request.args.get('tab_id', '')
@@ -130,52 +172,46 @@ def update_tab_bill(bill_json):
     tabs.insert(le_tab)
 
 
-########################################################################
-
-
-
+##################################################################
 ############################## USERS   ###########################
+##################################################################
 @app.route('/add_user' , methods=['POST', 'GET'])
 def add_user():
     users = get_db_collection('users')
     if request.method == 'POST':
-        user_id = request.form['id']
         user_phone = request.form['phone']
         user_name = request.form['name']
         user_friends = request.form['friends'] #list
 
         user = {
-                'id' : user_id,
                 'phone' : user_phone,
                 'name' : user_name,
                 'friends' : user_friends
         }
-        users.insert(user)
+        user_mongo_id = users.insert(user)
 
-        return "registerd user: " + users.find_one({"id":user_id})['id']
+        return json.dumps({'user_id': user_mongo_id})
 
 #GET USER
 @app.route('/get_user')
 def get_user():
-    ''' gets a user_id and returns json info of user '''
-    users = get_db_collection('users')
+     # gets a user_id and returns json info of user
+    users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    json = dumps(users.find_one({"id":user_id}))
-    print 'hello'
-    return  json
+    user = users_collection.find_one({"_id":user_id})
+    return json.dumps(user)
 
 #GET FRIENDS
 @app.route('/get_friends')
 def get_friends():
-    ''' gets the list of friends with their ids and names for a given user id '''
-    users = get_db_collection('users')
+     # gets the list of friends with their ids and names for a given user id 
+    users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users.find_one({'id':user_id})
+    user = users_collection.find_one({'_id':user_id})
     friend_ids = user['friends']
     friends = {}
     for friend_id in friend_ids:
-        name = users.find_one({'id':friend_id})['name']
-        friends[friend_id] = {name:'name'}
+        friends[friend_id] = users_collection.find_one({'_id':friend_id})
     return friends
 
 ########################################################################
@@ -217,10 +253,10 @@ def unassign_item(tab_id, item_id, user_id):
 
 def create_invites(group, tab_id): #used by create tab to invite users that are added.
     invites = get_db_collection('invites')
-    print "Creating invites for " +  group
-    users = eval(group)
-    for user_id in users:
-        print str(user_id) + " " + tab_id
+    print group
+    # print "Creating invites for " +  str(group)
+    for user_id in group:
+        print str(user_id) + " " + str(tab_id)
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
@@ -253,13 +289,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
-# This route will show a form to perform an AJAX request
-# jQuery is loaded to execute the request and update the
-# value of the operation
-@app.route('/img-upload')
-def img_upload():
-    return render_template('img-upload.html')
-
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -276,7 +305,7 @@ def upload():
         # will basicaly show on the browser the uploaded file
         parsed_tabs = scan.okraparser.full_scan(filename)
         print parsed_tabs
-        db = get_db_conection("okra")   #get conncection
+        okratabs = get_db_collection("tabs")   #get conncection
 
         insert_tabs = {}
         insert_tabs['total'] = float(parsed_tabs['meta']['total'])
@@ -286,6 +315,8 @@ def upload():
 
         insert_tabs['group'] = {}
         insert_tabs['items'] = {}
+        insert_tabs['paid_users'] = []
+        insert_tabs['paid'] = False
 
         index_id = 0
         for parsed_item in parsed_tabs['items']:
@@ -293,8 +324,6 @@ def upload():
             index_id += 1
 
         print insert_tabs
-
-        okratabs = get_db_collection('tabs')
 
         # okratabs = db.tabs
         tab_id = okratabs.insert(insert_tabs)
@@ -305,31 +334,7 @@ def upload():
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
 
-# def async_parse(filename):
-#     tabs = scan.okraparser.full_scan(filename)
-#     print tabs
-#     db = get_db_conection("okra")   #get conncection
-#     # tabs = get_db_collection('tabs')#get tabs collection
 
-#     tab_id = request.args.get('tab_id', '')
-#     le_tab = tabs.find_one({"id" : tab_id})
-
-#     #whatever stevens json collection is called
-#     bill_json = get_db_collection('bill_json')
-
-#     #Insert bill items to tab
-#     le_tab['items_prices'] = bill_json['tab_items']
-#     le_tab['total'] = bill_json['tab_meta']
-
-
-    
-
-# def send_email(subject, sender, recipients, text_body, html_body):
-#     msg = Message(subject, sender = sender, recipients = recipients)
-#     msg.body = text_body
-#     msg.html = html_body
-#     thr = Thread(target = send_async_email, args = [msg])
-#     thr.start()
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
@@ -346,7 +351,7 @@ def uploaded_file(filename):
 
 ### init
 @app.route('/venmo_login')
-def index():
+def venmo_login():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
@@ -360,7 +365,7 @@ def index():
 @app.route('/master_charge')
 def master_charge(master):
   if session.get('venmo_token'):
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     users = db.users #get tabs collection
 
     for user in users:
@@ -371,8 +376,6 @@ def master_charge(master):
 
 
 # def add_venmo_user(phone_number,display_name, token):
-
-
 
 
 ###### OAuth
@@ -412,6 +415,7 @@ def oauth_authorized():
 
     #return  'fuck you %s' % session['venmo_token']
     return 'You were signed in as %s' % session['venmo_token']
+    
 #########################################################################
 
 
