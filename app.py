@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session
+from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session, make_response
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from threading import Thread
