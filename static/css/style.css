@@ -106,3 +106,8 @@ h1.page-header {
     #take-picture {
       display: none;
     }
+
+/* -------------- Create button -------------- */
+.create_tab_button {
+  width: 30%;
+}
