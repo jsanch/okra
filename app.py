@@ -32,7 +32,9 @@ def new_tab_view():
 
 @app.route('/tab')
 def tab_view():
-    return render_template('tab.html')
+    resp = make_response(render_template('tab.html'))
+    resp.set_cookie('user_id', 'poo')
+    return resp
 
 @app.route('/start')
 def start():
