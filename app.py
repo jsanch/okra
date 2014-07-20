@@ -6,6 +6,7 @@ from threading import Thread
 import json
 from bson import Binary, Code
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
@@ -107,11 +108,36 @@ def create_tab():
 def get_tab():
     tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find( { "_id" : 'ObjectId('+tab_id+')' } )
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     if (le_tab == None):
         return 'Tab not found'
     else: 
-        return "Tab Found"
+        #Get wanted data
+        tab_title = le_tab['title']
+        tab_group = le_tab['group'] #array of user ids
+        tab_items = le_tab['items']
+        tab_subtotal = le_tab['subtotal']
+        tab_total = le_tab['total']
+        tab_tip = le_tab['tip']
+        tab_tax = le_tab['tax']
+        tab_paid_users = le_tab['paid_users']
+        tab_paid = le_tab['paid']
+
+        tab = {
+            "title" : tab_title,
+            "group" : tab_group,
+            "items" : tab_items,
+            "subtotal" : tab_subtotal,
+            "total" : tab_total,
+            "tip" : tab_tip,
+            "tax" : tab_tax,
+            "paid_users" : tab_paid_users,
+            "paid" : tab_paid,    
+        }
+
+        return  jsonify(tab)
+
+
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
@@ -356,6 +382,9 @@ def master_charge(master):
 
 @app.route('/oauth-authorized')
 def oauth_authorized():
+    db = get_db_conection("okra")   #get conncection
+    users = get_db_collection('users')
+
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
         "client_id":CONSUMER_ID,
@@ -370,27 +399,30 @@ def oauth_authorized():
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
+    session['first_name'] = user['first_name']
+    session['last_name'] = user['last_name']
+    session['profile_picture_url'] = user['profile_picture_url']
 
-    ''' Create new user with venmo user_id and token '''
-    db = get_db_conection("okra")   #get conncection
-    users = get_db_collection('users')    
-    # users.insert({ 
-    #             user_id: session['venmo_username'],
-    #             name: ,
-    #             friends: ,
-    #             phone_number: ,
-    #             token: session['venmo_token']
-    #             })
-
-    # # phone_number = request.args.get('phone_number', '')
-    # print phone_number
-    # user = {
-    #         'phone_number' :   ''
-    #     }
+    users.insert( {
+                    "first_name" : session['first_name'],
+                    "second_name": session['last_name'],
+                    "friends" : ["user_id","user_id"],
+                    "phone": "",
+                    "token": session['venmo_token'],
+                    "pic_url": session['profile_picture_url']
+                  }
+        )
+    
+    response = make_response(redirect('/'))
+    response.set_cookie('user_id',value="session['venmo_username']")
+    response.set_cookie('first_name',value="session['first_name']")
+    response.set_cookie('last_name',value="session['last_name']")
+    response.set_cookie('profile_picture_url',value="session['profile_picture_url']")
 
     #return  'fuck you %s' % session['venmo_token']
-
-    return 'You were signed in as %s' % session['venmo_token']
+    # return 'You were signed in as %s' % session['venmo_token']
+    return response
+    
 #########################################################################
 
 
