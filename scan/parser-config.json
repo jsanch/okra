@@ -13,7 +13,7 @@
 			"string": "balance_due"
 		},
 		"tax": {
-			"ere": "^((sales)|(meals)|(total))?( tax)?)$",
+			"ere": "^((sales)|(meals)|(total))?( tax))$",
 			"string": "tax"
 		}
 	},
