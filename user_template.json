@@ -1,0 +1,6 @@
+{
+	_id: "object_id"
+	name : "user name"
+	friends : ["user_id","user_id"]	
+	phone: 12314234143124
+}
