@@ -47,7 +47,7 @@
 
         <!-- OCR button -->
         <div id='camera-container'>
-          <img id='camera' src='img/camera.svg'>
+          <img id='camera' src='/static/img/camera.svg'>
           <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
           </form>
@@ -81,16 +81,17 @@
 </body>
 </html>
 
+
 <!-- Handlebars -->
 <script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
 
 <script id="friend_block_template" type="text/x-handlebars-template">
-{{#each friends}}
-<td class="friend_block">
-<img src="img/face.jpeg" width='50px' height='50px'>
-<div class="friend_name text-center">{{name}}</div>
-</td>
-{{/each}}
+  {{#each friends}}
+    <td class="friend_block">
+      <img src="/static/img/face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
+    </td>
+  {{/each}}
 </script>
 
 <script id='add_friends_template' type='text/x-handlebars-template'>
