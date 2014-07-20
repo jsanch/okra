@@ -8,6 +8,10 @@ import json
 
 DEBUG = True
 
+def debug(x):
+	if DEBUG:
+		print x
+
 class OkraParseException(Exception):
 	pass
 
@@ -18,17 +22,26 @@ images_location = os.path.join(os.path.dirname(parser_location), 'images/')
 config_file = open(os.path.join(parser_location, 'parser-config.json'), 'r')
 config = json.load(config_file, 'ascii')
 
-# print config
+reverse_map_file = open(os.path.join(parser_location, 'map.json'), 'r')
+# debug(reverse_map_file)
+reverse_map = json.load(reverse_map_file, 'ascii')
+
+character_map = {}
+
+for key in reverse_map:
+	# print key
+	for letter in reverse_map[key]:
+		# print letter
+		character_map[str(letter)] = str(key)
+
+print config
+print character_map
 
 ere_end_of_line_price = r'\$?[0-9]+[\.,][0-9]{2}$'
 
 string_total = 'total'
 string_subtotal = 'subtotal'
 image_folder = 'images'
-
-def debug(x):
-	if DEBUG:
-		print x
 
 def analyze_tab(tab_param):
 	debug(tab_param)
@@ -105,8 +118,24 @@ def analyze_tab(tab_param):
 
 	return tab
 
-def price_fix(x):
-	return Decimal(x.strip('$'))
+def price_fix(price_string_param):
+	final_price_string = ''
+	for letter in price_string_param:
+		print letter
+		if not letter in '0123456789.':
+			print 'not numeric letter'
+			if letter in character_map:
+				debug('letter in character map')
+				final_price_string += character_map[letter]
+		else:
+			print 'is numeric letter'
+			final_price_string += letter
+
+	# return Decimal(price_string_param.strip('$'))
+	debug('price fix')
+	debug(price_string_param)
+	debug(final_price_string)
+	return Decimal(final_price_string)
 
 def full_scan(image_name):
 	try:
@@ -175,6 +204,7 @@ def basic_scan(image_name):
 					min = match
 			tab_meta[min[1]] = raw_item['value']
 		else:
+			debug('SHOULD HAVE BEEN CUT OFF')
 			if cut_off_meta < 1:
 				tab_items.append(raw_item)
 
