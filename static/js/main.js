@@ -15,6 +15,8 @@ $(document).ready(function() {
   $('#js-accept-tab').on('click', function() {
     acceptInvite()
   });
+
+  var cookie = parseCookie(document.cookie);
 });
 
 /**
@@ -66,4 +68,15 @@ function acceptInvite() {
           $("#myform").replaceWith(data.form);
         }
     });
+}
+
+// Parse the cookie and return a cookie object
+function parseCookie(cookie) {
+  var cookie_obj = {};
+  var fields = cookie.split(';');
+  fields.forEach(function(string) {
+    var parts = string.split('=');
+    cookie_obj[parts[0].trim()] = parts[1].trim()
+  });
+  return cookie_obj;
 }
