@@ -47,7 +47,7 @@ def analyze_tab(tab_param):
 	debug(tab_param)
 
 	tab = {}
-	tab['items'] = {}
+	tab['items'] = []
 	tab['meta'] = {}
 
 	avail_total = config['mid_parsers']['total']['string'] in tab_param['tab_meta']
@@ -75,7 +75,8 @@ def analyze_tab(tab_param):
 
 	item_total = Decimal()
 	for item in tab_param['tab_items']:
-		tab['items'][item['description']] = price_fix(item['value'])
+		tab['items'].append({'name' : item['description'], 'price' : item['value']})
+		# tab['items'][item['description']] = price_fix(item['value'])
 		item_total += price_fix(item['value'])
 
 	print 'item_total', item_total, type(item_total)

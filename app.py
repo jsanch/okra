@@ -274,24 +274,34 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        # thr = Thread(target = async_parse, args = [filename])
-        # thr.start()
-        tabs = scan.okraparser.full_scan(filename)
-        print tabs
+        parsed_tabs = scan.okraparser.full_scan(filename)
+        print parsed_tabs
         db = get_db_conection("okra")   #get conncection
-        # tabs = get_db_collection('tabs')#get tabs collection
 
-        tab_id = request.args.get('tab_id', '')
-        # le_tab = tabs.find_one({"id" : tab_id})
+        insert_tabs = {}
+        insert_tabs['total'] = float(parsed_tabs['meta']['total'])
+        insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
+        insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
+        insert_tabs['tip'] = float(0)
 
-        #whatever stevens json collection is called
-        bill_json = get_db_collection('bill_json')
+        insert_tabs['group'] = {}
+        insert_tabs['items'] = {}
 
-        #Insert bill items to tab
-        le_tab['items_prices'] = bill_json['tab_items']
-        le_tab['total'] = bill_json['tab_meta']
+        index_id = 0
+        for parsed_item in parsed_tabs['items']:
+            insert_tabs['items'][str(index_id)] = parsed_item
+            index_id += 1
 
-        # return 'uploaded - async analyzing'
+        print insert_tabs
+
+        okratabs = get_db_collection('tabs')
+
+        # okratabs = db.tabs
+        tab_id = okratabs.insert(insert_tabs)
+
+        # tab_id = db.
+        # return str(insert_tabs)
+        return str({'tab_id' : tab_id})
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
 
