@@ -9,6 +9,8 @@ var db_poll_interval;
 var user_id = 1;  // get from session
 var _tab_id = '53cc34f9d2a57d636d082146';
 
+var _cookie = document.cookie;
+
 $(function() {
 
   // ---------------------- Templating ----------------------
@@ -391,9 +393,8 @@ $(function() {
     });
   });
 
-  $(document).on('click', '#make_payment_button', function(){
-    alert("asdfas");
-    window.location.href = "http://app.grasscat.org/venmo_login";
+  $('#make_payment_button').on('click', function(){
+    window.location.replace("http://app.grasscat.org/venmo_login");
   });
 });
 
