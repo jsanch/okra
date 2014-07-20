@@ -23,7 +23,9 @@ app.secret_key = APP_SECRET
 def landing():
    return render_template('landing_page/landing_page.html')
 
-
+@app.route('/new_tab')
+def new_tab_view():
+    return render_template('new_tab_view/index.html')
 
 
 ################################ DB ####################################
