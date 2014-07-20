@@ -22,7 +22,7 @@ $(document).ready(function() {
 */
 function pollForInvite(){
   setInterval(function() {
-    $.get('http://app.grasscat.org:5000/ajax/poll_for_invite', {user_id:user_id})
+    $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
       // check for tab invite
       if (data['tab']) {
@@ -31,7 +31,7 @@ function pollForInvite(){
         console.log('no new tabs');
       }
     });
-  }, 5000);
+  }, 500);
 }
 
 /**
@@ -56,7 +56,7 @@ function acceptInvite() {
     tab_id : theTab['tab_id']
   }
   // post to server that tab was accepted
-  $.post('http://app.grasscat.org:5000/ajax/accepttab', acceptedTab)
+  $.post('/accept', acceptedTab)
     .done(function(data) {
         if (data.redirect) {
           // data.redirect contains the string URL to redirect to the accepted tab page
