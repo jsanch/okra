@@ -40,26 +40,29 @@
 
     <!-- Creating a new tab -->
     <section id='new-tab-container'>
-      <h1>Create a New Tab</h1>
-      <label>
-        {{user_name}}'s Tab
-      </label>
+      <h1 id='new_tab_name'></h1>
+      <div><!-- user name here --></div>
+
+      <!-- OCR button -->
+      <div id='camera-container'>
+        <img id='camera' src='img/camera.svg'>
+        <input type='file' id='take-picture' accept='image/*;capture=camera'>
+
+      </div>
 
       <!-- Friends in tab -->
       <table class="friend_group content_container">
         <tbody>
           <tr class="friend_group_row">
             <td class="button_cell">
-              <button id="open_add_friends" class="btn btn-primary butt">+</button>
+              <button id="open_add_friends" class="btn btn-primary">Add Friends</button>
             </td>
           </tr>
         </tbody>
       </table>
 
-      <!-- OCR button -->
-      <div id='camera-container'>
-        <img id='camera'src='img/camera.svg'>
-      </div>
+      <!-- Create Tab button -->
+      <button type='button' id='js-create-tab' class='btn btn-lg'>Create Tab</button>
     </section>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -71,7 +74,10 @@
   </body>
 </html>
 
+
 <!-- Handlebars -->
+<script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
+
 <script id="friend_block_template" type="text/x-handlebars-template">
   {{#each friends}}
     <td class="friend_block">

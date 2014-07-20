@@ -1,7 +1,12 @@
 $(document).ready(function() {
   var user_id = 999;
+  var user_name = 'Jesus';
   // set to hold friends to add to tab
   var friendsToAdd = {};
+
+  // fill in tab name
+  var NewTabTemplate = Handlebars.compile($('#new_tab_template').html());
+  $('#new_tab_name').html(NewTabTemplate({user_name : user_name}) + "'s Tab");
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
@@ -11,6 +16,16 @@ $(document).ready(function() {
   // Bind confirm add friends button
   $('#add_friends_button').on('click', function() {
     updateAdded();
+  });
+
+  // Bind take photo
+  $('#camera').on('click', function() {
+    $('#take-picture').click();
+  });
+
+  // Bind create tab button
+  $('#create_tab_button').on('click', function() {
+    createTab();
   });
 
   // get friends and populate the add friends modal
@@ -67,5 +82,21 @@ $(document).ready(function() {
     $('.friend_group_row .friend_block').remove();
     console.log(friendsToAdd);
     $('.friend_group_row').prepend(FriendBlockTemplate({ friends: friendsToAdd }));
+  }
+
+  // grab the necessary data and post to insert into db
+  function createTab() {
+    var newTab = {
+      group : {},
+      items : {},
+      sub_total : 0,
+      tax : 0,
+      tip : 0,
+      total: 0
+    };
+    $.post('http://app.grasscat.org:5000/ajax/create_tab', {tab: newTab})
+    .done(function(data) {
+      window.location.href = data.redirect;
+    });
   }
 });
