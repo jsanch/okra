@@ -103,7 +103,61 @@ def create_tab():
     else:
         return 'error'
 
-# GET TAB
+# UPDATE TAB
+@app.route('/update_tab', methods=['POST', 'GET'])
+def update_tab():
+    '''Updates tab with JSON sent by client '''
+    db = get_db_connection("okra") #get conncection
+    # tabs = db.tabs #get tabs collection
+    tabs = get_db_collection('tabs')
+    # invites = db.invites #get invites collection
+
+    if request.method == 'POST':
+        #Get JSON
+        data = request.get_json(True)
+
+        #Get wanted data
+        tab_title = data['title']
+        tab_group = data['group'] #array of user ids
+        tab_items = data['items']
+        tab_subtotal = data['subtotal']
+        tab_total = data['total']
+        tab_tip = data['tip']
+        tab_tax = data['tax']
+        tab_paid_users = data['paid_users']
+        tab_paid = data['paid']
+
+        # prepare data for db 
+        tab = {
+                "title" : tab_title,
+                "group" : tab_group,
+                "items" : tab_items,
+                "subtotal" : tab_subtotal,
+                "total" : tab_total,
+                "tip" : tab_tip,
+                "tax" : tab_tax,
+                "paid_users" : tab_paid_users,
+                "paid" : tab_paid,    
+            }
+        #get desired  tab
+        tab_id = request.args.get('tab_id', '')
+        le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+
+        #insert to db 
+        tab_id = tabs.insert(tab)
+        print str(tab_id)
+        # create invites from group.
+        create_invites(tab_group, tab_id)
+
+        # return msg
+        print 'Inserted tab with tab_id: ' + str(tabs.find_one({"_id":tab_id})['_id'])
+        return '{ "_id":' + str(tabs.find_one({"_id":tab_id})['_id']) + '}'
+    else:
+        return 'error'
+
+
+
+# get TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
     tabs = get_db_collection('tabs')
@@ -261,7 +315,7 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite_id = invites.insert(invite)
 
 #poll invite
-@app.route('/poll_for_invite')
+@app.route('/poll_for_invite2')
 def poll_for_invite():
     '''Returns tab_id if the passed user_id has an invite '''
     #get db collection
@@ -303,10 +357,13 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
+        
+        # OCR PARSING
         parsed_tabs = scan.okraparser.full_scan(filename)
         print parsed_tabs
+       
+        #  CREATE NEW TAB WITH RECEIPT INFO
         okratabs = get_db_collection("tabs")   #get conncection
-
         insert_tabs = {}
         insert_tabs['total'] = float(parsed_tabs['meta']['total'])
         insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
@@ -325,24 +382,12 @@ def upload():
 
         print insert_tabs
 
-        # okratabs = db.tabs
+        #INSERT TAB
         tab_id = okratabs.insert(insert_tabs)
 
-        # tab_id = db.
-        # return str(insert_tabs)
         return str({'tab_id' : tab_id})
-        # return redirect(url_for('uploaded_file',
-                                # filename=filename))
 
 
-
-# This route is expecting a parameter containing the name
-# of a file. Then it will locate that file on the upload
-# directory and show it on the browser, so if the user uploads
-# an image, that image is going to be show after the upload
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 ########################################################################
 
