@@ -47,7 +47,7 @@ def analyze_tab(tab_param):
 	debug(tab_param)
 
 	tab = {}
-	tab['items'] = {}
+	tab['items'] = []
 	tab['meta'] = {}
 
 	avail_total = config['mid_parsers']['total']['string'] in tab_param['tab_meta']
@@ -75,7 +75,8 @@ def analyze_tab(tab_param):
 
 	item_total = Decimal()
 	for item in tab_param['tab_items']:
-		tab['items'][item['description']] = price_fix(item['value'])
+		tab['items'].append({'name' : item['description'], 'price' : item['value']})
+		# tab['items'][item['description']] = price_fix(item['value'])
 		item_total += price_fix(item['value'])
 
 	print 'item_total', item_total, type(item_total)
@@ -185,12 +186,13 @@ def basic_scan(image_name):
 
 	for raw_item in raw_tab_data:
 		raw_item_description = raw_item['description']
+		raw_item_value = raw_item['value']
 		matches_to_compare = []
 		for parser_key in config['mid_parsers']:
 			tre_matcher = tre.compile(config['mid_parsers'][parser_key]['ere'], tre.EXTENDED)
 			tre_match = tre_matcher.search(raw_item_description, tre_fuzzyness)
 			debug('xxxxxxxxxxxxxxxxxxxxxxxxxx')
-			debug(raw_item_description + ' XXX ' + config['mid_parsers'][parser_key]['ere'])
+			debug(raw_item_description + ' XXX ' + config['mid_parsers'][parser_key]['ere'] + ' XXX ' + raw_item_value)
 			if tre_match:
 				debug('match')
 				matches_to_compare.append((tre_match, config['mid_parsers'][parser_key]['string']))
@@ -202,7 +204,7 @@ def basic_scan(image_name):
 			for match in matches_to_compare:
 				if match[0].cost < min[0].cost:
 					min = match
-			tab_meta[min[1]] = raw_item['value']
+			tab_meta[min[1]] = raw_item_value
 		else:
 			debug('SHOULD HAVE BEEN CUT OFF')
 			if cut_off_meta < 1:

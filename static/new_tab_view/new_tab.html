@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Tab</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <!-- Add Friends to tab modal -->
+    <div class="modal fade" id="js-add-friends-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">Add a Friend to the Tab</h4>
+          </div>
+          <div id='add_friends_body' class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button id='add_friends_button' type="button" class="btn btn-default" data-dismiss="modal">Confirm</button>
+          </div>
+        </div>
+        <div class="alert alert-success" role="alert" hidden></div>
+      </div>
+    </div>
+
+    <!-- Creating a new tab -->
+    <section id='new-tab-container'>
+      <h1 id='new_tab_name'></h1>
+      <div><!-- user name here --></div>
+
+      <!-- OCR button -->
+      <div id='camera-container'>
+        <img id='camera' src='img/camera.svg'>
+        <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
+          <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
+          <!-- <input type="submit" value="Upload" action="http://app.grasscat.org/upload"> -->
+        </form>
+
+
+      </div>
+
+      <!-- Friends in tab -->
+      <table class="friend_group content_container">
+        <tbody>
+          <tr class="friend_group_row">
+            <td class="button_cell">
+              <button id="open_add_friends" class="btn btn-primary">Add Friends</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Create Tab button -->
+      <button type='button' id='js-create-tab' class='btn btn-lg'>Create Tab</button>
+    </section>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src='js/handlebars-v1.3.0.js'></script>
+    <script src='js/new_tab.js'></script>
+    <script src='http://malsup.github.com/min/jquery.form.min.js'></script>
+  </body>
+</html>
+
+
+<!-- Upload shit -->
+<script>
+  $('#uploadform').submit(function(e){
+    e.preventDefault();
+    // Prints loading a bunch of time
+    var loading = setInterval(function(){console.log('LOADING');}, 200);    
+
+    $(this).ajaxSubmit({
+      success: function(responseText, statusText, xhr, $form){
+        console.log(responseText);
+
+        clearInterval(loading);
+      }
+    });
+
+  });
+  $('#js-create-tab').click(function(){
+    console.log('asdfadsf');
+    $('#uploadform').submit();
+  });
+
+</script>
+
+
+<!-- Handlebars -->
+<script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
+
+<script id="friend_block_template" type="text/x-handlebars-template">
+  {{#each friends}}
+    <td class="friend_block">
+      <img src="img/face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
+    </td>
+  {{/each}}
+</script>
+
+          <!-- <div style="background-image: url('img/face.jpeg'); width='50px'; height='50px'; border-radius: '25px';"></div> -->
+
+<script id='add_friends_template' type='text/x-handlebars-template'>
+  <table>
+    {{#each friends}}
+      <div class='list-group friend_block'>
+        <a href='#' class='list-group-item js-add-friend'>
+          <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
+          <span class='glyphicon glyphicon-ok-circle'></span>
+        </a>
+      </div>
+    {{/each}}
+  </table>
+</script>
