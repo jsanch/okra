@@ -10,7 +10,6 @@ from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
-# import scan.okraparser.OkraParseException
 
 app = Flask(__name__, static_url_path = '')
 
@@ -31,11 +30,11 @@ def new_tab_view():
 ################################ DB ####################################
 
 
-def get_db_conection(db):
+def get_db_connection(db):
     client = MongoClient()
     return client[db]
 def get_db_collection(collection):
-    return get_db_conection('okra').okra[collection]
+    return get_db_connection('okra').okra[collection]
 
 ########################################################################
 
@@ -45,14 +44,13 @@ def get_db_collection(collection):
 # CREATE TAB
 @app.route('/create_tab', methods=['POST', 'GET'])
 def create_tab():
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     # tabs = db.tabs #get tabs collection
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
 
     if request.method == 'POST':
         #MUST VALIDATE
-        tab_id = request.form['id']
         tab_group = request.form['group']
         tab_items = dumps(request.form['items']) #convert to json
 
@@ -64,7 +62,6 @@ def create_tab():
 
         #prepare for db entry
         tab = {
-                'id' : request.form['id'],
                 'title' : request.form['title'],
                 'group' : request.form['group'], #array of user ids
                 'items' : tab_items,
@@ -87,15 +84,11 @@ def create_tab():
 # GET TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
-    '''Returns tab object in json for requested tab_id'''
-    db = get_db_conection("okra") #get conncection
-    tabs = db.tabs #get tabs collection
+    tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
-
-    le_tab = tabs.find_one({"id" : tab_id})
-    json1 = dumps(le_tab)
-
-    return json1
+    le_tab = tabs.find_one({"_id" : tab_id})
+    json = json.dumps(le_tab)
+    return json
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
@@ -114,7 +107,7 @@ def update_tab_items():
 @app.route('/update_tab_bill', methods=['POST'])
 def update_tab_bill(bill_json):
     '''Updates tab to add each bill items description and value'''
-    db = get_db_conection("okra")   #get conncection
+    db = get_db_connection("okra")   #get conncection
     tabs = get_db_collection('tabs')#get tabs collection
 
     tab_id = request.args.get('tab_id', '')
@@ -131,51 +124,51 @@ def update_tab_bill(bill_json):
 
 
 ########################################################################
+=======
+>>>>>>> 5112a34733697429d484063ceb5dfb9b90432d21
 
 
 
+##################################################################
 ############################## USERS   ###########################
+##################################################################
 @app.route('/add_user' , methods=['POST', 'GET'])
 def add_user():
     users = get_db_collection('users')
     if request.method == 'POST':
-        user_id = request.form['id']
         user_phone = request.form['phone']
         user_name = request.form['name']
         user_friends = request.form['friends'] #list
 
         user = {
-                'id' : user_id,
                 'phone' : user_phone,
                 'name' : user_name,
                 'friends' : user_friends
         }
-        users.insert(user)
+        user_mongo_id = users.insert(user)
 
-        return "registerd user: " + users.find_one({"id":user_id})['id']
+        return json.dumps({'user_id': user_mongo_id})
 
 #GET USER
 @app.route('/get_user')
 def get_user():
-    ''' gets a user_id and returns json info of user '''
-    users = get_db_collection('users')
+     # gets a user_id and returns json info of user
+    users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    json = dumps(users.find_one({"id":user_id}))
-    print 'hello'
-    return  json
+    user = users_collection.find_one({"_id":user_id}))
+    return json.dumps(user)
 
 #GET FRIENDS
 @app.route('/get_friends')
 def get_friends():
-    ''' gets the list of friends with their ids and names for a given user id '''
-    users = get_db_collection('users')
+     # gets the list of friends with their ids and names for a given user id 
+    users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users.find_one({'id':user_id})
+    user = users_collection.find_one({'_id':user_id})
     friend_ids = user['friends']
     friends = {}
     for friend_id in friend_ids:
-        name = users.find_one({'id':friend_id})['name']
-        friends[friend_id] = {name:'name'}
+        friends[friend_id] = users_collection.find_one({'_id':friend_id})
     return friends
 
 ########################################################################
@@ -241,11 +234,6 @@ def poll_for_invite():
         return inv['tab_id']
 
 
-
-########################################################################
-
-
-
 ############################# UPLAOD IMAGE #############################
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'images/'
@@ -279,37 +267,38 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        thr = Thread(target = async_parse, args = [filename])
-        thr.start()
-        return 'uploaded - async analyzing'
+        parsed_tabs = scan.okraparser.full_scan(filename)
+        print parsed_tabs
+        okratabs = get_db_collection("tabs")   #get conncection
+
+        insert_tabs = {}
+        insert_tabs['total'] = float(parsed_tabs['meta']['total'])
+        insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
+        insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
+        insert_tabs['tip'] = float(0)
+
+        insert_tabs['group'] = {}
+        insert_tabs['items'] = {}
+        insert_tabs['paid_users'] = []
+        insert_tabs['paid'] = False
+
+        index_id = 0
+        for parsed_item in parsed_tabs['items']:
+            insert_tabs['items'][str(index_id)] = parsed_item
+            index_id += 1
+
+        print insert_tabs
+
+        # okratabs = db.tabs
+        tab_id = okratabs.insert(insert_tabs)
+
+        # tab_id = db.
+        # return str(insert_tabs)
+        return str({'tab_id' : tab_id})
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
 
-def async_parse(filename):
-    tabs = scan.okraparser.full_scan(filename)
-    print tabs
-    db = get_db_conection("okra")   #get conncection
-    # tabs = get_db_collection('tabs')#get tabs collection
 
-    tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find_one({"id" : tab_id})
-
-    #whatever stevens json collection is called
-    bill_json = get_db_collection('bill_json')
-
-    #Insert bill items to tab
-    le_tab['items_prices'] = bill_json['tab_items']
-    le_tab['total'] = bill_json['tab_meta']
-
-
-    
-
-# def send_email(subject, sender, recipients, text_body, html_body):
-#     msg = Message(subject, sender = sender, recipients = recipients)
-#     msg.body = text_body
-#     msg.html = html_body
-#     thr = Thread(target = send_async_email, args = [msg])
-#     thr.start()
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
@@ -340,7 +329,7 @@ def index():
 @app.route('/master_charge')
 def master_charge(master):
   if session.get('venmo_token'):
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     users = db.users #get tabs collection
 
     for user in users:
@@ -377,14 +366,4 @@ def oauth_authorized():
 
     # phone_number = request.args.get('phone_number', '')
     # print phone_number
-    # user = {
-    #         'phone_number' :   ''
-    #     }
-
-    #return  'fuck you %s' % session['venmo_token']
-    return 'You were signed in as %s' % user['username']
-#########################################################################
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    # user
