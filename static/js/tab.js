@@ -391,6 +391,10 @@ $(function() {
     });
   });
 
+  $(document).on('click', '#make_payment_button', function(){
+    alert("asdfas");
+    window.location.href = "http://app.grasscat.org/venmo_login";
+  });
 });
 
 // ---------------------- Prototype ----------------------

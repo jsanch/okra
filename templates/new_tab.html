@@ -1,3 +1,4 @@
+{% raw %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,8 @@
   <title>New Tab</title>
 
   <!-- Bootstrap -->
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/style.css" rel="stylesheet">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,9 +39,7 @@
         </div>
       </div>
       <section class='main-content'>
-   <!--    <header class='main-header'>
-        <span class='vertical'><h1 class='page-header'>Okra</h1></span>
-      </header> -->
+
       <!-- Creating a new tab -->
       <section id='new-tab-container'>
         <h1 id='new_tab_name'></h1>
@@ -48,14 +47,12 @@
 
         <!-- OCR button -->
         <div id='camera-container'>
-          <img id='camera' src='img/camera.svg'>
+          <img id='camera' src='/static/img/camera.svg'>
           <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
-            <!-- <input type="submit" value="Upload" action="http://app.grasscat.org/upload"> -->
           </form>
-
-
         </div>
+        <img src="about:blank" alt="" id="show-picture">
 
         <!-- Friends in tab -->
         <table class="friend_group content_container">
@@ -68,69 +65,45 @@
           </tbody>
         </table>
       </br>
+
       <!-- Create Tab button -->
-      <button type='button' id='js-create-tab' class='btn btn-block btn-lg'>Create Tab</button>
+      <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
     </section>
   </section>
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="js/bootstrap.min.js"></script>
-  <script src='js/handlebars-v1.3.0.js'></script>
-  <script src='js/new_tab.js'></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src='/static/js/handlebars-v1.3.0.js'></script>
+  <script src='/static/js/new_tab.js'></script>
   <script src='http://malsup.github.com/min/jquery.form.min.js'></script>
 </body>
 </html>
-
-
-<!-- Upload shit -->
-<script>
-$('#uploadform').submit(function(e){
-  e.preventDefault();
-    // Prints loading a bunch of time
-    var loading = setInterval(function(){console.log('LOADING');}, 200);    
-
-    $(this).ajaxSubmit({
-      success: function(responseText, statusText, xhr, $form){
-        console.log(responseText);
-
-        clearInterval(loading);
-      }
-    });
-
-  });
-$('#js-create-tab').click(function(){
-  console.log('asdfadsf');
-  $('#uploadform').submit();
-});
-
-</script>
 
 
 <!-- Handlebars -->
 <script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
 
 <script id="friend_block_template" type="text/x-handlebars-template">
-{{#each friends}}
-<td class="friend_block">
-<img src="img/face.jpeg" width='50px' height='50px'>
-<div class="friend_name text-center">{{name}}</div>
-</td>
-{{/each}}
+  {{#each friends}}
+    <td class="friend_block">
+      <img src="/static/img/face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
+    </td>
+  {{/each}}
 </script>
-
-<!-- <div style="background-image: url('img/face.jpeg'); width='50px'; height='50px'; border-radius: '25px';"></div> -->
 
 <script id='add_friends_template' type='text/x-handlebars-template'>
-<table>
-{{#each friends}}
-<div class='list-group friend_block'>
-<a href='#' class='list-group-item js-add-friend'>
-<span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
-<span class='glyphicon glyphicon-ok-circle'></span>
-</a>
-</div>
-{{/each}}
-</table>
+  <table>
+    {{#each friends}}
+      <div class='list-group friend_block'>
+        <a href='#' class='list-group-item js-add-friend'>
+          <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
+          <span class='glyphicon glyphicon-ok-circle'></span>
+        </a>
+      </div>
+    {{/each}}
+  </table>
 </script>
+{% endraw %}

@@ -18,7 +18,7 @@ $(document).ready(function() {
     updateAdded();
   });
 
-  // Bind take photo
+  // Bind take photo button
   $('#camera').on('click', function() {
     $('#take-picture').click();
   });
@@ -26,6 +26,79 @@ $(document).ready(function() {
   // Bind create tab button
   $('#create_tab_button').on('click', function() {
     createTab();
+  });
+
+  // Bind getting the picture file
+  var takePicture = document.querySelector("#take-picture");
+  var showPicture = document.querySelector("#show-picture");
+  takePicture.onchange = function (event) {
+    // Get a reference to the taken picture or chosen file
+    var files = event.target.files,
+        file;
+    if (files && files.length > 0) {
+      file = files[0];
+      try {
+        // Get window.URL object
+        var URL = window.URL || window.webkitURL;
+        // Create ObjectURL
+        var imgURL = URL.createObjectURL(file);
+        // Set img src to ObjectURL
+        showPicture.src = imgURL;
+        // For performance reasons, revoke used ObjectURLs
+        URL.revokeObjectURL(imgURL);
+      }
+      catch(e) {
+        try {
+          // Fallback if createObjectURL is not supported
+          var fileReader = new FileReader();
+          fileReader.onload = function (event) {
+              showPicture.src = event.target.result;
+          };
+          fileReader.readAsDataURL(file);
+        }
+        catch (e) {
+          var error = document.querySelector("#error");
+          if (error) {
+              error.innerHTML = "Neither createObjectURL or FileReader are supported";
+          }
+        }
+      }
+    }
+  };
+
+  // grab the necessary data and post to insert into db
+  function createTab() {
+    var newTab = {
+      group : {},
+      items : {},
+      sub_total : 0,
+      tax : 0,
+      tip : 0,
+      total: 0
+    };
+    $.post('http://app.grasscat.org:5000/ajax/create_tab', {tab: newTab})
+    .done(function(data) {
+      window.location.href = data.redirect;
+    });
+  }
+
+  $('#uploadform').submit(function(e){
+    e.preventDefault();
+      // Prints loading a bunch of time
+      var loading = setInterval(function(){console.log('LOADING');}, 200);
+
+      $(this).ajaxSubmit({
+        success: function(responseText, statusText, xhr, $form){
+          console.log(responseText);
+
+          clearInterval(loading);
+        }
+      });
+
+    });
+  $('#js-create-tab').click(function(){
+    console.log('asdfadsf');
+    $('#uploadform').submit();
   });
 
   // get friends and populate the add friends modal
@@ -84,19 +157,4 @@ $(document).ready(function() {
     $('.friend_group_row').prepend(FriendBlockTemplate({ friends: friendsToAdd }));
   }
 
-  // grab the necessary data and post to insert into db
-  function createTab() {
-    var newTab = {
-      group : {},
-      items : {},
-      sub_total : 0,
-      tax : 0,
-      tip : 0,
-      total: 0
-    };
-    $.post('http://app.grasscat.org:5000/ajax/create_tab', {tab: newTab})
-    .done(function(data) {
-      window.location.href = data.redirect;
-    });
-  }
 });
