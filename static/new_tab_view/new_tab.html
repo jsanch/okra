@@ -46,7 +46,11 @@
       <!-- OCR button -->
       <div id='camera-container'>
         <img id='camera' src='img/camera.svg'>
-        <input type='file' id='take-picture' accept='image/*;capture=camera'>
+        <form action="http://app.grasscat.org:8080/upload" method="post" enctype="multipart/form-data">
+          <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
+          <input type="submit" value="Upload" action="http://app.grasscat.org/upload">
+        </form>
+
 
       </div>
 

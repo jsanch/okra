@@ -233,11 +233,6 @@ def poll_for_invite():
         return inv['tab_id']
 
 
-
-########################################################################
-
-
-
 ############################# UPLAOD IMAGE #############################
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'images/'
@@ -271,27 +266,42 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        thr = Thread(target = async_parse, args = [filename])
-        thr.start()
-        return 'uploaded - async analyzing'
+        # thr = Thread(target = async_parse, args = [filename])
+        # thr.start()
+        tabs = scan.okraparser.full_scan(filename)
+        print tabs
+        db = get_db_conection("okra")   #get conncection
+        # tabs = get_db_collection('tabs')#get tabs collection
+
+        tab_id = request.args.get('tab_id', '')
+        # le_tab = tabs.find_one({"id" : tab_id})
+
+        #whatever stevens json collection is called
+        bill_json = get_db_collection('bill_json')
+
+        #Insert bill items to tab
+        le_tab['items_prices'] = bill_json['tab_items']
+        le_tab['total'] = bill_json['tab_meta']
+
+        # return 'uploaded - async analyzing'
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
 
-def async_parse(filename):
-    tabs = scan.okraparser.full_scan(filename)
-    print tabs
-    db = get_db_conection("okra")   #get conncection
-    # tabs = get_db_collection('tabs')#get tabs collection
+# def async_parse(filename):
+#     tabs = scan.okraparser.full_scan(filename)
+#     print tabs
+#     db = get_db_conection("okra")   #get conncection
+#     # tabs = get_db_collection('tabs')#get tabs collection
 
-    tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find_one({"id" : tab_id})
+#     tab_id = request.args.get('tab_id', '')
+#     le_tab = tabs.find_one({"id" : tab_id})
 
-    #whatever stevens json collection is called
-    bill_json = get_db_collection('bill_json')
+#     #whatever stevens json collection is called
+#     bill_json = get_db_collection('bill_json')
 
-    #Insert bill items to tab
-    le_tab['items_prices'] = bill_json['tab_items']
-    le_tab['total'] = bill_json['tab_meta']
+#     #Insert bill items to tab
+#     le_tab['items_prices'] = bill_json['tab_items']
+#     le_tab['total'] = bill_json['tab_meta']
 
 
     

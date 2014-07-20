@@ -28,6 +28,16 @@ $(document).ready(function() {
     createTab();
   });
 
+  var takePicture = document.querySelector("#take-picture");
+  takePicture.onchange = function (event) {
+    // Get a reference to the taken picture or chosen file
+    var files = event.target.files,
+        file;
+    if (files && files.length > 0) {
+        file = files[0];
+    }
+  };
+
   // get friends and populate the add friends modal
   function openAddFriends(user_id) {
     var friends_list = getFriends(user_id);
