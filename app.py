@@ -30,11 +30,11 @@ def new_tab_view():
 ################################ DB ####################################
 
 
-def get_db_conection(db):
+def get_db_connection(db):
     client = MongoClient()
     return client[db]
 def get_db_collection(collection):
-    return get_db_conection('okra').okra[collection]
+    return get_db_connection('okra').okra[collection]
 
 ########################################################################
 
@@ -44,7 +44,7 @@ def get_db_collection(collection):
 # CREATE TAB
 @app.route('/create_tab', methods=['POST', 'GET'])
 def create_tab():
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     # tabs = db.tabs #get tabs collection
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
@@ -84,15 +84,48 @@ def create_tab():
 # GET TAB
 @app.route('/get_tab', methods=['GET'])
 def get_tab():
-    # Returns tab object in json for requested tab_id
     tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
-
     le_tab = tabs.find_one({"_id" : tab_id})
-    json1 = dumps(le_tab)
+    json = json.dumps(le_tab)
+    return json
 
-    return json1
+# UPDATE TAB ITEMS
+@app.route('/update_tab_items', methods=['POST'])
+def update_tab_items():
+    ''' updates items in a tab '''
+    tabs = get_db_collection('tabs')
+    tab_id = request.form['tab_id']
+    le_tab = tabs.find_one({"id" : tab_id})
+    if (le_tab == None):
+        return 'Tab not found'
+    else:
+        print   le_tab['items'][1]
+        return 'jello'
 
+# UPDATE TAB BILL
+@app.route('/update_tab_bill', methods=['POST'])
+def update_tab_bill(bill_json):
+    '''Updates tab to add each bill items description and value'''
+    db = get_db_connection("okra")   #get conncection
+    tabs = get_db_collection('tabs')#get tabs collection
+
+    tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one({"id" : tab_id})
+
+    #whatever stevens json collection is called
+    bill_json = get_db_collection('bill_json')
+
+    #Insert bill items to tab
+    le_tab['items_prices'] = bill_json['tab_items']
+    le_tab['total'] = bill_json['tab_meta']
+
+    tabs.insert(le_tab)
+
+
+########################################################################
+=======
+>>>>>>> 5112a34733697429d484063ceb5dfb9b90432d21
 
 
 
@@ -236,7 +269,7 @@ def upload():
         # will basicaly show on the browser the uploaded file
         parsed_tabs = scan.okraparser.full_scan(filename)
         print parsed_tabs
-        db = get_db_conection("okra")   #get conncection
+        okratabs = get_db_collection("tabs")   #get conncection
 
         insert_tabs = {}
         insert_tabs['total'] = float(parsed_tabs['meta']['total'])
@@ -256,8 +289,6 @@ def upload():
 
         print insert_tabs
 
-        okratabs = get_db_collection('tabs')
-
         # okratabs = db.tabs
         tab_id = okratabs.insert(insert_tabs)
 
@@ -266,6 +297,7 @@ def upload():
         return str({'tab_id' : tab_id})
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
+
 
 
 # This route is expecting a parameter containing the name
@@ -297,7 +329,7 @@ def index():
 @app.route('/master_charge')
 def master_charge(master):
   if session.get('venmo_token'):
-    db = get_db_conection("okra") #get conncection
+    db = get_db_connection("okra") #get conncection
     users = db.users #get tabs collection
 
     for user in users:
@@ -334,14 +366,4 @@ def oauth_authorized():
 
     # phone_number = request.args.get('phone_number', '')
     # print phone_number
-    # user = {
-    #         'phone_number' :   ''
-    #     }
-
-    #return  'fuck you %s' % session['venmo_token']
-    return 'You were signed in as %s' % user['username']
-#########################################################################
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    # user
