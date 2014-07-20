@@ -19,12 +19,20 @@ app.secret_key = APP_SECRET
 
 #landing page
 @app.route('/')
-def landing():
+def index():
    return render_template('landing_page/landing_page.html')
 
 @app.route('/new_tab')
 def new_tab_view():
-    return render_template('new_tab_view/index.html')
+    return render_template('new_tab.html')
+
+@app.route('/tab')
+def tab_view():
+    return render_template('tab.html')
+
+@app.route('/start')
+def start():
+    return render_template('index.html')
 
 
 ################################ DB ####################################
@@ -87,8 +95,8 @@ def get_tab():
     tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
     le_tab = tabs.find_one({"_id" : tab_id})
-    json = json.dumps(le_tab)
-    return json
+    tab_json = json.dumps(le_tab)
+    return tab_json
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
@@ -123,12 +131,6 @@ def update_tab_bill(bill_json):
     tabs.insert(le_tab)
 
 
-########################################################################
-=======
->>>>>>> 5112a34733697429d484063ceb5dfb9b90432d21
-
-
-
 ##################################################################
 ############################## USERS   ###########################
 ##################################################################
@@ -155,7 +157,7 @@ def get_user():
      # gets a user_id and returns json info of user
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users_collection.find_one({"_id":user_id}))
+    user = users_collection.find_one({"_id":user_id})
     return json.dumps(user)
 
 #GET FRIENDS
@@ -315,7 +317,7 @@ def uploaded_file(filename):
 
 ### init
 @app.route('/venmo_login')
-def index():
+def venmo_login():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
@@ -342,8 +344,6 @@ def master_charge(master):
 # def add_venmo_user(phone_number,display_name, token):
 
 
-
-
 ###### OAuth
 
 @app.route('/oauth-authorized')
@@ -363,7 +363,28 @@ def oauth_authorized():
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
 
+    ''' Create new user with venmo user_id and token '''
+    db = get_db_conection("okra")   #get conncection
+    users = get_db_collection('users')    
+    # users.insert({ 
+    #             user_id: session['venmo_username'],
+    #             name: ,
+    #             friends: ,
+    #             phone_number: ,
+    #             token: session['venmo_token']
+    #             })
 
-    # phone_number = request.args.get('phone_number', '')
+    # # phone_number = request.args.get('phone_number', '')
     # print phone_number
-    # user
+    # user = {
+    #         'phone_number' :   ''
+    #     }
+
+    #return  'fuck you %s' % session['venmo_token']
+
+    return 'You were signed in as %s' % session['venmo_token']
+#########################################################################
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=80)
