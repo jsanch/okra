@@ -12,10 +12,16 @@ import requests
 import scan.okraparser
 # import scan.okraparser.OkraParseException
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = '')
 
 app.secret_key = APP_SECRET
 
+########################## VIEWS #######################################
+
+
+@app.route('/landing')
+def landing():
+   return render_template('landing_page/landing_page.html')
 
 
 
