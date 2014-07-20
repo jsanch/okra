@@ -18,8 +18,8 @@ app.secret_key = APP_SECRET
 
 ########################## VIEWS #######################################
 
-
-@app.route('/landing')
+#landing page
+@app.route('/')
 def landing():
    return render_template('landing_page/landing_page.html')
 
@@ -325,7 +325,7 @@ def uploaded_file(filename):
 ############################## VENMO ###################################
 
 ### init
-@app.route('/')
+@app.route('/venmo_login')
 def index():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
