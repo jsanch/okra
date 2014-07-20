@@ -262,24 +262,32 @@ def img_upload():
 @app.route('/upload', methods=['POST'])
 def upload():
 
-    def async_parse_and_save(filename):
-        with app.app_context():
-            # tabs = scan.okraparser.full_scan(filename)
-            from flask import request
-            tabs = scan.okraparser.full_scan(filename)
-            print tabs
-            db = get_db_conection("okra")   #get conncection
-            # tabs = get_db_collection('tabs')#get tabs collection
+    # def async_parse_and_save(filename):
+    #     with app.app_context():
+    #         # tabs = scan.okraparser.full_scan(filename)
+    #         from flask import request
 
-            tab_id = request.args.get('tab_id', '')
-            le_tab = tabs.find_one({"id" : tab_id})
+    #         try:
+    #             tabs = scan.okraparser.full_scan(filename)     
+    #             print tabs
+    #             db = get_db_conection("okra")   #get conncection
+    #             # tabs = get_db_collection('tabs')#get tabs collection
 
-            #whatever stevens json collection is called
-            bill_json = get_db_collection('bill_json')
+    #             tab_id = request.args.get('tab_id', '')
+    #             le_tab = tabs.find_one({"id" : tab_id})
 
-            #Insert bill items to tab
-            le_tab['items_prices'] = bill_json['tab_items']
-            le_tab['total'] = bill_json['tab_meta']
+    #             #whatever stevens json collection is called
+    #             bill_json = get_db_collection('bill_json')
+
+    #             #Insert bill items to tab
+    #             le_tab['items_prices'] = bill_json['tab_items']
+    #             le_tab['total'] = bill_json['tab_meta']
+    #         except Exception as error_inst:
+    #             print error_inst
+
+
+
+
 
     # Get the name of the uploaded file
     file = request.files['file']
@@ -294,11 +302,41 @@ def upload():
         # will basicaly show on the browser the uploaded file
         # thr = Thread(target = async_parse_and_save, args = [filename])
         # thread.start_new_thread(async_parse_and_save,(request))
-        gevent.spawn(async_parse_and_save(filename))
+        # gevent.spawn(async_parse_and_save(filename))
 
+        try:
+            # VINAY
+            # VINAY
+            # VINAY
+            # VINAY
+            # VINAY
+            # VINAY
+            # VINAY
+            # VINAY
+
+            tabs = scan.okraparser.full_scan(filename)     
+            # print tabs
+            # db = get_db_conection("okra")   #get conncection
+            # tabs = get_db_collection('tabs')#get tabs collection
+
+            # tab_id = request.args.get('tab_id', '')
+            # le_tab = tabs.find_one({"id" : tab_id})
+
+            #whatever stevens json collection is called
+            # bill_json = get_db_collection('bill_json')
+
+            #Insert bill items to tab
+            # le_tab['items_prices'] = bill_json['tab_items']
+            # le_tab['total'] = bill_json['tab_meta']
+
+            # return 'ASDF'
+            return str(tabs)
+        except Exception as error_inst:
+            print error_inst
+            return 'failed'
         # thread.start_new_thread()
         # thr.start()
-        return 'uploaded - async analyzing'
+        # return 'uploaded - async analyzing'
         # return redirect(url_for('uploaded_file',
                                 # filename=filename))
 
