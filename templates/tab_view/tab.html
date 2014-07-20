@@ -7,9 +7,12 @@
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   <script type="text/javascript" src="jquery.knob.min.js"></script>
   <script type="text/javascript" src="tab.js"></script>
+
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="tab.css">
 </head>
 
@@ -86,6 +89,9 @@
         <div class="content_container pull-right">
           <button id="finish_button" class="btn btn-primary">Finish and Pay ></button>
         </div>
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
+        </div>
       </div>
 
       <div id="pay_view" class="content_panel">
@@ -105,10 +111,18 @@
           <div class="content_container col_centered text-center">
             <button id="make_payment_button" class="btn btn-primary">Make Payment</button>
           </div>
+
+          <div class="content_container">
+            <ul class="paid_user_list list-group"></ul>
+          </div>
+        </div>
+
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
         </div>
       </div>
+
 		</div>
-	
   </div>
 </body>
 </html>
@@ -154,6 +168,37 @@
     </div>
   </li>
 </script>
+
+<script id="paid_user_list_template" type="text/x-handlebars-template">
+  {{#each users}}
+    {{> paid_user_entry_template}}
+  {{/each}}
+</script>
+
+<script id="paid_user_entry_template" type="text/x-handlebars-template">
+  <li class="user_entry list-group-item" data-id={{@key}}>
+    <div class="row">
+      <div class="col-xs-2">
+        <div class="small_portrait pull-left" style="background-image: url({{get_pic_url this}})"></div>
+      </div>
+      <div class="col-xs-6">
+        <div class="paid_user_name text_limit">{{first_name}} {{last_name}}</div>
+      </div>
+      <div class="col-xs-4">
+        <div class="paid_indicator_block">
+        {{#if (check_paid this ../paid_users)}}
+          <i class="paid_icon fa fa-check text_green"></i>
+          <div class="paid_text text_green">Paid</div>
+        {{else}}
+          <i class="paid_icon fa fa-circle-o pull-right text_red"></i>
+          <div class="paid_text pull-rsight text_red">Waiting</div>
+        {{/if}}
+        </div>
+      </div>
+    </div>
+  </li>
+</script>
+
 <!-- 
         <div class="item_assigned_name text_limit text-left">
           {{get_name this}}

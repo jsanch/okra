@@ -1,24 +1,24 @@
 
 $(function() {
-  var NAME_CHAR_LIMIT = 8;
 
-  var user_id = 1;
-
-  // ---------------------- Templates ----------------------
+  // ---------------------- Templating ----------------------
 
   var FriendRowTemplate = Handlebars.compile($('#friend_row_template').html());
   var FriendBlockTemplate = Handlebars.compile($('#friend_block_template').html());
   var ItemListTemplate = Handlebars.compile($('#item_list_template').html());
   var ItemTemplate = Handlebars.compile($('#item_template').html());
 
-  Handlebars.registerPartial("item_template", $("#item_template").html());
+  var PaidUserListTemplate = Handlebars.compile($('#paid_user_list_template').html());
 
-  Handlebars.registerHelper('get_name', function(id) {
-    var user = friends[id];
+  Handlebars.registerPartial("item_template", $("#item_template").html());
+  Handlebars.registerPartial("paid_user_entry_template", $("#paid_user_entry_template").html());
+
+  Handlebars.registerHelper('get_name', function(user_id) {
+    var user = friends[user_id];
     return user? user.first_name + ' ' + user.last_name : 'None';
   });
 
-  Handlebars.registerHelper('get_pic_url', function(id) {
+  Handlebars.registerHelper('get_pic_url', function(user_id) {
     return 'face.jpeg';
   });
 
@@ -26,11 +26,20 @@ $(function() {
     return $.inArray(user_id, assigned_to) != -1;
   });
 
+  Handlebars.registerHelper('check_paid', function(user_id, paid_users) {
+    return $.inArray(user_id, paid_users) != -1;
+  });
+
   // ---------------------- Global ----------------------
 
   var _tab;
   var _friends;
+  var _group;
+
   var db_poll_interval;
+
+  var user_id = 1;  // get from session
+  var _tab_id = 12;
 
   // ---------------------- Init ----------------------
 
@@ -55,22 +64,76 @@ $(function() {
         'readOnly': true,
       }
     );
+
+    // getTab(_tab_id).done(function(data) {
+    //   if(!data) return;
+    //   _tab = JSON.parse(data);
+
+      var _tab = {
+        id: 100,
+        title: "Dinner at Centerfolds",
+        group: [1, 2, 3, 4, 5, 6, 7],
+        paid_users: [],
+        currency: '$',
+        items: {
+          1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
+          2: {name: 'Okra', price: '32.45', assigned_to: [1]},
+          3: {name: 'Okra', price: '14.50', assigned_to: [4]},
+          4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
+          5: {name: 'Okra', price: '14.50', assigned_to: [4]}
+        },
+        tax: 14.40,
+        tip: 5012.00,
+        subtotal: 96.10,
+        total: 110.50,
+        paid: 72
+      }; // TEMP -- REMOVE THIS LATER
+
+      setGroupUsers(_tab.group);
+
+      // Populate list showing which users have paid
+      $('.paid_user_list').html(PaidUserListTemplate({ users: _group, paid_users: _tab.paid_users }));
+    // });
+
+    // Call pay view update function periodically
     clearInterval(db_poll_interval);
     db_poll_interval = setInterval(function() { updatePayView() }, 100);
   }
 
   // ---------------------- Functions ----------------------
 
-  function getTab() {
-    return $.get("http://app.grasscat.org/get_tab?tab_id=12");
+  function getTab(id) {
+    return $.get('http://app.grasscat.org/get_tab?tab_id=' + id);
   };
 
-  function getUser() {
-    return $.get("http://app.grasscat.org/get_user?user_id=12");
+  function getUser(id) {
+    return $.get('http://app.grasscat.org/get_user?user_id=' + id);
   };
+
+  // Get the group users from the list of ids
+  function setGroupUsers(group) {
+    _group = {};
+    // group.forEach(function(id) {
+    //   getUser(id).done(function(data) {
+    //     if(!data) return;
+    //     var user = JSON.parse(data);
+    //     _group[user.id] = user;
+    //   });
+    // });
+
+    _group = {
+      1: {first_name: 'Barack', last_name: 'Obama'},
+      2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
+      3: {first_name: 'Michael', last_name: 'Vader'},
+      4: {first_name: 'Darth', last_name: 'Vader'},
+      5: {first_name: 'Darth', last_name: 'Vader'},
+      6: {first_name: 'Darth', last_name: 'Vader'},
+      7: {first_name: 'Darth', last_name: 'Vader'},
+    };
+  }
 
   function populatePage() {
-    getTab().done(function(data) {
+    getTab(_tab_id).done(function(data) {
       if(!data) return;
 
       var data = JSON.parse(data);
@@ -113,12 +176,14 @@ $(function() {
       $('#tip_input').val(_tab.tip);
       $('#subtotal').text(_tab.subtotal);
       $('#total').text(_tab.total);
+
+      setGroupUsers(_tab.group);
     });
   }
 
   function updateTabView() {
     if(!_tab) return;
-    getTab().done(function(data) {
+    getTab(_tab_id).done(function(data) {
       var new_tab = JSON.parse(data);
 
       new_tab = {
@@ -159,32 +224,89 @@ $(function() {
         var a = _tab.items[item_id].assigned_to;
         var b = new_tab.items[item_id].assigned_to;
         if(!_tab.items[item_id].assigned_to.is_same(new_tab.items[item_id].assigned_to)) {
-
           $('.item_list .tab_item[data-id=' + item_id + ']').replaceWith(ItemTemplate(new_tab.items[item_id]));
         }
-      }
+      } 
 
       // Update the global tab object
       _tab = new_tab;
+      setGroupUsers(_tab.group);
     });
   }
 
   function updatePayView() {
-    if(!_tab) return;
-    getTab().done(function(data) {
-      var new_tab = JSON.parse(data);
+    // if(!_tab) return;
+    // getTab(_tab_id).done(function(data) {
+      // var new_tab = JSON.parse(data);
+      var _tab = {
+        id: 100,
+        title: "Dinner at Centerfolds",
+        group: [1, 2, 3, 4, 5, 6, 7],
+        paid_users: [],
+        currency: '$',
+        items: {
+          1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
+          2: {name: 'Okra', price: '32.45', assigned_to: [1]},
+          3: {name: 'Okra', price: '14.50', assigned_to: [4]},
+          4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
+          5: {name: 'Okra', price: '14.50', assigned_to: [4]}
+        },
+        tax: 14.40,
+        tip: 5012.00,
+        subtotal: 96.10,
+        total: 110.50,
+        paid: 72
+      }; // TEMP -- REMOVE THIS LATER
 
-      new_tab = _tab; // TEMP -- REMOVE THIS LATER
+      var new_tab = {
+        id: 100,
+        title: "Dinner at Centerfolds",
+        group: [1, 2, 3, 4, 5, 6, 7],
+        paid_users: [2, 3, 4],
+        currency: '$',
+        items: {
+          1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
+          2: {name: 'Okra', price: '32.45', assigned_to: [1]},
+          3: {name: 'Okra', price: '14.50', assigned_to: [4]},
+          4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
+          5: {name: 'Okra', price: '14.50', assigned_to: [4]}
+        },
+        tax: 14.40,
+        tip: 5012.00,
+        subtotal: 96.10,
+        total: 110.50,
+        paid: 72
+      }; // TEMP -- REMOVE THIS LATER
 
-      var paid = parseFloat(1230.00);//_tab.paid);
-      var total = parseFloat(_tab.total);
+      var paid = parseFloat(new_tab.paid);
+      var total = parseFloat(new_tab.total);
       $('#payment_progress_chart').val((paid/total*100).toFixed(2)).trigger('change');
+      
+      var payment_amt = 0;
+      for(var item_id in new_tab.items) {
+        var item = new_tab.items[item_id];
+        if($.inArray(user_id, item.assigned_to) != -1) {
+          payment_amt += parseFloat(item.price) / item.assigned_to.length;
+        }
+      }
 
-      $('#payment_amount').text(500.00);
-      $('#payment_rem_amt').text((total - paid).toFixed(2));
-      $('#payment_rem_tot').text(total);
+      $('#payment_amount').text(payment_amt.toFixed(2));
+      $('#payment_rem_amt').text('$' + (total - paid).toFixed(2));
+      $('#payment_rem_tot').text('/$' + total.toFixed(2));
 
-    });
+      new_tab.paid_users.forEach(function(id) {
+        if($.inArray(id, _tab.paid_users) == -1) {
+          var $user_entry = $('.paid_user_list .user_entry[data-id=' + id + ']');
+          $user_entry.find('.paid_text').text('Paid');
+          $user_entry.find('.paid_text').removeClass('text_red').addClass('text_green');
+          $user_entry.find('.paid_icon').removeClass('fa-circle-o text_red').addClass('fa-check text_green');
+          $user_entry.find('.paid_user_name').text(_group[id].name);
+        }
+      });
+
+      // Update the global tab object, the group won't change here
+      _tab = new_tab;
+    // });
   }
 
   function updateTip(tip_val) {
@@ -233,6 +355,21 @@ $(function() {
     $('#tab_view').fadeOut(200, function() {
       initPayView();
       $('#pay_view').fadeIn(200);
+    });
+  });
+  
+  $('#tab_view #back_button').on('click', function(event) {
+    // window.location.replace("http://stackoverflow.com");
+
+  });
+
+  $('#pay_view #back_button').on('click', function(event) {
+    // window.location.replace("http://stackoverflow.com");
+    $('#add_friend_button').fadeIn(200);
+    $('#pay_view').fadeOut(200, function() {
+      clearInterval(db_poll_interval);
+      db_poll_interval = setInterval(function() { updateTabView() }, 100);
+      $('#tab_view').fadeIn(200);
     });
   });
 

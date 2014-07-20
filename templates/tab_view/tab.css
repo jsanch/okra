@@ -162,6 +162,18 @@ table td {
   font-size: 24px;
 }
 
+.paid_indicator_block {
+  position: relative;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.paid_icon {
+  position: absolute;
+  right: 0; top: 3px; bottom: 0;
+}
+
+
 /* -------------- Style classes -------------- */
 
 .inline_element {
@@ -188,6 +200,13 @@ table td {
 
 .fill_width {
   width: 100%;
+}
+
+.text_green {
+  color: green;
+}
+.text_red {
+  color: red;
 }
 
 /* -------------- Views -------------- */
