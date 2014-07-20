@@ -32,7 +32,9 @@ def new_tab_view():
 
 @app.route('/tab')
 def tab_view():
-    return render_template('tab.html')
+    resp = make_response(render_template('tab.html'))
+    resp.set_cookie('user_id', 'poo')
+    return resp
 
 @app.route('/start')
 def start():
@@ -193,9 +195,10 @@ def get_tab():
 ###############################################################################
 
 # ADD USER TO TAB'S ITEMS
+# NEEDS: tab_id, user_id, item_id
 @app.route('/add_user_to_item', methods=['POST'])
-def update_tab_items():
-    ''' updates items in a tab '''
+def add_user_to_item():
+    ''' add user to  items in a tab '''
     #get db collection
     tabs = get_db_collection('tabs')
     
@@ -204,13 +207,42 @@ def update_tab_items():
     user_id = request.form['user_id']
     item_id = request.form['item_id']
 
+    #get tab 
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-    le_tab = tabs.find_one({"id" : tab_id})
+
     if (le_tab == None):
-        return 'Tab not found'
+        return 'Fail'
     else:
-        print   le_tab['items'][1]
-        return 'jello'
+        le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        print le_tab['items'][str(item_id)]['assigned_to']
+        tabs.save(le_tab)
+        return "True"
+
+# REMOVE USER 
+# NEEDS: tab_id, user_id, item_id
+@app.route('/remove_user_from_item', methods=['POST'])
+def remove_user_to_item():
+    ''' remove user of items in a tab '''
+    #get db collection
+    tabs = get_db_collection('tabs')
+    
+    #get args
+    tab_id = request.form['tab_id']
+    user_id = request.form['user_id']
+    item_id = request.form['item_id']
+
+    #get tab 
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+
+
+    if (le_tab == None):
+        return 'Fail'
+    else:
+        le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        print le_tab['items'][str(item_id)]['assigned_to']
+        tabs.save(le_tab)
+        return "True"
 
 
 
