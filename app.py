@@ -315,7 +315,7 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite_id = invites.insert(invite)
 
 #poll invite
-@app.route('/poll_for_invite2')
+@app.route('/poll_for_invite')
 def poll_for_invite():
     '''Returns tab_id if the passed user_id has an invite '''
     #get db collection
