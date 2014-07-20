@@ -11,7 +11,8 @@ from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
 
-app = Flask(__name__, static_url_path = '')
+app = Flask(__name__)
+app.jinja_env.autoescape = False
 
 app.secret_key = APP_SECRET
 
@@ -33,6 +34,11 @@ def tab_view():
 @app.route('/start')
 def start():
     return render_template('index.html')
+
+@app.route('/img-upload')
+def img_upload():
+    return render_template('img-upload.html')
+
 
 
 ################################ DB ####################################
@@ -247,13 +253,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
-
-# This route will show a form to perform an AJAX request
-# jQuery is loaded to execute the request and update the
-# value of the operation
-@app.route('/img-upload')
-def img_upload():
-    return render_template('img-upload.html')
 
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
