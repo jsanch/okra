@@ -1,3 +1,13 @@
+// ---------------------- Global ----------------------
+
+var _tab;
+var _friends;
+var _group;
+
+var db_poll_interval;
+
+var user_id = 1;  // get from session
+var _tab_id = '53cc34f9d2a57d636d082146';
 
 $(function() {
 
@@ -7,7 +17,6 @@ $(function() {
   var FriendBlockTemplate = Handlebars.compile($('#friend_block_template').html());
   var ItemListTemplate = Handlebars.compile($('#item_list_template').html());
   var ItemTemplate = Handlebars.compile($('#item_template').html());
-
   var PaidUserListTemplate = Handlebars.compile($('#paid_user_list_template').html());
 
   Handlebars.registerPartial("item_template", $("#item_template").html());
@@ -19,7 +28,7 @@ $(function() {
   });
 
   Handlebars.registerHelper('get_pic_url', function(user_id) {
-    return 'face.jpeg';
+    return '../static/img/face.jpeg';
   });
 
   Handlebars.registerHelper('user_selected', function(assigned_to) {
@@ -30,17 +39,6 @@ $(function() {
     return $.inArray(user_id, paid_users) != -1;
   });
 
-  // ---------------------- Global ----------------------
-
-  var _tab;
-  var _friends;
-  var _group;
-
-  var db_poll_interval;
-
-  var user_id = 1;  // get from session
-  var _tab_id = 12;
-
   // ---------------------- Init ----------------------
 
   initTabView();
@@ -49,7 +47,7 @@ $(function() {
     // Initially populate page
     populatePage();
     // Update page periodically
-    db_poll_interval = setInterval(function() { updateTabView() }, 100);
+    db_poll_interval = setInterval(function() { updateTabView() }, 1000);
   }
 
   // Initialize the pay view
@@ -136,8 +134,6 @@ $(function() {
     getTab(_tab_id).done(function(data) {
       if(!data) return;
 
-      var data = JSON.parse(data);
-
       friends = {
         1: {first_name: 'Barack', last_name: 'Obama'},
         2: {first_name: 'Curioussssss', last_name: 'George'},
@@ -184,7 +180,6 @@ $(function() {
   function updateTabView() {
     if(!_tab) return;
     getTab(_tab_id).done(function(data) {
-      var new_tab = JSON.parse(data);
 
       new_tab = {
         id: 100,
@@ -306,6 +301,7 @@ $(function() {
 
       // Update the global tab object, the group won't change here
       _tab = new_tab;
+      setGroupUsers(_tab.group);
     // });
   }
 
@@ -321,19 +317,24 @@ $(function() {
   //Add a user to the group
   $('#add_friend_button').on('click', function() {
     var friends = get_friends(user_id);
+    //activate modal 
+
     // dont prepend
     $('.friend_group_row').prepend(FriendBlockTemplate({ friends: friends }));
   });
 
   // Submit an item select
   $('.item_list li').on('click', function(event) {
-    var item_id = $(this).data('id');
-    var item_assigned_to_id = $(this).data('assigned_to_id');
+    $item = $(this);
+    var item_id = $item.data('id');
+    var item_assigned_to_id = $item.data('assigned_to_id');
 
     if(user_id == item_assigned_to_id) {
       $.post("select_item_url", { user_id: 10, tab_id: _tab.id, item_id: item_id });
+      $item.addClass('selected');
     } else {
       $.post("remove_item_url", { user_id: 10, tab_id: _tab.id, item_id: item_id });
+      $item.removeClass('selected');
     }
   });
 
@@ -348,7 +349,24 @@ $(function() {
     }
   });
 
-  // CHANGE VIEWS
+  $('#make_payment_button').on('click', function(event) {
+    $.post('http://app.grasscat.org/get_tab?tab_id=' + user_id, function(result) {
+
+    });
+  });
+
+  // Bind open add friends modal button
+  $('#tab_open_add_friends').on('click', function() {
+    openAddFriends(user_id, _group);
+  });
+
+   // Bind confirm add friends button
+  $('#tab_add_friends_button').on('click', function() {
+    updateAdded();
+  });
+
+  // ---------------------- Change Views ----------------------
+
   $('#tab_view #finish_button').on('click', function(event) {
     // window.location.replace("http://stackoverflow.com");
     $('#add_friend_button').fadeOut(200);
