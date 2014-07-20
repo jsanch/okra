@@ -5,7 +5,7 @@ body {
 }
 
 .header {
-  font-family: Helvetica;
+  font-family: "Raleway";
   color: white;
   width: 400px;
   margin: auto;
@@ -130,6 +130,50 @@ table td {
   background-size: 30px 30px;
 }
 
+#payment_progress_chart {
+  background-color: white;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  position: relative;
+}
+
+#payment_progress_chart_inner {
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 0;
+  background-color: #7EDEB1;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.payment_progress_wrapper {
+  width: 200px;
+  position: relative;
+}
+
+#payment_rem_block {
+  position: absolute;
+  top: 30%; bottom: 0; right: 0; left: 0;
+  text-align: center;
+}
+
+#payment_rem_amt {
+  font-size: 24px;
+}
+
+.paid_indicator_block {
+  position: relative;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.paid_icon {
+  position: absolute;
+  right: 0; top: 3px; bottom: 0;
+}
+
+
 /* -------------- Style classes -------------- */
 
 .inline_element {
@@ -156,6 +200,19 @@ table td {
 
 .fill_width {
   width: 100%;
+}
+
+.text_green {
+  color: green;
+}
+.text_red {
+  color: red;
+}
+
+/* -------------- Views -------------- */
+
+#pay_view {
+  display: none;
 }
 
 /* -------------- Overrides -------------- */
@@ -196,7 +253,6 @@ table td {
   padding-right: 0;
   /*padding: 0;*/
 }
-
 
 .input-group-addon {
   background-color: white;

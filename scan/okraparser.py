@@ -8,6 +8,10 @@ import json
 
 DEBUG = True
 
+def debug(x):
+	if DEBUG:
+		print x
+
 class OkraParseException(Exception):
 	pass
 
@@ -18,7 +22,20 @@ images_location = os.path.join(os.path.dirname(parser_location), 'images/')
 config_file = open(os.path.join(parser_location, 'parser-config.json'), 'r')
 config = json.load(config_file, 'ascii')
 
-# print config
+reverse_map_file = open(os.path.join(parser_location, 'map.json'), 'r')
+# debug(reverse_map_file)
+reverse_map = json.load(reverse_map_file, 'ascii')
+
+character_map = {}
+
+for key in reverse_map:
+	# print key
+	for letter in reverse_map[key]:
+		# print letter
+		character_map[str(letter)] = str(key)
+
+print config
+print character_map
 
 ere_end_of_line_price = r'\$?[0-9]+[\.,][0-9]{2}$'
 
@@ -26,11 +43,9 @@ string_total = 'total'
 string_subtotal = 'subtotal'
 image_folder = 'images'
 
-def debug(x):
-	if DEBUG:
-		print x
-
 def analyze_tab(tab_param):
+	debug(tab_param)
+
 	tab = {}
 	tab['items'] = {}
 	tab['meta'] = {}
@@ -103,8 +118,24 @@ def analyze_tab(tab_param):
 
 	return tab
 
-def price_fix(x):
-	return Decimal(x.strip('$'))
+def price_fix(price_string_param):
+	final_price_string = ''
+	for letter in price_string_param:
+		print letter
+		if not letter in '0123456789.':
+			print 'not numeric letter'
+			if letter in character_map:
+				debug('letter in character map')
+				final_price_string += character_map[letter]
+		else:
+			print 'is numeric letter'
+			final_price_string += letter
+
+	# return Decimal(price_string_param.strip('$'))
+	debug('price fix')
+	debug(price_string_param)
+	debug(final_price_string)
+	return Decimal(final_price_string)
 
 def full_scan(image_name):
 	try:
@@ -154,12 +185,13 @@ def basic_scan(image_name):
 
 	for raw_item in raw_tab_data:
 		raw_item_description = raw_item['description']
+		raw_item_value = raw_item['value']
 		matches_to_compare = []
 		for parser_key in config['mid_parsers']:
 			tre_matcher = tre.compile(config['mid_parsers'][parser_key]['ere'], tre.EXTENDED)
 			tre_match = tre_matcher.search(raw_item_description, tre_fuzzyness)
 			debug('xxxxxxxxxxxxxxxxxxxxxxxxxx')
-			debug(raw_item_description + ' XXX ' + config['mid_parsers'][parser_key]['ere'])
+			debug(raw_item_description + ' XXX ' + config['mid_parsers'][parser_key]['ere'] + ' XXX ' + raw_item_value)
 			if tre_match:
 				debug('match')
 				matches_to_compare.append((tre_match, config['mid_parsers'][parser_key]['string']))
@@ -171,8 +203,9 @@ def basic_scan(image_name):
 			for match in matches_to_compare:
 				if match[0].cost < min[0].cost:
 					min = match
-			tab_meta[min[1]] = raw_item['value']
+			tab_meta[min[1]] = raw_item_value
 		else:
+			debug('SHOULD HAVE BEEN CUT OFF')
 			if cut_off_meta < 1:
 				tab_items.append(raw_item)
 

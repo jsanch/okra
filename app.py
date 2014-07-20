@@ -2,20 +2,30 @@ import os
 from flask import Flask, request, redirect, render_template, url_for, jsonify, send_from_directory, session
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
+from threading import Thread
 import json
 from bson import Binary, Code
 from bson.json_util import dumps
 from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
+import scan.okraparser
+# import scan.okraparser.OkraParseException
 
-
-app = Flask(__name__)
+app = Flask(__name__, static_url_path = '')
 
 app.secret_key = APP_SECRET
 
+########################## VIEWS #######################################
 
+#landing page
+@app.route('/')
+def landing():
+   return render_template('landing_page/landing_page.html')
 
+@app.route('/new_tab')
+def new_tab_view():
+    return render_template('new_tab_view/index.html')
 
 
 ################################ DB ####################################
@@ -160,7 +170,7 @@ def get_friends():
     ''' gets the list of friends with their ids and names for a given user id '''
     users = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users.fine_one({'id':user_id})
+    user = users.find_one({'id':user_id})
     friend_ids = user['friends']
     friends = {}
     for friend_id in friend_ids:
@@ -170,6 +180,38 @@ def get_friends():
 
 ########################################################################
 
+##############################    ITEMS   #############################
+#ASSIGN ITEM
+@app.route('/assign_item')
+def assign_item(tab_id, item_id, user_id):
+    ''' gets the list of friends with their ids and names for a given user id '''
+    tabs = get_db_collection('tabs')
+    tab_id = request.form['tab_id']
+    le_tab = tabs.find_one({"id" : tab_id})
+    
+    le_tab['items'][2].append(user_id)
+    tabs.insert(le_tab)
+
+#UNASSIGN ITEM
+@app.route('/unassign_item')
+def unassign_item(tab_id, item_id, user_id):
+    ''' gets the list of friends with their ids and names for a given user id '''
+    tabs = get_db_collection('tabs')
+    tab_id = request.form['tab_id']
+    le_tab = tabs.find_one({"id" : tab_id})
+    
+    le_tab['items'][2].append(user_id)
+    number_of_users = len(le_tab['items'][2])
+    remove_location = -1
+    i=0
+    for i in range(0, number_of_users):
+        if (le_tab['items'][2][i] == user_id):
+            remove_location = i
+            break
+    if (remove_location > 0):
+        le_tab['items'][2].pop(remove_location)      
+
+    tabs.insert(le_tab)    
 
 ############################## INVITE shit  ############################
 
@@ -237,8 +279,37 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # Redirect the user to the uploaded_file route, which
         # will basicaly show on the browser the uploaded file
-        return redirect(url_for('uploaded_file',
-                                filename=filename))
+        thr = Thread(target = async_parse, args = [filename])
+        thr.start()
+        return 'uploaded - async analyzing'
+        # return redirect(url_for('uploaded_file',
+                                # filename=filename))
+
+def async_parse(filename):
+    tabs = scan.okraparser.full_scan(filename)
+    print tabs
+    db = get_db_conection("okra")   #get conncection
+    # tabs = get_db_collection('tabs')#get tabs collection
+
+    tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one({"id" : tab_id})
+
+    #whatever stevens json collection is called
+    bill_json = get_db_collection('bill_json')
+
+    #Insert bill items to tab
+    le_tab['items_prices'] = bill_json['tab_items']
+    le_tab['total'] = bill_json['tab_meta']
+
+
+    
+
+# def send_email(subject, sender, recipients, text_body, html_body):
+#     msg = Message(subject, sender = sender, recipients = recipients)
+#     msg.body = text_body
+#     msg.html = html_body
+#     thr = Thread(target = send_async_email, args = [msg])
+#     thr.start()
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
@@ -254,7 +325,7 @@ def uploaded_file(filename):
 ############################## VENMO ###################################
 
 ### init
-@app.route('/')
+@app.route('/venmo_login')
 def index():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
