@@ -6,6 +6,7 @@ from threading import Thread
 import json
 from bson import Binary, Code
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
@@ -107,11 +108,36 @@ def create_tab():
 def get_tab():
     tabs = get_db_collection('tabs')
     tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find( { "_id" : 'ObjectId('+tab_id+')' } )
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     if (le_tab == None):
         return 'Tab not found'
     else: 
-        return "Tab Found"
+        #Get wanted data
+        tab_title = le_tab['title']
+        tab_group = le_tab['group'] #array of user ids
+        tab_items = le_tab['items']
+        tab_subtotal = le_tab['subtotal']
+        tab_total = le_tab['total']
+        tab_tip = le_tab['tip']
+        tab_tax = le_tab['tax']
+        tab_paid_users = le_tab['paid_users']
+        tab_paid = le_tab['paid']
+
+        tab = {
+            "title" : tab_title,
+            "group" : tab_group,
+            "items" : tab_items,
+            "subtotal" : tab_subtotal,
+            "total" : tab_total,
+            "tip" : tab_tip,
+            "tax" : tab_tax,
+            "paid_users" : tab_paid_users,
+            "paid" : tab_paid,    
+        }
+
+        return  jsonify(tab)
+
+
 
 # UPDATE TAB ITEMS
 @app.route('/update_tab_items', methods=['POST'])
