@@ -1,0 +1,122 @@
+html,body {
+  background-color: #7edeb1;
+  height: 100%;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+  width: 100%
+}
+
+.content_container {
+  position: relative;
+  margin: auto;
+  padding: 15px 0;
+}
+
+.border {
+  margin: auto;
+  width: 30%;
+  border-top: solid 2px white;
+}
+
+/* -------------- Landing page -------------- */
+h1.page-header {
+  border: none;
+  height: 300px;
+  line-height: 300px;
+  vertical-align: middle;
+}
+
+.main-content {
+  height: 100%;
+  text-align: center;
+}
+
+#start-buttons {
+  padding: 0 20%;
+}
+
+  #start-buttons button {
+    border: 0px;
+    background-color: white;
+    color: #7edeb1;
+    margin-bottom: 10%;
+    outline: none;
+  }
+
+  #start-tab {
+    text-decoration: none;
+    color: #7edeb1;
+  }
+
+/* -------------- New Tab -------------- */
+#new-tab-container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+  #new_tab_name {
+    background-color: white;
+    color: #7EDEB1;
+    display: inline-block;
+    font-size: 2.1em;
+    margin: 0 auto;
+    padding-bottom: 3%;
+    width: 100%;
+  }
+
+  /* -------------- Camera button -------------- */
+  #camera-container {
+    background-color: #7EDEB1;
+    cursor: hand;
+    cursor: pointer;
+    height: 100%;
+    margin: 5% auto;
+  }
+
+    #camera {
+      background-color: white;
+      border-radius: 50%;
+      display: inline-block;
+      padding: 1%;
+      width: 60%;
+    }
+
+    #take-picture {
+      display: none;
+    }
+
+  /* -------------- New Tab Buttons -------------- */
+  #new_tab_buttons {
+    background-color: #7EDEB1;
+    padding: 5% 0;
+  }
+
+  #new_tab_buttons .btn {
+    background-color: white;
+    color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+  }
+
+  #new_tab_buttons .btn:hover, .btn:focus {
+    background-color: #7EDEB1;
+    border-color: white;
+    border-width: 2px;
+    color: white;
+    outline: none;
+  }
+
+  .friend_group .friend_block {
+    min-width: 50px;
+  }
+
+    .glyphicon-ok-circle {
+      display: none;
+    }
+
+  .create_tab_button {
+    margin: 0 auto;
+    width: 50%;
+  }
