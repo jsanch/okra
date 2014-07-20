@@ -31,6 +31,8 @@ def debug(x):
 		print x
 
 def analyze_tab(tab_param):
+	debug(tab_param)
+
 	tab = {}
 	tab['items'] = {}
 	tab['meta'] = {}

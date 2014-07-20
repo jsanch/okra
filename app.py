@@ -10,7 +10,7 @@ from charge import *
 from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
-import scan.okraparser.OkraParseException
+# import scan.okraparser.OkraParseException
 
 app = Flask(__name__)
 
@@ -278,34 +278,30 @@ def upload():
                                 # filename=filename))
 
 def async_parse(filename):
-    try:
-        tabs = scan.okraparser.full_scan()
-        db = get_db_conection("okra")   #get conncection
-        # tabs = get_db_collection('tabs')#get tabs collection
+    tabs = scan.okraparser.full_scan(filename)
+    print tabs
+    db = get_db_conection("okra")   #get conncection
+    # tabs = get_db_collection('tabs')#get tabs collection
 
-        tab_id = request.args.get('tab_id', '')
-        le_tab = tabs.find_one({"id" : tab_id})
+    tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one({"id" : tab_id})
 
-        #whatever stevens json collection is called
-        bill_json = get_db_collection('bill_json')
+    #whatever stevens json collection is called
+    bill_json = get_db_collection('bill_json')
 
-        #Insert bill items to tab
-        le_tab['items_prices'] = bill_json['tab_items']
-        le_tab['total'] = bill_json['tab_meta']
-
-    except OkraParseException:
-        print 'the scan was bad'
-
+    #Insert bill items to tab
+    le_tab['items_prices'] = bill_json['tab_items']
+    le_tab['total'] = bill_json['tab_meta']
 
 
     
 
-def send_email(subject, sender, recipients, text_body, html_body):
-    msg = Message(subject, sender = sender, recipients = recipients)
-    msg.body = text_body
-    msg.html = html_body
-    thr = Thread(target = send_async_email, args = [msg])
-    thr.start()
+# def send_email(subject, sender, recipients, text_body, html_body):
+#     msg = Message(subject, sender = sender, recipients = recipients)
+#     msg.body = text_body
+#     msg.html = html_body
+#     thr = Thread(target = send_async_email, args = [msg])
+#     thr.start()
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
