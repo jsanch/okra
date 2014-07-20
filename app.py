@@ -379,6 +379,9 @@ def master_charge(master):
 
 @app.route('/oauth-authorized')
 def oauth_authorized():
+    db = get_db_conection("okra")   #get conncection
+    users = get_db_collection('users')
+
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
         "client_id":CONSUMER_ID,
@@ -393,16 +396,22 @@ def oauth_authorized():
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
+    session['first_name'] = user['first_name']
+    session['last_name'] = user['last_name']
+    session['profile_picture_url'] = user['profile_picture_url']
 
-
-    # phone_number = request.args.get('phone_number', '')
-    # print phone_number
-    # user = {
-    #         'phone_number' :   ''
-    #     }
+    users.insert( {
+                    "first_name" : session['first_name'],
+                    "second_name": session['last_name'],
+                    "friends" : ["user_id","user_id"],
+                    "phone": "",
+                    "token": session['venmo_token'],
+                    "pic_url": session['profile_picture_url']
+                  }
+        )
 
     #return  'fuck you %s' % session['venmo_token']
-    return 'You were signed in as %s' % user['username']
+    return 'You were signed in as %s' % session['venmo_token']
 #########################################################################
 
 
