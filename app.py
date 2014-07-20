@@ -192,10 +192,6 @@ def get_tab():
 ################################## ITEMS  #####################################
 ###############################################################################
 
-# tab_id : 53cc3d83fc6f95074ea1b391
-
-
-
 # ADD USER TO TAB'S ITEMS
 # NEEDS: tab_id, user_id, item_id
 @app.route('/add_user_to_item', methods=['POST'])
