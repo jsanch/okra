@@ -49,7 +49,7 @@
 
         <!-- OCR button -->
         <div id='camera-container'>
-          <img id='camera' src='img/camera.svg'>
+          <img id='camera' src='/static/img/camera.svg'>
           <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
             <!-- <input type="submit" value="Upload" action="http://app.grasscat.org/upload"> -->
@@ -70,7 +70,7 @@
         </table>
       </br>
       <!-- Create Tab button -->
-      <button type='button' id='js-create-tab' class='btn btn-block btn-lg'>Create Tab</button>
+      <button type='button' id='js-create-tab' class='btn btn-block btn-primary'>Create Tab</button>
     </section>
   </section>
 
@@ -89,18 +89,20 @@
 <script>
 $('#uploadform').submit(function(e){
   e.preventDefault();
-    // Prints loading a bunch of time
-    var loading = setInterval(function(){console.log('LOADING');}, 200);
+  // Prints loading a bunch of time
+  var loading = setInterval(function(){console.log('LOADING');}, 200);
 
-    $(this).ajaxSubmit({
-      success: function(responseText, statusText, xhr, $form){
-        console.log(responseText);
+  $(this).ajaxSubmit({
+    success: function(responseText, statusText, xhr, $form){
+      console.log(responseText);
 
-        clearInterval(loading);
-      }
-    });
-
+      clearInterval(loading);
+    },
+    failure: function(){
+      clearInterval(loading);
+    }
   });
+});
 $('#js-create-tab').click(function(){
   console.log('asdfadsf');
   $('#uploadform').submit();
@@ -115,7 +117,7 @@ $('#js-create-tab').click(function(){
 <script id="friend_block_template" type="text/x-handlebars-template">
 {{#each friends}}
 <td class="friend_block">
-<img src="img/face.jpeg" width='50px' height='50px'>
+<img src="/static/img/face.jpeg" width='50px' height='50px'>
 <div class="friend_name text-center">{{name}}</div>
 </td>
 {{/each}}
