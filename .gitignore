@@ -9,6 +9,8 @@ scan/*.txt
 images/*.jpg
 images/*.txt
 
+.DS_STORE
+
 *.pyc
 
 # Other files and folders
