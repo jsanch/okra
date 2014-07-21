@@ -77,8 +77,9 @@ $(function() {
   });
 
   $('#make_payment_button').on('click', function(event) {
-    $.post('http://app.grasscat.org/make_payment', function(result) {
-      
+    $.post('http://app.grasscat.org/make_payment')
+      .done(function(result) {
+
     });
   });
 

@@ -52,7 +52,7 @@
     </div>
 
     <div class="row content_container content_panel">
-      <div class="col-xs-10 col_centered">
+      <div class="col_centered">
         <div class="friend_group">
           <table class="col_centered">
             <tbody>
@@ -196,15 +196,21 @@
 
         <!-- Add friends in new tab -->
         <section id='new_tab_buttons'>
-          <table class="friend_group content_container">
-            <tbody>
-              <tr class="friend_group_row">
-                <td class="button_cell">
-                  <button id="open_add_friends" class="btn btn-primary btn-block btn-lg">+</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="row content_container content_panel">
+            <div class="col_centered">
+              <div class="friend_group">
+                <table class="content_container">
+                  <tbody>
+                    <tr class="friend_group_row">
+                      <td class="button_cell">
+                        <button id="open_add_friends" class="btn btn-primary btn-block btn-lg">+</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
           <!-- Create Tab button -->
           <button type='button' id='js-create-tab' class='btn btn-primary btn-block btn-lg create_tab_button'>Create Tab</button>
@@ -272,8 +278,8 @@
 <script id="friend_row_template" type="text/x-handlebars-template">
   {{#each friends}}
     <td class="friend_block" data-id={{@key}}>
-      <div class="friend_name text_limit text-center">{{first_name}}</div>
       <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
+      <div class="friend_name text_limit text-center">{{first_name}}</div>
     </td>
   {{/each}}
 </script>
