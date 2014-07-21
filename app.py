@@ -210,17 +210,21 @@ def add_user_to_item():
     print 'stage 1'
 
     #get args
-    tab_id = request.form.get('tab_id')
-    print 'a'
+    tab_id = request.form['tab_id']
+    # print 'a', tab_id
+    print tab_id
 
     user_id = request.form['user_id']
-    print 'b'
+    print user_id
+    # print 'b'
     item_id = request.form['item_id']
+    print item_id
 
     print 'stage 2'
 
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    print str(le_tab)
 
     print 'stage 3'
 
@@ -228,7 +232,12 @@ def add_user_to_item():
         print 'fail'
         return 'fail'
     else:
-        le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        if not 'assigned_to' in le_tab['items'][str(item_id)]:
+            le_tab['items'][str(item_id)]['assigned_to'] = []
+        if not user_id in le_tab['items'][str(item_id)]['assigned_to']:
+            le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        else:
+            return 'already'
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
         print 'add_user_to_item success'
@@ -256,7 +265,12 @@ def remove_user_to_item():
     if (le_tab == None):
         return 'fail'
     else:
-        le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        if not 'assigned_to' in le_tab['items'][str(item_id)]:
+            le_tab['items'][str(item_id)]['assigned_to'] = []
+        if user_id in le_tab['items'][str(item_id)]['assigned_to']:
+            le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        else:
+            return 'already'
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
         return "success"
@@ -400,6 +414,7 @@ def upload():
             index_id = 0
             for parsed_item in parsed_tabs['items']:
                 insert_tabs['items'][str(index_id)] = parsed_item
+                insert_tabs['items'][str(index_id)]['assigned_to'] = []
                 index_id += 1
 
             print insert_tabs
@@ -408,6 +423,7 @@ def upload():
             tab_id = okratabs.insert(insert_tabs)
             print 'SUCCESS'
             return str({'tab_id' : tab_id})
+        return 'fail'
     except Exception as e:
         print e
         return 'fail'
@@ -537,9 +553,4 @@ if __name__ == '__main__':
 ###############################################################################
 ###############################################################################
 ###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
+################################################
