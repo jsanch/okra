@@ -41,6 +41,7 @@ function pollForInvite(){
       if (data === 'fail') {
         console.log('no new tabs');
       } else {
+        console.log(data);
         showInvite(JSON.parse(data));
       }
     });
@@ -88,6 +89,7 @@ function acceptInvite() {
           // kill polling
           clearInterval(invitePoll);
           // do mike's switch thing
+          $('#modal').modal('toggle');
           closeMainView(_tab['_id']);
         } else {
           window.alert('Could not enter the tab');
