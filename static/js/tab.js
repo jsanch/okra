@@ -24,7 +24,11 @@ $(function() {
   });
 
   Handlebars.registerHelper('get_pic_url', function(user_id) {
-    return _group[user_id].pic_url;
+    if(_group && _group[user_id]) {
+      return _group[user_id].pic_url;
+    } else {
+      return;
+    }
   });
 
   Handlebars.registerHelper('user_selected', function(assigned_to) {

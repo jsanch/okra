@@ -2,8 +2,8 @@
 
 var friendsToAdd = {},
     POLL_DELAY = 500, // ms
-    _tab,
-    _group,
+    _tab = {},
+    _group = {},
     db_poll_interval;
 
 var user_id = $.cookie('user_id');
