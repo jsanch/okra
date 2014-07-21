@@ -1,0 +1,41 @@
+/* -------------- Main page -------------- */
+
+.main_title {
+  background-color: white;
+  color: #7edeb1;
+  border: none;
+  height: 100px;
+  line-height: 100px;
+  margin-top: 50px;
+  vertical-align: middle;
+  font-size: 48px;
+}
+
+.main-content {
+  height: 100%;
+  text-align: center;
+}
+
+.main_logo {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+#main_logo_img {
+  width: 25%;
+  height: 25%;
+}
+
+#start-buttons {
+}
+
+#start-tab {
+  text-decoration: none;
+  color: #7edeb1;
+}
+
+#start_buttons {
+  padding-bottom: 100px;
+  padding-left: 20%;
+  padding-right: 20%;
+}

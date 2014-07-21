@@ -95,7 +95,7 @@ table td {
 }
 
 .tab_item.selected {
-  border-color: #FFD9B3;
+  border-color: #FFE3F0;
 }
 
 .friend_group {
@@ -132,7 +132,7 @@ table td {
 }
 
 .tab_item.selected .item_assigned_block {
-  background-color: #FFD9B3;
+  background-color: #FFE3F0;
 }
 
 .item_name_block {
@@ -213,6 +213,11 @@ table td {
 .paid_icon, .friend_add_icon {
   position: absolute;
   right: 0; top: 3px; bottom: 0;
+}
+
+.main_title {
+  color: white;
+  font-size: 32px;
 }
 
 

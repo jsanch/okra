@@ -5,6 +5,16 @@ var user_id = 999,
 var friendsToAdd = {};
 var theTab = null;
 
+// ---------------------- Global ----------------------
+
+var _tab;
+var _friends;
+var _group;
+
+var POLL_DELAY = 500; // ms
+
+var db_poll_interval;
+
 $(document).ready(function() {
   // start asking server for outstanding invites
   // pollForInvite();
@@ -13,8 +23,6 @@ $(document).ready(function() {
   $('#js-accept-tab').on('click', function() {
     acceptInvite()
   });
-
-  var cookie = parseCookie(document.cookie);
 });
 
 /**
@@ -31,7 +39,7 @@ function pollForInvite(){
         console.log('no new tabs');
       }
     });
-  }, 500);
+  }, POLL_DELAY);
 }
 
 /**
@@ -68,18 +76,6 @@ function acceptInvite() {
     });
 }
 
-// Parse the cookie and return a cookie object
-function parseCookie(cookie) {
-  if(cookie.length == 0) return {};
-  var cookie_obj = {};
-  var fields = cookie.split(';');
-  fields.forEach(function(string) {
-    var parts = string.split('=');
-    cookie_obj[parts[0].trim()] = parts[1].trim();
-  });
-  return cookie_obj;
-}
-
 function getTab(id) {
   return $.get('http://app.grasscat.org/get_tab?tab_id=' + id);
 };
@@ -92,7 +88,7 @@ function getUser(id) {
 
 function openTabView() {
   clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updateTabView() }, 1000);
+  db_poll_interval = setInterval(function() { updateTabView() }, POLL_DELAY);
   $('#tab_view').fadeIn(200);
   $('#page_title_view').fadeIn(200);
 }
