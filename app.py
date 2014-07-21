@@ -35,14 +35,14 @@ def index():
 
 @app.route('/new_tab')
 def new_tab_view():
-    if session.get('user_id'):
+    if session['user_id']:
         return render_template('new_tab.html')
     else:
         return redirect('/login')
 
 @app.route('/tab')
 def tab_view():
-    if session.get('user_id'):
+    if session['user_id']:
         resp = make_response(render_template('tab.html'))
         return resp
     else:
@@ -88,9 +88,11 @@ def make_payment():
     tip_and_tax = float(le_tab['tax']) + float(le_tab['tip'])
 
     for item in le_tab['items']:
-        if str(user_id) in item['assigned_to']:
-            le_tab['paid'] += float(item[price])
+        print item
+        if str(user_id) in le_tab['items'][item]['assigned_to']:
+            le_tab['paid'] += float(le_tab['items'][item]['price'])
 
+    print le_tab
     print 'stage 3'
     tabs.save(le_tab)
     return 'success'
