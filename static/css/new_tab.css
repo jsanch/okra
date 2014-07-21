@@ -14,12 +14,6 @@ html,body {
   padding: 15px 0;
 }
 
-.border {
-  margin: auto;
-  width: 30%;
-  border-top: solid 2px white;
-}
-
 /* -------------- Landing page -------------- */
 h1.page-header {
   border: none;
@@ -36,14 +30,6 @@ h1.page-header {
 #start-buttons {
   padding: 0 20%;
 }
-
-  #start-buttons button {
-    border: 0px;
-    background-color: white;
-    color: #7edeb1;
-    margin-bottom: 10%;
-    outline: none;
-  }
 
   #start-tab {
     text-decoration: none;
@@ -69,7 +55,7 @@ h1.page-header {
   /* -------------- Camera button -------------- */
   #camera-container {
     background-color: #7EDEB1;
-    border: 3px solid white;
+    border: 1px solid white;
     border-radius: 4px;
     cursor: hand;
     cursor: pointer;
@@ -100,7 +86,7 @@ h1.page-header {
       margin-top: 60px;
       position: relative;
       width: 40%;
-      z-index: 10000;
+      z-index: 1;
     }
 
     #take-picture {
