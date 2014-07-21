@@ -286,6 +286,21 @@ def create_invites_route():
     create_invites(inv_group, session['tab_id'])
     return 'success'
 
+@app.route('/accept_invite',  methods=['POST'])
+def accept_invite_route():
+    print 'accept'
+    invites = get_db_collection('invites')
+    tab_id = request.form['tab_id']
+
+    if invites.find_one({'tab_id': str(tab_id), 'user_id': str(session['user_id'])}):
+        invites.remove({'tab_id': str(tab_id), 'user_id': str(session['user_id'])})
+        session['tab_id'] = tab_id
+    # inv_group = request.values.getlist('group[]')
+    # print inv_group
+    print tab_id
+    # create_invites(inv_group, session['tab_id'])
+    return 'success'
+
 #poll invite
 @app.route('/poll_for_invite')
 def poll_for_invite():
@@ -349,7 +364,7 @@ def upload():
                 insert_tabs['master_user_id'] = session['user_id']
             else:
                 insert_tabs['master_user_id'] = None
-            insert_tabs['group'] = []
+            insert_tabs['group'] = [str(session['user_id'])]
             insert_tabs['items'] = {}
             insert_tabs['paid_users'] = []
             insert_tabs['paid'] = False
