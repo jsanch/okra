@@ -76,6 +76,8 @@ $(document).ready(function() {
       file_url : showPicture.src
     };
     var group = Object.keys(friendsToAdd);
+    // also include the master in the group
+    group.push($.cookie('user_id'));
     if (!(typeof group !== 'undefined' && group.length > 0)) {
       window.alert('Please add friends to tab.');
       return;

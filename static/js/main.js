@@ -1,17 +1,10 @@
-// get user_id from cookie
-var user_name = 'Jesus',
-    pro_pic = '/static/img/face.jpeg';
-var friendsToAdd = {};
-var theTab = null;
-
 // ---------------------- Global ----------------------
 
-var _tab;
-var _friends;
-var _group;
-
-var POLL_DELAY = 500; // ms
-var db_poll_interval;
+var friendsToAdd = {},
+    POLL_DELAY = 500, // ms
+    _tab,
+    _group,
+    db_poll_interval;
 
 var user_id = $.cookie('user_id');
 
