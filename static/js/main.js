@@ -46,7 +46,6 @@ function pollForInvite(){
 * create modal with the tab request
 */
 function showInvite(tab) {
-
   // {
   //   "paid_users": [],
   //   "_id": "53ccd703d2a57d6ec8ebded6",
@@ -62,7 +61,8 @@ function showInvite(tab) {
   //   "total": 9.62,
   //   "subtotal": 8.99
   // }
-  $('.modal-body').text('You have been invited to ' + tab['title']);
+  $('#js-invite-modal .modal-title').text('New Tab Invite');
+  $('#js-invite-modal .modal-body').text('You have been invited to ' + tab['title']);
   $('#js-invite-modal').modal();
 }
 
