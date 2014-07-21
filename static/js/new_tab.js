@@ -2,7 +2,11 @@ $(document).ready(function() {
 
   // fill in tab name
   var NewTabTemplate = Handlebars.compile($('#new_tab_template').html());
-  $('#new_tab_name').html(NewTabTemplate({user_name : user_name}) + "'s Tab");
+  var context = {
+    first_name : $.cookie('first_name'),
+    last_name : $.cookie('last_name')
+  }
+  $('#new_tab_name').html(NewTabTemplate(context));
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
@@ -60,22 +64,35 @@ $(document).ready(function() {
     }
   };
 
-  $('#uploadform').submit(function(e) {
-    e.preventDefault();
+  // Uploading the picture on clikcing create tab
+  $('#js-create-tab').click(function(){
+    $('#uploadform').submit();
+  });
 
+  $('#uploadform').submit(function(e) {
+    var tab = {
+      name : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
+      file_url : showPicture.src
+    };
+    var group = Object.keys(friendsToAdd);
+    if (!group) {
+      window.alert('Please add friends to tab.');
+      return;
+    }
+    e.preventDefault();
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
         if (responseText === 'fail'){
           window.alert('Tab failed to upload. Blame Vinay.');
         } else {
-          var tab_id = '53cc7b70d2a57d14a1f58c5d'; // CHANGE
-          closeNewTabView(tab_id);        }
+          // Send the other info like group, maste id, etc.
+          $.post('/create_invites', {group: group})
+          .done(function() {
+            closeNewTabView(tab_id);
+          });
+        }
       }
     });
-  });
-
-  $('#js-create-tab').click(function(){
-    $('#uploadform').submit();
   });
 
 });

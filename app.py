@@ -333,15 +333,18 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
-@app.route('/create_invite')
+@app.route('/create_invite', methods=['POST'])
 def create_invite_route():
-    inv_user_id = request.args.get('user_id', '')
+    inv_user_id = request.form['user_id']
     create_invites([inv_user_id], session['tab_id'])
+    return 'success'
 
-@app.route('/create_invites')
+@app.route('/create_invites',  methods=['POST'])
 def create_invites_route():
-    inv_group = request.args.get('group', '')
+    inv_group = request.form['group']
+    print inv_group
     create_invites(inv_group, session['tab_id'])
+    return 'success'
 
 #poll invite
 @app.route('/poll_for_invite')
@@ -436,8 +439,8 @@ def upload():
 ###############################################################################
 
 ### INIT 
-@app.route('/venmo_login')
-def venmo_login():
+@app.route('/login')
+def login():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
