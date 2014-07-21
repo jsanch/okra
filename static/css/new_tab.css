@@ -84,6 +84,7 @@ h1.page-header {
       border-radius: 50%;
       display: inline-block;
       margin-top: 45px;
+      max-width: 150px;
       position: relative;
       width: 40%;
       z-index: 1;

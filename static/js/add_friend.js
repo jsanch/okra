@@ -30,14 +30,14 @@ function openAddFriends(user_id, friends_to_add) {
 
 // returns dictionary of friends with their ids and names
 function getFriends(user_id) {
-  return {
-      // user_id : user_name
-      1 : {first_name : 'Mikey Big Wang'},
-      2 : {first_name : 'Vinay Fuck This Farias'},
-      3 : {first_name : 'Steven Nuggers Han'},
-      4 : {first_name : 'Jaime Hipster Sanchez'},
-      5 : {first_name : 'Dan The Boss Wu'}
-    };
+  // return {
+  //     // user_id : user_name
+  //     1 : {first_name : 'Mikey Big Wang'},
+  //     2 : {first_name : 'Vinay Fuck This Farias'},
+  //     3 : {first_name : 'Steven Nuggers Han'},
+  //     4 : {first_name : 'Jaime Hipster Sanchez'},
+  //     5 : {first_name : 'Dan The Boss Wu'}
+  //   };
   $.get('http://app.grasscat.org:/get_friends', {user_id : user_id})
   .done(function(data) {
     return data;

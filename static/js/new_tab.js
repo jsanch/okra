@@ -10,7 +10,9 @@ $(document).ready(function() {
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
-    openAddFriends(user_id, friendsToAdd);
+    console.log($.cookie('user_id'));
+    return;
+    openAddFriends($.cookie('user_id'), friendsToAdd);
   });
 
   // Bind confirm add friends button
