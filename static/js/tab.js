@@ -24,7 +24,7 @@ $(function() {
   });
 
   Handlebars.registerHelper('get_pic_url', function(user_id) {
-    return '../static/img/face.jpeg';
+    return _group[user_id].pic_url;
   });
 
   Handlebars.registerHelper('user_selected', function(assigned_to) {
@@ -77,10 +77,7 @@ $(function() {
   });
 
   $('#make_payment_button').on('click', function(event) {
-    $.get('http://app.grasscat.org/make_payment')
-      .done(function(result) {
-
-    });
+    $.post('http://app.grasscat.org/make_payment', { hi: 'hi'});
   });
 
   // Bind open add friends modal button
@@ -151,15 +148,15 @@ function setGroupUsers(group) {
     });
   });
 
-  _group = {
-    1: {first_name: 'Barack', last_name: 'Obama'},
-    2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
-    3: {first_name: 'Michael', last_name: 'Vader'},
-    4: {first_name: 'Darth', last_name: 'Vader'},
-    5: {first_name: 'Darth', last_name: 'Vader'},
-    6: {first_name: 'Darth', last_name: 'Vader'},
-    7: {first_name: 'Darth', last_name: 'Vader'},
-  };
+  // _group = {
+  //   1: {first_name: 'Barack', last_name: 'Obama'},
+  //   2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
+  //   3: {first_name: 'Michael', last_name: 'Vader'},
+  //   4: {first_name: 'Darth', last_name: 'Vader'},
+  //   5: {first_name: 'Darth', last_name: 'Vader'},
+  //   6: {first_name: 'Darth', last_name: 'Vader'},
+  //   7: {first_name: 'Darth', last_name: 'Vader'},
+  // };
 }
 
 function populatePage() {

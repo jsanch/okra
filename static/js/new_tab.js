@@ -95,6 +95,8 @@ $(document).ready(function() {
         }
       }
     });
+              // closeNewTabView(_tab_id, false);
+
   });
 
 });
