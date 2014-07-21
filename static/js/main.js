@@ -46,7 +46,6 @@ function pollForInvite(){
 * create modal with the tab request
 */
 function showInvite(tab) {
-
   // {
   //   "paid_users": [],
   //   "_id": "53ccd703d2a57d6ec8ebded6",
