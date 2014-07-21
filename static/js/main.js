@@ -33,9 +33,8 @@ function pollForInvite(){
   setInterval(function() {
     $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
-      // check for tab invite
       if (data) {
-        showInvite(data);
+        showInvite(JSON.parse(data));
       } else {
         console.log('no new tabs');
       }
@@ -47,8 +46,23 @@ function pollForInvite(){
 * create modal with the tab request
 */
 function showInvite(tab) {
-  theTab = tab['tab'];
-  $('.modal-body').text(theTab['user_id'] + ' has invited you to ' + theTab['tab_name']);
+
+  // {
+  //   "paid_users": [],
+  //   "_id": "53ccd703d2a57d6ec8ebded6",
+  //   "group": [],
+  //   "title": "Michael's tab",
+  //   "tip": 0.0,
+  //   "tax": 0.63,
+  //   "paid": false,
+  //   "master_user_id": "53ccbe9d04b7747717fcdfdf",
+  //   "items": {"0": {"price": 8.99,
+  //   "name": "1 summer big bowl",
+  //   "assigned_to": ["53ccbe9d04b7747717fcdfdf"]}},
+  //   "total": 9.62,
+  //   "subtotal": 8.99
+  // }
+  $('.modal-body').text('You have been invited to ' + tab['title']);
   $('#js-invite-modal').modal();
 }
 
