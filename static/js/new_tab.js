@@ -30,14 +30,10 @@ $(document).ready(function() {
     $('#take-picture').click();
   });
 
-  // Bind create tab button
-  $('#create_tab_button').on('click', function() {
-    createTab();
-  });
-
   // Bind getting the picture file
   var takePicture = document.querySelector("#take-picture");
   var showPicture = document.querySelector("#show-picture");
+
   takePicture.onchange = function (event) {
     // Get a reference to the taken picture or chosen file
     var files = event.target.files,
@@ -73,39 +69,32 @@ $(document).ready(function() {
     }
   };
 
-  // grab the necessary data and post to insert into db
+  // send file url to backend to parse
   function createTab() {
     var newTab = {
+      master_id : user_id,
       group : {},
-      items : {},
-      sub_total : 0,
-      tax : 0,
-      tip : 0,
-      total: 0
+      file_url : ''
     };
     $.post('http://app.grasscat.org:5000/ajax/create_tab', {tab: newTab})
     .done(function(data) {
-      window.location.href = data.redirect;
     });
   }
 
   $('#uploadform').submit(function(e){
     e.preventDefault();
-      // Prints loading a bunch of time
-      var loading = setInterval(function(){console.log('LOADING');}, 200);
 
-      $(this).ajaxSubmit({
-        success: function(responseText, statusText, xhr, $form){
-          console.log(responseText);
-
-          clearInterval(loading);
-        }
-      });
-
+    $(this).ajaxSubmit({
+      success: function(responseText, statusText, xhr, $form) {
+        console.log('poo');
+        closeNewTabPage();
+      }
     });
+  });
+
   $('#js-create-tab').click(function(){
-    console.log('asdfadsf');
     $('#uploadform').submit();
+    // createTab();
   });
 
   // get friends and populate the add friends modal

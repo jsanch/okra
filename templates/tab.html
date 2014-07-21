@@ -1,53 +1,52 @@
-{% raw %}
 <!DOCTYPE html>
 
 {% raw %}
 
 <html lang="en">
 <head>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script type="text/javascript" src="../static/js/handlebars-v1.3.0.js"></script>
-  <script type="text/javascript" src="../static/js/jquery.knob.min.js"></script>
-  <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-
-  <script type="text/javascript" src="../static/js/tab.js"></script>
-  <script type="text/javascript" src="../static/js/add_friend.js"></script>
-
-
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../static/css/tab.css">
   <link rel="stylesheet" type="text/css" href="../static/css/new_tab.css">
+
+  <link rel="import" href="../templates/new_tab.html">
 </head>
 
 <body>
 	<div class="container-fluid">
-    <div class="header content_container text-center">
-      <div id="title" class="title"></div>
-      <div class="border_line_white"></div>
-      <div class="sub_title">Tab</div>
-    </div>
-    
 		<div class="content_panel">
-      <div class="row content_container">
-        <div class="col-xs-10 col_centered">
-          <div class="friend_group">
-            <table class="col_centered">
-              <tbody>
-                <tr class="friend_group_row">
-                  <td class="button_cell">
-                    <button id="tab_open_add_friends" class="btn btn-primary pull-right">+</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="button_cell pulld-left">
+
+      <div id="page_title_view">
+        <div class="header content_container text-center">
+          <div id="title" class="title"></div>
+          <div class="border_line_white"></div>
+          <div class="sub_title">Tab</div>
+        </div>
+
+        <div class="row content_container">
+          <div class="col-xs-10 col_centered">
+            <div class="friend_group">
+              <table class="col_centered">
+                <tbody>
+                  <tr class="friend_group_row">
+                    <td class="button_cell">
+                      <button id="tab_open_add_friends" class="btn btn-primary pull-right">+</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="button_cell pulld-left">
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- View for editting the tab -->
 
       <div id="tab_view">
         <div class="content_container">
@@ -116,6 +115,8 @@
         </div>
       </div>
 
+      <!-- View for viewing payments -->
+
       <div id="pay_view" class="content_panel">
         <div class="row content_container">
           <div class="payment_progress_wrapper col_centered">
@@ -146,6 +147,38 @@
         </div>
       </div>
 
+    <!-- View for creating a new tab -->
+
+    <div id="new_tab_view" class="content_panel">
+      <section id='new-tab-container'>
+        <h1 id='new_tab_name'></h1>
+        <div><!-- user name here --></div>
+
+        <!-- OCR button -->
+        <div id='camera-container'>
+          <img id='camera' src='../static/img/camera.svg'>
+          <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
+            <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
+          </form>
+        </div>
+        <img src="" alt="" id="show-picture">
+
+        <!-- Friends in tab -->
+        <table class="friend_group content_container">
+          <tbody>
+            <tr class="friend_group_row">
+              <td class="button_cell">
+                <button id="open_add_friends" class="btn btn-block btn-primary">Add Friends</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Create Tab button -->
+        <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
+      </section>
+    </div>
+
 		</div>
   </div>
 
@@ -165,6 +198,17 @@
       <div class="alert alert-success" role="alert" hidden></div>
     </div>
   </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/handlebars-v1.3.0.js"></script>
+<script type="text/javascript" src="../static/js/jquery.knob.min.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="../static/js/main.js"></script>
+<script type="text/javascript" src="../static/js/tab.js"></script>
+<script type="text/javascript" src="../static/js/new_tab.js"></script>
+<script type="text/javascript" src="../static/js/add_friend.js"></script>
+<script src='http://malsup.github.com/min/jquery.form.min.js'></script>
 </body>
 </html>
 
@@ -260,7 +304,28 @@
   {{/each}}
 </script>
 
-{% raw %}
+<script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
 
+<script id="friend_block_template" type="text/x-handlebars-template">
+  {{#each friends}}
+    <td class="friend_block">
+      <img src="/static/img/face.jpeg" width='50px' height='50px'>
+      <div class="friend_name text-center">{{name}}</div>
+    </td>
+  {{/each}}
+</script>
+
+<script id='add_friends_template' type='text/x-handlebars-template'>
+  <table>
+    {{#each friends}}
+      <div class='list-group friend_block'>
+        <a href='#' class='list-group-item js-add-friend'>
+          <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
+          <span class='glyphicon glyphicon-ok-circle'></span>
+        </a>
+      </div>
+    {{/each}}
+  </table>
+</script>    
 
 {% endraw %}

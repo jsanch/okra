@@ -242,6 +242,14 @@ table td {
   display: none;
 }
 
+#tab_view {
+  display: none;
+}
+
+#page_title_view {
+  display: none;
+}
+
 /* -------------- Overrides -------------- */
 
 .btn {

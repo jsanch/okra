@@ -72,11 +72,70 @@ function acceptInvite() {
 
 // Parse the cookie and return a cookie object
 function parseCookie(cookie) {
+  if(cookie.length == 0) return {};
   var cookie_obj = {};
   var fields = cookie.split(';');
   fields.forEach(function(string) {
     var parts = string.split('=');
-    cookie_obj[parts[0].trim()] = parts[1].trim()
+    cookie_obj[parts[0].trim()] = parts[1].trim();
   });
   return cookie_obj;
 }
+
+
+// ---------------------- Change Views ----------------------
+
+function openTabView() {
+  clearInterval(db_poll_interval);
+  db_poll_interval = setInterval(function() { updateTabView() }, 100);
+  $('#tab_view').fadeIn(200);
+  $('#page_title').fadeIn(200);
+}
+function closeTabView() {
+  $('#add_friend_button').fadeOut(200);
+  $('#tab_view').fadeOut(200, function() {
+    openPayView();
+  });
+}
+
+function openPayView() {
+  initPayView();
+  $('#pay_view').fadeIn(200);
+}
+function closePayView() {
+  $('#add_friend_button').fadeIn(200);
+  $('#pay_view').fadeOut(200, function() {
+    openTabView();
+  });
+}
+
+function openNewTabView() {
+  $('#page_title').fadeOut(200);
+  $('#new_tab_view').fadeIn(200);
+}
+function closeNewTabView() {
+  $('#new_tab_view').fadeOut(200, function() {
+    openTabView();
+  });
+}
+
+$('#tab_view #finish_button').on('click', function(event) {
+  closeTabView();
+});
+  
+$('#tab_view #back_button').on('click', function(event) {
+
+});
+
+$('#pay_view #back_button').on('click', function(event) {
+  closePayView();
+});
+
+$('#make_payment_button').on('click', function(){
+  window.location.replace("http://app.grasscat.org/venmo_login");
+});
+
+
+
+
+

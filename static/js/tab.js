@@ -367,35 +367,7 @@ $(function() {
     updateAdded();
   });
 
-  // ---------------------- Change Views ----------------------
-
-  $('#tab_view #finish_button').on('click', function(event) {
-    // window.location.replace("http://stackoverflow.com");
-    $('#add_friend_button').fadeOut(200);
-    $('#tab_view').fadeOut(200, function() {
-      initPayView();
-      $('#pay_view').fadeIn(200);
-    });
-  });
   
-  $('#tab_view #back_button').on('click', function(event) {
-    // window.location.replace("http://stackoverflow.com");
-
-  });
-
-  $('#pay_view #back_button').on('click', function(event) {
-    // window.location.replace("http://stackoverflow.com");
-    $('#add_friend_button').fadeIn(200);
-    $('#pay_view').fadeOut(200, function() {
-      clearInterval(db_poll_interval);
-      db_poll_interval = setInterval(function() { updateTabView() }, 100);
-      $('#tab_view').fadeIn(200);
-    });
-  });
-
-  $('#make_payment_button').on('click', function(){
-    window.location.replace("http://app.grasscat.org/venmo_login");
-  });
 });
 
 // ---------------------- Prototype ----------------------
