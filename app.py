@@ -277,7 +277,7 @@ def create_invites_route():
     print "asdkjfhakgjha"
     inv_group = request.values.getlist('group[]')
     print inv_group
-    create_invites(inv_group, session['tab_id'])
+    create_invites(inv_group, str(session['tab_id']))
     return 'success'
 
 @app.route('/accept_invite',  methods=['POST'])

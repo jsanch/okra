@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
-    openAddFriends($.cookie('user_id'), friends_to_add);
+    openAddFriends($.cookie('user_id'), friendsToAdd);
   });
 
   // Bind confirm add friends button
@@ -75,9 +75,7 @@ $(document).ready(function() {
       title : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
       file_url : showPicture.src
     };
-    var group = Object.keys(friends_to_add);
-    // also include the master in the group
-    group.push($.cookie('user_id'));
+    var group = Object.keys(friendsToAdd);
     if (!(typeof group !== 'undefined' && group.length > 0)) {
       window.alert('Please add friends to tab.');
       return;
@@ -95,7 +93,7 @@ $(document).ready(function() {
         }
       }
     });
-    // closeNewTabView(_tab_id, false);
+              // closeNewTabView(_tab_id, false);
 
   });
 
