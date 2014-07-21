@@ -22,3 +22,7 @@
   color: #000;
   opacity: .5;
 }
+
+.friend_add_icon {
+  display: none;
+}
