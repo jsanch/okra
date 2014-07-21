@@ -8,6 +8,10 @@
  */
 
 #venmo {
+  margin-top: 10px;
+}
+
+#venmo a {
   color: white;
   text-decoration: none;
 }
