@@ -35,14 +35,14 @@ def index():
 
 @app.route('/new_tab')
 def new_tab_view():
-    if session['user_id']:
+    if 'user_id' in session:
         return render_template('new_tab.html')
     else:
         return redirect('/login')
 
 @app.route('/tab')
 def tab_view():
-    if session['user_id']:
+    if 'user_id' in session:
         resp = make_response(render_template('tab.html'))
         return resp
     else:
@@ -288,7 +288,7 @@ def accept_invite_route():
 
     if invites.find_one({'tab_id': str(tab_id), 'user_id': str(session['user_id'])}):
         invites.remove({'tab_id': str(tab_id), 'user_id': str(session['user_id'])})
-        session['tab_id'] = tab_id
+        session['tab_id'] = str(tab_id)
     # inv_group = request.values.getlist('group[]')
     # print inv_group
     print tab_id
@@ -307,7 +307,7 @@ def poll_for_invite():
     invite = invites.find_one({'user_id':req_user_id})
     print invite
     if ( invite == None ):
-        return 'null'
+        return 'fail'
     else:
         tabs = get_db_collection('tabs')
         le_tab = tabs.find_one({'_id' : ObjectId(invite['tab_id'])})
