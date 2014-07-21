@@ -47,6 +47,7 @@
       <div class="header content_container text-center">
         <div id="title" class="title"></div>
         <div class="border_line_lime"></div>
+        <div class="sub_title">Tab</div>
       </div>
     </div>
 
@@ -359,30 +360,10 @@
       <a href='#' class='list-group-item js-add-friend'>
         <div class="row">
           <div class="col-xs-2">
-            <div class="small_portrait pull-left" style="background-image: url({{get_pic_url @key}})"></div>
+            <div class="small_portrait pull-left" style="background-image: url({{pic_url}})"></div>
           </div>
           <div class="col-xs-8">
-            <span class="text-center js-friend" data-id={{@key}} data-name={{first_name}}>{{first_name}}</span>
-          </div>
-          <div class="col-xs-2">
-            <i class="friend_add_icon fa fa-check text_green"></i>
-          </div>
-        </div>
-      </a>
-    </div>
-  {{/each}}
-</script>
-
-<script id="dan_add_friends_template" type="text/x-handlebars-template">
-  {{#each friends}}
-    <div class="list-group">
-      <a href='#' class='list-group-item js-add-friend'>
-        <div class="row">
-          <div class="col-xs-2">
-            <div class="small_portrait pull-left" style="background-image: url({{get_pic_url @key}})"></div>
-          </div>
-          <div class="col-xs-8">
-            <span class="text-center js-friend" data-id={{@key}} data-name={{first_name}}>{{first_name}}</span>
+            <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
           </div>
           <div class="col-xs-2">
             <i class="friend_add_icon fa fa-check text_green"></i>
