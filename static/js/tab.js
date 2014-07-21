@@ -82,7 +82,12 @@ $(function() {
 
   $('#make_payment_button').on('click', function(event) {
     event.preventDefault();
-    $.post('http://app.grasscat.org/make_payment', { hi: 'hi'});
+    $.post('http://app.grasscat.org/make_payment', { hi: 'hi'})
+      .done(function(result) {
+        if(result == 'success') {
+          $('#payment_success').animate({'opacity': 1}, 200);
+        }
+      });
   });
 
   // Bind open add friends modal button
@@ -122,6 +127,8 @@ function initPayView() {
       'readOnly': true,
     }
   );
+
+  $('#payment_success').css({'opacity': 0});
 
   getTab(_tab_id).done(function(data) {
     if(!data) return;
