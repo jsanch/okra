@@ -24,19 +24,25 @@ config_file = open(os.path.join(parser_location, 'parser-config.json'), 'r')
 config = json.load(config_file, 'ascii')
 
 reverse_map_file = open(os.path.join(parser_location, 'map.json'), 'r')
-# debug(reverse_map_file)
 reverse_map = json.load(reverse_map_file, 'ascii')
 
+reverse_name_map_file = open(os.path.join(parser_location, 'name-map.json'), 'r')
+reverse_name_map = json.load(reverse_name_map_file, 'ascii')
+
 character_map = {}
+name_character_map = {}
 
 for key in reverse_map:
-	# print key
 	for letter in reverse_map[key]:
-		# print letter
 		character_map[str(letter)] = str(key)
+
+for key in reverse_name_map:
+	for letter in reverse_name_map[key]:
+		name_character_map[str(letter)] = str(key)		
 
 print config
 print character_map
+print reverse_name_map
 
 ere_end_of_line_price = r'\$?[0-9]+[\.,][0-9]{2}$'
 
@@ -135,14 +141,14 @@ def analyze_tab(tab_param):
 def price_fix(price_string_param):
 	final_price_string = ''
 	for letter in price_string_param:
-		print letter
+		# print letter
 		if not letter in '0123456789.':
-			print 'not numeric letter'
+			# print 'not numeric letter'
 			if letter in character_map:
 				debug('letter in character map')
 				final_price_string += character_map[letter]
 		else:
-			print 'is numeric letter'
+			# print 'is numeric letter'
 			final_price_string += letter
 
 	# return Decimal(price_string_param.strip('$'))
@@ -150,6 +156,25 @@ def price_fix(price_string_param):
 	debug(price_string_param)
 	debug(final_price_string)
 	return Decimal(final_price_string)
+
+def name_fix(name_string_param):
+	final_name_string = ''
+	for letter in name_string_param:
+		# print letter
+		if not letter in 'abcdefghijklmnopqrstuvwxyz':
+			# print 'not numeric letter'
+			if letter in name_character_map:
+				# debug('letter in character map')
+				final_name_string += name_character_map[letter]
+		else:
+			# print 'is numeric letter'
+			final_name_string += letter
+
+	# return Decimal(price_string_param.strip('$'))
+	debug('name fix')
+	debug(name_string_param)
+	debug(final_name_string)
+	return final_name_string
 
 def full_scan(image_name):
 	full_image_path = images_location + image_name
@@ -213,9 +238,9 @@ def basic_scan(image_name):
 		matches_to_compare = []
 		for parser_key in config['mid_parsers']:
 			tre_matcher = tre.compile(config['mid_parsers'][parser_key]['ere'], tre.EXTENDED)
-			tre_match = tre_matcher.search(raw_item_description, tre_fuzzyness)
+			tre_match = tre_matcher.search(name_fix(raw_item_description), tre_fuzzyness)
 			debug('xxxxxxxxxxxxxxxxxxxxxxxxxx')
-			debug(raw_item_description + ' XXX ' + config['mid_parsers'][parser_key]['ere'] + ' XXX ' + raw_item_value)
+			debug(name_fix(raw_item_description) + ' XXX ' + config['mid_parsers'][parser_key]['ere'] + ' XXX ' + raw_item_value)
 			if tre_match:
 				debug('match')
 				matches_to_compare.append((tre_match, config['mid_parsers'][parser_key]['string']))
@@ -240,3 +265,36 @@ def basic_scan(image_name):
 	x = analyze_tab(tab)
 	print x
 	return x
+
+
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+	######################
+
+	######################
+	######################
+	######################
+	######################
+
+	######################
+	######################
+	######################

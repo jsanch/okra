@@ -203,25 +203,44 @@ def get_tab():
 # NEEDS: tab_id, user_id, item_id
 @app.route('/add_user_to_item', methods=['POST'])
 def add_user_to_item():
-    ''' add user to  items in a tab '''
+    print ''' add user to  items in a tab '''
     #get db collection
     tabs = get_db_collection('tabs')
     
+    print 'stage 1'
+
     #get args
     tab_id = request.form['tab_id']
+    # print 'a', tab_id
+    print tab_id
+
     user_id = request.form['user_id']
+    print user_id
+    # print 'b'
     item_id = request.form['item_id']
+    print item_id
+
+    print 'stage 2'
 
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    print str(le_tab)
 
+    print 'stage 3'
 
     if (le_tab == None):
+        print 'fail'
         return 'fail'
     else:
-        le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        if not 'assigned_to' in le_tab['items'][str(item_id)]:
+            le_tab['items'][str(item_id)]['assigned_to'] = []
+        if not user_id in le_tab['items'][str(item_id)]['assigned_to']:
+            le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
+        else:
+            return 'already'
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
+        print 'add_user_to_item success'
         return "success"
 
 # REMOVE USER 
@@ -232,18 +251,26 @@ def remove_user_to_item():
     #get db collection
     tabs = get_db_collection('tabs')
     
+    print 'stage 1'
     #get args
     tab_id = request.form['tab_id']
     user_id = request.form['user_id']
     item_id = request.form['item_id']
 
+    print 'stage 2'
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
+    print 'stage 3'
     if (le_tab == None):
         return 'fail'
     else:
-        le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        if not 'assigned_to' in le_tab['items'][str(item_id)]:
+            le_tab['items'][str(item_id)]['assigned_to'] = []
+        if user_id in le_tab['items'][str(item_id)]['assigned_to']:
+            le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
+        else:
+            return 'already'
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
         return "success"
@@ -306,6 +333,16 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
+@app.route('/create_invite')
+def create_invite_route():
+    inv_user_id = request.args.get('user_id', '')
+    create_invites([inv_user_id], session['tab_id'])
+
+@app.route('/create_invites')
+def create_invites_route():
+    inv_group = request.args.get('group', '')
+    create_invites(inv_group, session['tab_id'])
+
 #poll invite
 @app.route('/poll_for_invite')
 def poll_for_invite():
@@ -315,12 +352,12 @@ def poll_for_invite():
     #get param
     req_user_id = request.args.get('user_id', '')
     print "requested user id : " +  req_user_id
-    inv = invites.find_one({'user_id':req_user_id})
-    print inv
-    if ( inv == None ):
+    invite = invites.find_one({'user_id':req_user_id})
+    print invite
+    if ( invite == None ):
         return 'null'
     else:
-        return inv['tab_id']
+        return invite['tab_id']
 
 ###############################################################################
 ################################## OCR  #####################################
@@ -377,6 +414,7 @@ def upload():
             index_id = 0
             for parsed_item in parsed_tabs['items']:
                 insert_tabs['items'][str(index_id)] = parsed_item
+                insert_tabs['items'][str(index_id)]['assigned_to'] = []
                 index_id += 1
 
             print insert_tabs
@@ -385,6 +423,7 @@ def upload():
             tab_id = okratabs.insert(insert_tabs)
             print 'SUCCESS'
             return str({'tab_id' : tab_id})
+        return 'fail'
     except Exception as e:
         print e
         return 'fail'
@@ -474,15 +513,44 @@ def oauth_authorized():
     response.set_cookie('last_name',str(session['last_name']))
     response.set_cookie('profile_picture_url',session['profile_picture_url'])
 
-    #return  'fuck you %s' % session['venmo_token']
-    # return 'You were signed in as %s' % session['venmo_token']
     return response
     
 
 ###############################################################################
-################################## FLASK  #########################
-
+################################## FLASK ######################################
+###############################################################################
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
+
+
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+################################# DELETE BUFFER ###############################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+################################################
