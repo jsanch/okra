@@ -75,16 +75,22 @@ def get_db_collection(collection):
 
 @app.route('/make_payment', methods=['POST'])
 def make_payment():
+    print 'MAKE PAYMENTS'
     user_id = session['user_id']
     tab_id = session['tab_id']
+    print 'stage 1'
     tabs = get_db_collection('tabs')
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     le_tab['paid_users'].append(user_id)
+    print 'stage 2'
+
+    tip_and_tax = float(le_tab['tax']) + float(le_tab['tip'])
 
     for item in le_tab['items']:
         if user_id in item['assigned_to']:
             le_tab['paid'] += float(item[price])
 
+    print 'stage 3'
     tabs.save(le_tab)
     return 'success'
 
