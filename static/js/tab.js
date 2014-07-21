@@ -183,7 +183,7 @@ function populatePage() {
     // Populate item list
     $('.item_list').html(ItemListTemplate({ items: _tab.items }));
 
-    $('#title').text('Michael\'s Tab');//_tab.title);
+    $('#title').text(_tab.title);
     $('#tax').text('$' + parseFloat(_tab.tax).toFixed(2));
     $('#tip_input').val(_tab.tip);
     $('#subtotal').text('$' + parseFloat(_tab.subtotal));
@@ -207,7 +207,7 @@ function updateTabView() {
     // Update friends if it has changed
     new_tab.group.forEach(function(id) {
       if($.inArray(id, _tab.group) == -1) {
-        getUser().done(function(data) {
+        getUser(id).done(function(data) {
           var friend = JSON.parse(data);
           $('.friend_group_row').prepend(FriendBlockTemplate(friend));
         });
