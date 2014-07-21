@@ -414,7 +414,7 @@ def venmo_login():
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
         # charge_or_pay('charge',venmo_token,8576009129, 0.01,'')
-      return 'Jaime charged'
+      return redirect('/tab')
     else:
       return redirect('https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code' % CONSUMER_ID)
 
@@ -479,7 +479,7 @@ def oauth_authorized():
     session['user_id'] = str(user_id)
     print 'stage 3'
 
-    response = make_response(redirect('/'))
+    response = make_response(redirect('/tab'))
     response.set_cookie('user_id',str(session['user_id']))
     response.set_cookie('first_name',str(session['first_name']))
     response.set_cookie('last_name',str(session['last_name']))
