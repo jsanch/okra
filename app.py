@@ -83,11 +83,12 @@ def make_payment():
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     le_tab['paid_users'].append(user_id)
     print 'stage 2'
+    print le_tab
 
     tip_and_tax = float(le_tab['tax']) + float(le_tab['tip'])
 
     for item in le_tab['items']:
-        if user_id in item['assigned_to']:
+        if str(user_id) in item['assigned_to']:
             le_tab['paid'] += float(item[price])
 
     print 'stage 3'
