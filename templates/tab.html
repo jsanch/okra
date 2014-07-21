@@ -17,184 +17,185 @@
 </head>
 
 <body>
-	<div class="container-fluid">
-		<div class="content_panel">
 
-      <!-- Main Page content -->
-      <div id="main_view">
-        <section class='main-content'>
-          <header class='main-header'>
-            <span class='vertical'><h1 class='page-header'>Okra</h1></span>
-          </header>
+  <!-- Main Page content -->
+  <div id="main_view">
+    <section class='main-content'>
+      <header class='main-header'>
+        <span class='vertical'><h1 class='page-header'>Okra</h1></span>
+      </header>
 
-          <!-- Main page buttons -->
-          <div id='start-buttons'>
-            <button type='button' class="btn btn-primary btn-lg btn-block">Profile</button>
-            <button type='button' id='js-start-tab' class="btn btn-primary btn-lg btn-block">Start Tab</button>
-          </div>
-        </section>
+      <!-- Main page buttons -->
+      <div id='start-buttons'>
+        <button type='button' class="btn btn-primary btn-lg btn-block">Profile</button>
+        <button type='button' id='js-start-tab' class="btn btn-primary btn-lg btn-block">Start Tab</button>
       </div>
+    </section>
+  </div>
 
-      <div id="page_title_view">
-        <div class="header content_container text-center">
-          <div id="title" class="title"></div>
-          <div class="border_line_white"></div>
-          <div class="sub_title">Tab</div>
-        </div>
+  <!-- View for page title -->
 
-        <div class="row content_container">
-          <div class="col-xs-10 col_centered">
-            <div class="friend_group">
-              <table class="col_centered">
-                <tbody>
-                  <tr class="friend_group_row">
-                    <td class="button_cell">
-                      <button id="tab_open_add_friends" class="btn btn-primary pull-right">+</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="button_cell pulld-left">
-              </div>
-            </div>
+  <div id="page_title_view">
+    <div class="header content_container text-center">
+      <div id="title" class="title"></div>
+      <div class="border_line_white"></div>
+      <div class="sub_title">Tab</div>
+    </div>
+
+    <div class="row content_container">
+      <div class="col-xs-10 col_centered">
+        <div class="friend_group">
+          <table class="col_centered">
+            <tbody>
+              <tr class="friend_group_row">
+                <td class="button_cell">
+                  <button id="tab_open_add_friends" class="btn btn-primary pull-right">+</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="button_cell pulld-left">
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- View for editting the tab -->
+  <!-- View for editting the tab -->
 
-      <div id="tab_view">
-        <div class="content_container">
-          <ul class="item_list list-group"></ul>
+  <div id="tab_view">
+    <div class="container-fluid">
+      <div class="content_container">
+        <ul class="item_list list-group"></ul>
+      </div>
+
+      <div class="border_line_white content_container"></div>
+
+      <div class="row content_container">
+        <div class="text-center">Tab info:</div>
+      </div>
+
+      <div class="costs_panel padded_panel"> 
+        <div class="row content_container">
+          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Sub Total:</div>
+          <div id="subtotal" class="col-xs-8"></div>
         </div>
-
-        <div class="border_line_white content_container"></div>
+        <div class="border_line_lime content_container"></div>
 
         <div class="row content_container">
-          <div class="text-center">Tab info:</div>
+          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Tax:</div>
+          <div id="tax" class="col-xs-8"></div>
         </div>
+        <div class="border_line_lime content_container"></div>
 
-        <div class="costs_panel padded_panel"> 
-          <div class="row content_container">
-            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Sub Total:</div>
-            <div id="subtotal" class="col-xs-8"></div>
-          </div>
-          <div class="border_line_lime content_container"></div>
-
-          <div class="row content_container">
-            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Tax:</div>
-            <div id="tax" class="col-xs-8"></div>
-          </div>
-          <div class="border_line_lime content_container"></div>
-
-          <div class="row content_container col_centered">
-            <div class="col-xs-2 text-right inline_element">Tip:</div>
-            <div class="col-xs-4">
-              <form class="form-inline inline_element pull-right" role="form">
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-addon">$</div>
-                    <input type="text" class="form-control" id="tip_input" placeholder="Tip">
-                  </div>
+        <div class="row content_container col_centered">
+          <div class="col-xs-2 text-right inline_element">Tip:</div>
+          <div class="col-xs-4">
+            <form class="form-inline inline_element pull-right" role="form">
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-addon">$</div>
+                  <input type="text" class="form-control" id="tip_input" placeholder="Tip">
                 </div>
-              </form>
-            </div>
-            <div class="col-xs-6">
-              <button class="tip_button btn btn-primary" data-percentage="0.15">15%</button>
-              <button class="tip_button btn btn-primary" data-percentage="0.18">18%</button>
-              <button class="tip_button btn btn-primary" data-percentage="0.20">20%</button>
-            </div>
+              </div>
+            </form>
           </div>
-          <div class="border_line_lime content_container"></div>
-
-          <div class="row">
-            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Total:</div>
-            <div id="total" class="col-xs-8"></div>
+          <div class="col-xs-6">
+            <button class="tip_button btn btn-primary" data-percentage="0.15">15%</button>
+            <button class="tip_button btn btn-primary" data-percentage="0.18">18%</button>
+            <button class="tip_button btn btn-primary" data-percentage="0.20">20%</button>
           </div>
         </div>
+        <div class="border_line_lime content_container"></div>
 
-        <div class="user_pay_amt_panel padded_panel">
-          <div class="row">
-            <div class="col-xs-2 col-xs-offset-2 text-right inline_element">You Pay:</div>
-            <div id="user_pay_amt" class="col-xs-8"></div>
-          </div>
-        </div>
-
-        <div class="footer">
-          <div class="content_container pull-right">
-            <button id="finish_button" class="btn btn-primary">Finish and Pay ></button>
-          </div>
-          <div class="content_container pull-left">
-            <button id="back_button" class="btn btn-primary">< Back</button>
-          </div>
+        <div class="row">
+          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Total:</div>
+          <div id="total" class="col-xs-8"></div>
         </div>
       </div>
 
-      <!-- View for viewing payments -->
-
-      <div id="pay_view" class="content_panel">
-        <div class="row content_container">
-          <div class="payment_progress_wrapper col_centered">
-            <div id="payment_progress_chart"></div>
-            <div id="payment_rem_block">
-              <div id="payment_rem_label">Remaining</div>
-              <div id="payment_rem_amt"></div>
-              <div id="payment_rem_tot"></div>
-            </div>
-          </div>
-          <!-- <input type="text" val="75" class="payment_progress_chart"/> -->
-          <div class="content_container col_centered text-center">
-            <div>You owe $<span id="payment_amount"></span></div>
-          </div>
-          <div class="content_container col_centered text-center">
-            <button id="make_payment_button" class="btn btn-primary">Make Payment</button>
-          </div>
-
-          <div class="content_container">
-            <ul class="paid_user_list list-group"></ul>
-          </div>
-        </div>
-
-        <div class="footer">
-          <div class="content_container pull-left">
-            <button id="back_button" class="btn btn-primary">< Back</button>
-          </div>
+      <div class="user_pay_amt_panel padded_panel">
+        <div class="row">
+          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">You Pay:</div>
+          <div id="user_pay_amt" class="col-xs-8"></div>
         </div>
       </div>
+
+      <div class="footer">
+        <div class="content_container pull-right">
+          <button id="finish_button" class="btn btn-primary"></button>
+        </div>
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View for viewing payments -->
+
+  <div id="pay_view" class="content_panel">
+    <div class="container-fluid">
+      <div class="row content_container">
+        <div class="payment_progress_wrapper col_centered">
+          <div id="payment_progress_chart"></div>
+          <div id="payment_rem_block">
+            <div id="payment_rem_label">Remaining</div>
+            <div id="payment_rem_amt"></div>
+            <div id="payment_rem_tot"></div>
+          </div>
+        </div>
+        <!-- <input type="text" val="75" class="payment_progress_chart"/> -->
+        <div class="content_container col_centered text-center">
+          <div>You owe $<span id="payment_amount"></span></div>
+        </div>
+        <div class="content_container col_centered text-center">
+          <button id="make_payment_button" class="btn btn-primary">Make Payment</button>
+        </div>
+
+        <div class="content_container">
+          <ul class="paid_user_list list-group"></ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="content_container pull-left">
+          <button id="back_button" class="btn btn-primary">< Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- View for creating a new tab -->
 
-    <div id="new_tab_view" class="content_panel">
-      <section id='new-tab-container'>
-        <h1 id='new_tab_name'></h1>
-        <div><!-- user name here --></div>
+  <div id="new_tab_view" class="content_panel">
+    <section id='new-tab-container'>
+      <h1 id='new_tab_name'></h1>
+      <div><!-- user name here --></div>
 
-        <!-- OCR button -->
-        <div id='camera-container'>
-          <img id='camera' src='../static/img/camera.svg'>
-          <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
-            <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
-          </form>
-        </div>
-        <img src="" alt="" id="show-picture">
+      <!-- OCR button -->
+      <div id='camera-container'>
+        <img id='camera' src='../static/img/camera.svg'>
+        <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
+          <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
+        </form>
+      </div>
+      <img src="" alt="" id="show-picture">
 
-        <!-- Friends in tab -->
-        <table class="friend_group content_container">
-          <tbody>
-            <tr class="friend_group_row">
-              <td class="button_cell">
-                <button id="open_add_friends" class="btn btn-block btn-primary">Add Friends</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Friends in tab -->
+      <table class="friend_group content_container">
+        <tbody>
+          <tr class="friend_group_row">
+            <td class="button_cell">
+              <button id="open_add_friends" class="btn btn-block btn-primary">Add Friends</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-        <!-- Create Tab button -->
-        <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
-      </section>
-    </div>
-
-		</div>
+      <!-- Create Tab button -->
+      <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
+    </section>
   </div>
 
   <!-- Add Friends to tab modal -->

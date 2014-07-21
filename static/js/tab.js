@@ -43,8 +43,6 @@ $(function() {
 
   // ---------------------- Init ----------------------
 
-  initTabView();
-
   function initTabView() {
     // Initially populate page
     populatePage();
@@ -159,6 +157,7 @@ $(function() {
           5: {name: 'Okra', price: '14.50', assigned_to: [2]}
         },
         tax: 14.44,
+        master_user_id: 1,
         tip: 50.00,
         total: 3234,
         subtotal: 123,
@@ -175,6 +174,13 @@ $(function() {
       $('#subtotal').text(_tab.subtotal);
       $('#total').text(_tab.total);
 
+      if(user_id == _tab.master_user_id) {
+        $('#finish_button').text('View Payments >');
+      } else {
+        $('#finish_button').text('Finish and Pay >');
+      }
+
+      // Set the group object
       setGroupUsers(_tab.group);
     });
   }
@@ -367,7 +373,7 @@ $(function() {
     updateAdded();
   });
 
-  
+
 });
 
 // ---------------------- Prototype ----------------------
