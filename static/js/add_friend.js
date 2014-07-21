@@ -9,30 +9,30 @@ $(function() {
 
 // get friends and populate the add friends modal
 function openAddFriends(user_id, friends_to_add) {
-  var friends_list = getFriends(user_id);
-
-  $('#add_friends_body').html(AddFriendsTemplate({friends : friends_list}));
-  // toggle friends already added to list
-  $('.js-add-friend').each(function() {
-    var friend = $('.js-friend', this);
-    if (friend.data('id') in friends_to_add) {
-      $('.friend_add_icon', this).toggle();
-    }
-  });
-  // bind add friend action to each friend
-  $('.js-add-friend').on('click', function() {
-    updateFriend($(this), friends_to_add);
-  });
-  // show modal
-  $('#js-add-friends-modal').modal();
-}
-
-// returns dictionary of friends with their ids and names
-function getFriends(user_id) {
+  var friends_list;
   $.get('/get_friends', {user_id : user_id})
-  .done(function(data) {
-    return data;
-  });
+    .done(function(data) {
+
+      friends_list = data;
+
+      $('#add_friends_body').html(AddFriendsTemplate({friends : friends_list}));
+
+      // toggle friends already added to list
+      $('.js-add-friend').each(function() {
+        var friend = $('.js-friend', this);
+        if (friend.data('id') in friends_to_add) {
+          $('.friend_add_icon', this).toggle();
+        }
+      });
+
+      // bind add friend action to each friend
+      $('.js-add-friend').on('click', function() {
+        updateFriend($(this), friends_to_add);
+      });
+
+      // show modal
+      $('#js-add-friends-modal').modal();
+    });
 }
 
 // add the friend row to the global set or delete it if it's already in there

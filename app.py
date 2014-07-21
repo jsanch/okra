@@ -116,7 +116,7 @@ def create_tab():
         return 'error'
 
 # UPDATE TAB
-@app.route('/update_tab', methods=['POST', 'GET'])
+@app.route('/update_tab', methods=['POST'])
 def update_tab():
     '''Updates tab with JSON sent by client '''
     db = get_db_connection("okra") #get conncection
@@ -124,40 +124,37 @@ def update_tab():
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
 
-    if request.method == 'POST':
-        #Get JSON
-        data = request.get_json(True)
+    #Get JSON
+    data = request.get_json(True)
 
-        #Get wanted data
-        tab_title = data['title']
-        tab_group = data['group'] #array of user ids
-        tab_items = data['items']
-        tab_subtotal = data['subtotal']
-        tab_total = data['total']
-        tab_tip = data['tip']
-        tab_tax = data['tax']
-        tab_paid_users = data['paid_users']
-        tab_paid = data['paid']
+    #Get wanted data
+    tab_title = data['title']
+    tab_group = data['group'] #array of user ids
+    tab_items = data['items']
+    tab_subtotal = data['subtotal']
+    tab_total = data['total']
+    tab_tip = data['tip']
+    tab_tax = data['tax']
+    tab_paid_users = data['paid_users']
+    tab_paid = data['paid']
 
-        # prepare data for db 
-        tab = {
-                "title" : tab_title,
-                "group" : tab_group,
-                "items" : tab_items,
-                "subtotal" : tab_subtotal,
-                "total" : tab_total,
-                "tip" : tab_tip,
-                "tax" : tab_tax,
-                "paid_users" : tab_paid_users,
-                "paid" : tab_paid,    
-            }
-        #get desired  tab
-        tab_id = request.args.get('tab_id', '')
-        le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    # prepare data for db 
+    tab = {
+            "title" : tab_title,
+            "group" : tab_group,
+            "items" : tab_items,
+            "subtotal" : tab_subtotal,
+            "total" : tab_total,
+            "tip" : tab_tip,
+            "tax" : tab_tax,
+            "paid_users" : tab_paid_users,
+            "paid" : tab_paid,    
+        }
+    #get desired  tab
+    tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-        return "NOT IMPLEMENTED YET"
-    else:
-        return "not a post req"
+    return "NOT IMPLEMENTED YET"
 
 
 
@@ -311,13 +308,19 @@ def get_user():
 def get_friends():
      # gets the list of friends with their ids and names for a given user id 
     users_collection = get_db_collection('users')
+    print 'stage 1'
     user_id = request.args.get('user_id')
     user = users_collection.find_one({'_id':ObjectId(user_id)})
+    print 'stage 2'
     friend_ids = user['friends']
     friends = {}
+    print 'stage 3'
     for friend_id in friend_ids:
         friends[friend_id] = users_collection.find_one({'_id':ObjectId(friend_id)})
-    return friends
+    print 'stage 4'
+
+    print friends
+    return JSONEncoder.encode(mongo_encoder, friends)
 
 
 ###############################################################################
