@@ -88,9 +88,8 @@ function acceptInvite() {
           // kill polling
           clearInterval(invitePoll);
           // do mike's switch thing
-          closeMainView
-        } else {
           closeMainView(_tab['_id']);
+        } else {
           window.alert('Could not enter the tab');
         }
     });
@@ -172,7 +171,7 @@ function closeMainView(tab_id) {
 }
 
 $('#js-start-tab').on('click', function() {
-  closeMainView()
+  closeMainView();
 });
 
 $('#tab_view #finish_button').on('click', function(event) {
