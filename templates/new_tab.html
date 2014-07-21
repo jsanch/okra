@@ -9,7 +9,7 @@
 
   <!-- Bootstrap -->
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/static/css/style.css" rel="stylesheet">
+  <link href="/static/css/new_tab.css" rel="stylesheet">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,43 +38,41 @@
           <div class="alert alert-success" role="alert" hidden></div>
         </div>
       </div>
-      <section class='main-content'>
 
-      <!-- Creating a new tab -->
       <section id='new-tab-container'>
         <h1 id='new_tab_name'></h1>
         <div><!-- user name here --></div>
 
         <!-- OCR button -->
         <div id='camera-container'>
-          <img id='camera' src='/static/img/camera.svg'>
+          <img id='camera' src='/static/img/camera2.svg'>
           <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
           </form>
         </div>
         <img src="" alt="" id="show-picture">
 
-        <!-- Friends in tab -->
-        <table class="friend_group content_container">
-          <tbody>
-            <tr class="friend_group_row">
-              <td class="button_cell">
-                <button id="open_add_friends" class="btn btn-block btn-primary">Add Friends</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </br>
-
-      <!-- Create Tab button -->
-      <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
+        <section id='new_tab_buttons'>
+          <!-- Friends in tab -->
+          <table class="friend_group content_container">
+            <tbody>
+              <tr class="friend_group_row">
+                <td class="button_cell">
+                  <button id="open_add_friends" class="btn btn-block btn-primary">Add Friends</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </br>
+        <!-- Create Tab button -->
+        <button type='button' id='js-create-tab' class='btn btn-block btn-lg create_tab_button'>Create Tab</button>
+      </section>
     </section>
-  </section>
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/bootstrap.js"></script>
   <script src='/static/js/handlebars-v1.3.0.js'></script>
   <script src='/static/js/new_tab.js'></script>
   <script src='http://malsup.github.com/min/jquery.form.min.js'></script>

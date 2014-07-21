@@ -419,7 +419,7 @@ def master_charge(master):
 
 @app.route('/oauth-authorized')
 def oauth_authorized():
-    db = get_db_conection("okra")   #get conncection
+    db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
     AUTHORIZATION_CODE = request.args.get('code')
@@ -443,6 +443,7 @@ def oauth_authorized():
     users.insert( {
                     "first_name" : session['first_name'],
                     "second_name": session['last_name'],
+                    "name" : session['first_name'] + ' ' + session['last_name'],
                     "friends" : ["user_id","user_id"],
                     "phone": "",
                     "token": session['venmo_token'],

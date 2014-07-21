@@ -175,8 +175,8 @@ def basic_scan(image_name):
 			if tre_match:
 				tmp_description = re.sub(r'[\s:]*' + re.escape(tre_match.group(0)), '', line).lower()
 				tmp_value = tre_match.group(0).strip()
-				# tmp_value = 'asdfa'
-				raw_tab_data.append({'description' : tmp_description, 'value' : tmp_value})
+				if len(tmp_description) > 2:
+					raw_tab_data.append({'description' : tmp_description, 'value' : tmp_value})
 
 
 	tre_fuzzyness = tre.Fuzzyness(maxerr = 3)
