@@ -1,7 +1,7 @@
 // ---------------------- Global ----------------------
 
 var friendsToAdd = {},
-    POLL_DELAY = 500, // ms
+    POLL_DELAY = 5000, // ms
     _tab = {},
     _group = {},
     db_poll_interval;
@@ -18,7 +18,7 @@ var user = {
 
 $(document).ready(function() {
   // start asking server for outstanding invites
-  // pollForInvite();
+  pollForInvite();
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
@@ -34,7 +34,7 @@ function pollForInvite(){
     $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
       // check for tab invite
-      if (data['tab']) {
+      if (data) {
         showInvite(data);
       } else {
         console.log('no new tabs');
