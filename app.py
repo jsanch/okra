@@ -339,46 +339,50 @@ def allowed_file(filename):
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
 def upload():
-    # Get the name of the uploaded file
-    file = request.files['file']
-    # Check if the file is one of the allowed types/extensions
-    if file and allowed_file(file.filename):
-        # Make the filename safe, remove unsupported chars
-        filename = secure_filename(file.filename)
-        # Move the file form the temporal folder to
-        # the upload folder we setup
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # Redirect the user to the uploaded_file route, which
-        # will basicaly show on the browser the uploaded file
-        
-        # OCR PARSING
-        parsed_tabs = scan.okraparser.full_scan(filename)
-        print parsed_tabs
-       
-        #  CREATE NEW TAB WITH RECEIPT INFO
-        okratabs = get_db_collection("tabs")   #get conncection
-        insert_tabs = {}
-        insert_tabs['total'] = float(parsed_tabs['meta']['total'])
-        insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
-        insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
-        insert_tabs['tip'] = float(0)
+    try:
+        # Get the name of the uploaded file
+        file = request.files['file']
+        # Check if the file is one of the allowed types/extensions
+        if file and allowed_file(file.filename):
+            # Make the filename safe, remove unsupported chars
+            filename = secure_filename(file.filename)
+            # Move the file form the temporal folder to
+            # the upload folder we setup
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # Redirect the user to the uploaded_file route, which
+            # will basicaly show on the browser the uploaded file
+            
+            # OCR PARSING
+            parsed_tabs = scan.okraparser.full_scan(filename)
+            print parsed_tabs
+           
+            #  CREATE NEW TAB WITH RECEIPT INFO
+            okratabs = get_db_collection("tabs")   #get conncection
+            insert_tabs = {}
+            insert_tabs['total'] = float(parsed_tabs['meta']['total'])
+            insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
+            insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
+            insert_tabs['tip'] = float(0)
 
-        insert_tabs['group'] = {}
-        insert_tabs['items'] = {}
-        insert_tabs['paid_users'] = []
-        insert_tabs['paid'] = False
+            insert_tabs['group'] = {}
+            insert_tabs['items'] = {}
+            insert_tabs['paid_users'] = []
+            insert_tabs['paid'] = False
 
-        index_id = 0
-        for parsed_item in parsed_tabs['items']:
-            insert_tabs['items'][str(index_id)] = parsed_item
-            index_id += 1
+            index_id = 0
+            for parsed_item in parsed_tabs['items']:
+                insert_tabs['items'][str(index_id)] = parsed_item
+                index_id += 1
 
-        print insert_tabs
+            print insert_tabs
 
-        #INSERT TAB
-        tab_id = okratabs.insert(insert_tabs)
+            #INSERT TAB
+            tab_id = okratabs.insert(insert_tabs)
 
-        return str({'tab_id' : tab_id})
+            return str({'tab_id' : tab_id})
+    except Exception:
+        return 'fail'
+
 
 
 
