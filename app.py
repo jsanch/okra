@@ -31,20 +31,25 @@ app.secret_key = APP_SECRET
 #landing page
 @app.route('/')
 def index():
-   return render_template('landing_page/landing_page.html')
+    return render_template('landing_page/landing_page.html')
 
 @app.route('/new_tab')
 def new_tab_view():
-    return render_template('new_tab.html')
+    if session.get('user_id'):
+        return render_template('new_tab.html')
+    else:
+        return redirect('/login')
 
 @app.route('/tab')
 def tab_view():
+    if session.get('user_id'):
+        resp = make_response(render_template('tab.html'))
+        return resp
+    else:
+        return redirect('/login')
+
     resp = make_response(render_template('tab.html'))
     return resp
-
-@app.route('/start')
-def start():
-    return render_template('index.html')
 
 @app.route('/img-upload')
 def img_upload():
@@ -67,96 +72,6 @@ def get_db_collection(collection):
 ###############################################################################
 ###############################     TAB      ##################################
 ###############################################################################
-
-# CREATE TAB
-@app.route('/create_tab', methods=['POST', 'GET'])
-def create_tab():
-    db = get_db_connection("okra") #get conncection
-    # tabs = db.tabs #get tabs collection
-    tabs = get_db_collection('tabs')
-    # invites = db.invites #get invites collection
-
-    if request.method == 'POST':
-        #Get JSON
-        data = request.get_json(True)
-
-        #Get wanted data
-        tab_title = data['title']
-        tab_group = data['group'] #array of user ids
-        tab_items = data['items']
-        tab_subtotal = data['subtotal']
-        tab_total = data['total']
-        tab_tip = data['tip']
-        tab_tax = data['tax']
-        tab_paid_users = data['paid_users']
-        tab_paid = data['paid']
-
-        # prepare data for db 
-        tab = {
-                "title" : tab_title,
-                "group" : tab_group,
-                "items" : tab_items,
-                "subtotal" : tab_subtotal,
-                "total" : tab_total,
-                "tip" : tab_tip,
-                "tax" : tab_tax,
-                "paid_users" : tab_paid_users,
-                "paid" : tab_paid,    
-            }
-        #insert to db 
-        tab_id = tabs.insert(tab)
-        print str(tab_id)
-        # create invites from group.
-        create_invites(tab_group, tab_id)
-
-        # return msg
-        print 'Inserted tab with tab_id: ' + str(tabs.find_one({"_id":tab_id})['_id'])
-        return '{ "_id":' + str(tabs.find_one({"_id":tab_id})['_id']) + '}'
-    else:
-        return 'error'
-
-# UPDATE TAB
-@app.route('/update_tab', methods=['POST'])
-def update_tab():
-    '''Updates tab with JSON sent by client '''
-    db = get_db_connection("okra") #get conncection
-    # tabs = db.tabs #get tabs collection
-    tabs = get_db_collection('tabs')
-    # invites = db.invites #get invites collection
-
-    #Get JSON
-    data = request.get_json(True)
-
-    #Get wanted data
-    tab_title = data['title']
-    tab_group = data['group'] #array of user ids
-    tab_items = data['items']
-    tab_subtotal = data['subtotal']
-    tab_total = data['total']
-    tab_tip = data['tip']
-    tab_tax = data['tax']
-    tab_paid_users = data['paid_users']
-    tab_paid = data['paid']
-
-    # prepare data for db 
-    tab = {
-            "title" : tab_title,
-            "group" : tab_group,
-            "items" : tab_items,
-            "subtotal" : tab_subtotal,
-            "total" : tab_total,
-            "tip" : tab_tip,
-            "tax" : tab_tax,
-            "paid_users" : tab_paid_users,
-            "paid" : tab_paid,    
-        }
-    #get desired  tab
-    tab_id = request.args.get('tab_id', '')
-    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
-
-    return "NOT IMPLEMENTED YET"
-
-
 
 # GET TAB
 @app.route('/get_tab', methods=['GET'])
@@ -573,15 +488,4 @@ if __name__ == '__main__':
 ###############################################################################
 ###############################################################################
 ###############################################################################
-################################# DELETE BUFFER ###############################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################################################
-###############################################
+################################# DEL
