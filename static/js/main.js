@@ -162,10 +162,6 @@ $('#new_tab_view #back_button').on('click', function(event) {
   closeNewTabView(null, true);
 });
 
-$('#make_payment_button').on('click', function(){
-  window.location.replace("http://app.grasscat.org/venmo_login");
-});
-
 
 
 

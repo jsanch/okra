@@ -81,6 +81,7 @@ $(function() {
   });
 
   $('#make_payment_button').on('click', function(event) {
+    event.preventDefault();
     $.post('http://app.grasscat.org/make_payment', { hi: 'hi'});
   });
 
