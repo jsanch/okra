@@ -75,7 +75,7 @@
         <div class="text-center">Tab info:</div>
       </div>
 
-      <div class="costs_panel padded_panel"> 
+      <div class="costs_panel padded_panel">
         <div class="row content_container">
           <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Sub Total:</div>
           <div id="subtotal" class="col-xs-8"></div>
@@ -174,13 +174,15 @@
       <div><!-- user name here --></div>
 
       <!-- OCR button -->
-      <div id='camera-container'>
-        <img id='camera' src='../static/img/camera.svg'>
+      <section id='camera-container'>
+        <div id='camera-button'>
+          <img id='camera' src='../static/img/camera.svg'>
+          <img src="" alt="" id="show-picture" hidden>
+        </div>
         <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
           <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
         </form>
-      </div>
-      <img src="" alt="" id="show-picture">
+      </section>
 
       <!-- Friends in tab -->
       <table class="friend_group content_container">
@@ -361,6 +363,6 @@
       </div>
     {{/each}}
   </table>
-</script>    
+</script>
 
 {% endraw %}

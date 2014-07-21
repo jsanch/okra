@@ -71,24 +71,36 @@ h1.page-header {
     background-color: #7EDEB1;
     cursor: hand;
     cursor: pointer;
-    height: 100%;
+    height: 300px;
     margin: 5% auto;
   }
 
-    #camera {
-      background-color: white;
-      border-radius: 50%;
-      display: inline-block;
-      padding: 1%;
-      width: 50%;
+    #camera-button {
+      border: 3px solid white;
+      border-radius: 4px;
+      height: 100%;
+      margin: 0 auto;
+      width: 90%;
     }
+
+      #camera {
+        background-color: white;
+        border: 0px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-top: 75px;
+        width: 40%;
+      }
+
+      #show-picture {
+        height: 100%;
+        width: 100%;
+        opacity: .3;
+        overflow: hidden;
+      }
 
     #take-picture {
       display: none;
-    }
-
-    #show-picture {
-      width: 50%;
     }
 
   /* -------------- New Tab Buttons -------------- */
