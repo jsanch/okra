@@ -76,26 +76,23 @@ $(document).ready(function() {
       file_url : showPicture.src
     };
     var group = Object.keys(friendsToAdd);
-    // if (!(typeof group !== 'undefined' && group.length > 0)) {
-    //   window.alert('Please add friends to tab.');
-    //   return;
-    // }
-    // $(this).ajaxSubmit({
-    //   success: function(responseText, statusText, xhr, $form) {
-    //     if (responseText === 'fail'){
-    //       window.alert('Tab failed to upload. Blame Vinay.');
-    //     } else {
-    //       // Send the other info like group, maste id, etc.
-    //       $.post('/create_invites', {group: group})
-    //       .done(function() {
-    //         closeNewTabView(responseText.tab_id, false);
-    //       });
-    //     }
-    //   }
-    // });
-
-              closeNewTabView('53cca6cdd2a57d3208d1bd8c', false);
-
+    if (!(typeof group !== 'undefined' && group.length > 0)) {
+      window.alert('Please add friends to tab.');
+      return;
+    }
+    $(this).ajaxSubmit({
+      success: function(responseText, statusText, xhr, $form) {
+        if (responseText === 'fail'){
+          window.alert('Tab failed to upload. Blame Vinay.');
+        } else {
+          // Send the other info like group, maste id, etc.
+          $.post('/create_invites', {group: group})
+          .done(function() {
+            closeNewTabView(responseText.tab_id, false);
+          });
+        }
+      }
+    });
   });
 
 });

@@ -7,6 +7,11 @@
  * URL: http://blacktie.co
  */
 
+#venmo {
+  color: white;
+  text-decoration: none;
+}
+
 body {
   background-color: #f2f2f2;
     font-family: "Lato";
@@ -87,7 +92,7 @@ a:after {
 	background-position: center center;
 	min-height: 700px;
 	width: 100%;
-	
+
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     -o-background-size: 100%;
@@ -124,7 +129,7 @@ a:after {
 	background-position: center center;
 	min-height: 500px;
 	width: 100%;
-	
+
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     -o-background-size: 100%;
@@ -193,7 +198,7 @@ a:after {
 }
 
 #f h3 {
-	color: white;	
+	color: white;
 }
 
 #f i {
@@ -227,7 +232,7 @@ a:after {
 	background-position: center center;
 	min-height: 500px;
 	width: 100%;
-	
+
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     -o-background-size: 100%;
@@ -342,7 +347,7 @@ a:after {
 .menu a > i {
 	float: left;
 	display: inline-block;
-	vertical-align: middle; 
+	vertical-align: middle;
 	text-align: left;
 	width: 25px;
 	font-size: 14px;
@@ -450,7 +455,7 @@ a:after {
 	cursor: pointer;
 	color: white;
 	background-color: #16a085;
-	
+
 }
 
 /* TEAM CONF */
@@ -487,18 +492,18 @@ table {
 
 #cloud {
 	width: 350px; height: 120px;
-	
+
 	background: #f2f9fe;
 	background: linear-gradient(top, #f2f9fe 5%, #d6f0fd 100%);
 	background: -webkit-linear-gradient(top, #f2f9fe 5%, #d6f0fd 100%);
 	background: -moz-linear-gradient(top, #f2f9fe 5%, #d6f0fd 100%);
 	background: -ms-linear-gradient(top, #f2f9fe 5%, #d6f0fd 100%);
 	background: -o-linear-gradient(top, #f2f9fe 5%, #d6f0fd 100%);
-	
+
 	border-radius: 100px;
 	-webkit-border-radius: 100px;
 	-moz-border-radius: 100px;
-	
+
 	position: relative;
 	margin: 120px auto 20px;
 }
@@ -513,7 +518,7 @@ table {
 #cloud:after {
 	width: 100px; height: 100px;
 	top: -50px; left: 50px;
-	
+
 	border-radius: 100px;
 	-webkit-border-radius: 100px;
 	-moz-border-radius: 100px;
@@ -522,7 +527,7 @@ table {
 #cloud:before {
 	width: 180px; height: 180px;
 	top: -90px; right: 50px;
-	
+
 	border-radius: 200px;
 	-webkit-border-radius: 200px;
 	-moz-border-radius: 200px;
@@ -530,14 +535,14 @@ table {
 
 .shadow {
 	width: 350px;
-	position: absolute; bottom: -10px; 
+	position: absolute; bottom: -10px;
 	background: #000;
 	z-index: -1;
-	
+
 	box-shadow: 0 0 25px 8px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow: 0 0 25px 8px rgba(0, 0, 0, 0.4);
 	-webkit-box-shadow: 0 0 25px 8px rgba(0, 0, 0, 0.4);
-	
+
 	border-radius: 50%;
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
