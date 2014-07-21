@@ -87,6 +87,10 @@ h1.page-header {
       display: none;
     }
 
+    #show-picture {
+      width: 50%;
+    }
+
   /* -------------- New Tab Buttons -------------- */
   #new_tab_buttons {
     background-color: #7EDEB1;

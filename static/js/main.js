@@ -1,8 +1,11 @@
-$(document).ready(function() {
-  // session variables
-  var user_id = 999;
-  var theTab = null;
+// get user_id from cookie
+var user_id = 999,
+    user_name = 'Jesus',
+    pro_pic = '/static/img/face.jpeg';
+var friendsToAdd = {};
+var theTab = null;
 
+$(document).ready(function() {
   // start asking server for outstanding invites
   // pollForInvite();
 
@@ -77,6 +80,13 @@ function parseCookie(cookie) {
   return cookie_obj;
 }
 
+function getTab(id) {
+  return $.get('http://app.grasscat.org/get_tab?tab_id=' + id);
+};
+
+function getUser(id) {
+  return $.get('http://app.grasscat.org/get_user?user_id=' + id);
+};
 
 // ---------------------- Change Views ----------------------
 
@@ -136,7 +146,7 @@ $('#js-start-tab').on('click', function() {
 $('#tab_view #finish_button').on('click', function(event) {
   closeTabView();
 });
-  
+
 $('#tab_view #back_button').on('click', function(event) {
   //should clear tab
 
