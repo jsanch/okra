@@ -76,7 +76,7 @@ def analyze_tab(tab_param):
 
 	item_total = Decimal()
 	for item in tab_param['tab_items']:
-		tab['items'].append({'name' : item['description'], 'price' : item['value']})
+		tab['items'].append({'name' : item['description'], 'price' : float(price_fix(item['value']))})
 		# tab['items'][item['description']] = price_fix(item['value'])
 		item_total += price_fix(item['value'])
 
@@ -115,9 +115,21 @@ def analyze_tab(tab_param):
 			tab['meta'] = {string_total : meta_total, string_subtotal : meta_subtotal, string_tax : 0}
 		else:
 			raise OkraParseException('7')
+	elif (avail_tax and avail_subtotal):
+		if not (meta_tax + meta_subtotal == item_total or meta_subtotal == item_total):
+			raise OkraParseException('8')
+		elif (meta_tax + meta_subtotal == item_total):
+			tab['meta'] = {string_total : item_total, string_subtotal : meta_subtotal, string_tax : meta_tax}
+		elif (meta_subtotal == item_total):
+			tab['meta'] = {string_total : item_total, string_subtotal : meta_subtotal, string_tax : 0}
+		else:
+			raise OkraParseException('9')
+	elif avail_tax:
+		tab['meta'] = {string_total : item_total, string_subtotal : item_total - meta_tax, string_tax : meta_tax}
 	else:
-		raise OkraParseException('8')
+		raise OkraParseException('Nuttin')
 
+	print tab
 	return tab
 
 def price_fix(price_string_param):
@@ -222,12 +234,9 @@ def basic_scan(image_name):
 				tab_items.append(raw_item)
 
 	tab = {'tab_items' : tab_items, 'tab_meta' : tab_meta}
-	# print tab
+	print tab
 
 	# print analyze_tab(tab)
-	return analyze_tab(tab)
-
-# image_name = 'receipts3.jpg'
-# f = open(os.path.join(parser_location, image_name))
-
-# basic_scan(f)
+	x = analyze_tab(tab)
+	print x
+	return x

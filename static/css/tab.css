@@ -278,7 +278,7 @@ table td {
   background-color: white;
   color: #7EDEB1;
   border-color: white;
-  border-width: 2px;
+  border-width: 1px;
 }
 
 .btn:focus {
@@ -292,7 +292,7 @@ table td {
   background-color: #7EDEB1;
   color: white;
   border-color: white;
-  border-width: 2px;
+  border-width: 1px;
   outline: none;
 }
 
