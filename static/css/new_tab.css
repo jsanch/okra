@@ -91,5 +91,6 @@ html,body {
 
   .create_tab_button {
     margin: 5% auto;
+    margin-bottom: 0;
     width: 50%;
   }

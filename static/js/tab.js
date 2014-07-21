@@ -1,8 +1,4 @@
 
-
-var user_id = 1;  // get from session
-var _tab_id = '53cca6cdd2a57d3208d1bd8c';
-
 var FriendRowTemplate;
 var FriendBlockTemplate;
 var ItemListTemplate;
@@ -81,8 +77,8 @@ $(function() {
   });
 
   $('#make_payment_button').on('click', function(event) {
-    $.post('http://app.grasscat.org/get_tab?tab_id=' + user_id, function(result) {
-
+    $.post('http://app.grasscat.org/make_payment', function(result) {
+      
     });
   });
 

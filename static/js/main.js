@@ -1,6 +1,5 @@
 // get user_id from cookie
-var user_id = 999,
-    user_name = 'Jesus',
+var user_name = 'Jesus',
     pro_pic = '/static/img/face.jpeg';
 var friendsToAdd = {};
 var theTab = null;
@@ -12,8 +11,17 @@ var _friends;
 var _group;
 
 var POLL_DELAY = 500; // ms
-
 var db_poll_interval;
+
+var user_id = $.cookie('first_name');
+
+var _tab_id = '53cca6cdd2a57d3208d1bd8c';
+
+var user = {
+  id: user_id,
+  first_name : $.cookie('first_name'),
+  last_name : $.cookie('last_name')
+}
 
 $(document).ready(function() {
   // start asking server for outstanding invites
