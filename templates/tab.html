@@ -301,8 +301,12 @@
 
 <script id="friend_block_template" type="text/x-handlebars-template">
   <td class="friend_block" data-id={{@key}}>
-    <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
-    <div class="friend_name text_limit text-center">{{first_name}}</div>
+    {{#if pic_url}}
+      <div class="portrait" style="background-image: url({{pic_url}})"></div>
+    {{else}}
+      <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
+    {{/if}}
+      <div class="friend_name text_limit text-center">{{first_name}}</div>
   </td>
 </script>
 

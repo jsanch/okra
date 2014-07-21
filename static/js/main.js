@@ -1,7 +1,7 @@
 // ---------------------- Global ----------------------
 
 var friends_to_add = {},
-    POLL_DELAY = 500, // ms
+    POLL_DELAY = 2000, // ms
     _tab = {},
     _group = {},
     db_poll_interval;
