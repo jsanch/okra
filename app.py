@@ -76,6 +76,7 @@ def get_db_collection(collection):
 @app.route('/make_payment', methods=['POST','GET'])
 def make_payment():
     print 'MAKE PAYMENTS'
+    print session
     user_id = session['user_id']
     tab_id = session['tab_id']
     print 'stage 1'
