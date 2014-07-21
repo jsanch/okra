@@ -32,8 +32,7 @@ function pollForInvite(){
   return setInterval(function() {
     $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
-      console.log(data);
-      if (!data) {
+      if (data === 'fail') {
         console.log('no new tabs');
       } else {
         showInvite(JSON.parse(data));
