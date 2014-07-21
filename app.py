@@ -364,8 +364,11 @@ def upload():
         insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
         insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
         insert_tabs['tip'] = float(0)
-
-        insert_tabs['group'] = {}
+        if 'user_id' in session:
+            insert_tabs['master_user_id'] = session['user_id']
+        else:
+            insert_tabs['master_user_id'] = None
+        insert_tabs['group'] = []
         insert_tabs['items'] = {}
         insert_tabs['paid_users'] = []
         insert_tabs['paid'] = False
@@ -451,7 +454,7 @@ def oauth_authorized():
     session['last_name'] = user['last_name']
     session['profile_picture_url'] = user['profile_picture_url']
 
-    users.insert( {
+    user_id = users.insert( {
                     "first_name" : session['first_name'],
                     "second_name": session['last_name'],
                     "name" : session['first_name'] + ' ' + session['last_name'],
@@ -462,6 +465,9 @@ def oauth_authorized():
                   }
         )
     
+    session['user_id'] = user_id
+
+
     response = make_response(redirect('/'))
     response.set_cookie('user_id',value="session['venmo_username']")
     response.set_cookie('first_name',value="session['first_name']")
