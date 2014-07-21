@@ -291,9 +291,26 @@ def accept_invite_route():
         session['tab_id'] = str(tab_id)
     # inv_group = request.values.getlist('group[]')
     # print inv_group
+    tabs = get_db_collection('tabs')
+    le_tab = tabs.find_one({'_id':ObjectId(tab_id)})
+    le_tab['group'].append(str(session['user_id']))
+    tabs.save(le_tab)
+
     print tab_id
     # create_invites(inv_group, session['tab_id'])
     return 'success'
+
+@app.route('/reject_invite',  methods=['POST'])
+def reject_invite_route():
+    print 'reject'
+    invites = get_db_collection('invites')
+    tab_id = request.form['tab_id']
+
+    if invites.find_one({'tab_id': str(tab_id), 'user_id': str(session['user_id'])}):
+        invites.remove({'tab_id': str(tab_id), 'user_id': str(session['user_id'])})
+        # session['tab_id'] = str(tab_id)
+    return 'success'
+
 
 #poll invite
 @app.route('/poll_for_invite')
