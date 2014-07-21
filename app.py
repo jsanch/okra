@@ -513,7 +513,7 @@ def oauth_authorized():
             "token": session['venmo_token'],
             "pic_url": session['profile_picture_url']}
 
-    user_id = users.update({"username": user['username']}, possible_new_user, True)
+    users.update({"username": user['username']}, possible_new_user, True)
     # user_id = users.insert( {
     #                 "first_name" : session['first_name'],
     #                 "second_name": session['last_name'],
@@ -524,7 +524,14 @@ def oauth_authorized():
     #                 "pic_url": session['profile_picture_url']
     #               }
     #     )
-    
+
+    user = users.find_one({"username": user['username']})
+    # print possible_new_user
+    # print user_id
+    print user
+    user_id = user['_id']
+    print user_id
+
     session['user_id'] = str(user_id)
     print 'stage 3'
 
