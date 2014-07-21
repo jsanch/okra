@@ -134,9 +134,6 @@ function initPayView() {
 
     setGroupUsers(_tab.group);
 
-    // Populate list showing which users have paid
-    $('.paid_user_list').html(PaidUserListTemplate({ users: _group, paid_users: _tab.paid_users }));
-  
     updatePayView();
   });
 
@@ -267,6 +264,11 @@ function updatePayView() {
         $user_entry.find('.paid_user_name').text(_group[id].name);
       }
     });
+
+    // Populate list showing which users have paid
+    if(Object.keys(_group).length != _tab.group.length) {
+      $('.paid_user_list').html(PaidUserListTemplate({ users: _group, paid_users: _tab.paid_users }));
+    }
 
     // Update the global tab object, the group won't change here
     _tab = new_tab;
