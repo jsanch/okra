@@ -1,8 +1,11 @@
-$(document).ready(function() {
-  // session variables
-  var user_id = 999;
-  var theTab = null;
+// get user_id from cookie
+var user_id = 999,
+    user_name = 'Jesus',
+    pro_pic = '/static/img/face.jpeg';
+var friendsToAdd = {};
+var theTab = null;
 
+$(document).ready(function() {
   // start asking server for outstanding invites
   // pollForInvite();
 
@@ -136,7 +139,7 @@ $('#js-start-tab').on('click', function() {
 $('#tab_view #finish_button').on('click', function(event) {
   closeTabView();
 });
-  
+
 $('#tab_view #back_button').on('click', function(event) {
   //should clear tab
 

@@ -1,15 +1,4 @@
 $(document).ready(function() {
-  // get user_id from cookie
-  var user_id = 999,
-      user_name = 'Jesus',
-      pro_pic = '/static/img/face.jpeg';
-  var friendsToAdd = {};
-
-  // get user profile with the id
-  $.get('http://app.grasscat.org:5000/ajax/get_user', {user_id : user_id})
-  .done(function(data) {
-    console.log(data);
-  });
 
   // fill in tab name
   var NewTabTemplate = Handlebars.compile($('#new_tab_template').html());
