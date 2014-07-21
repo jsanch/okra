@@ -63,15 +63,16 @@ $(document).ready(function() {
   $('#uploadform').submit(function(e) {
     e.preventDefault();
 
-    $(this).ajaxSubmit({
-      success: function(responseText, statusText, xhr, $form) {
-        if (responseText === 'fail'){
-          window.alert('Tab failed to upload. Blame Vinay.');
-        } else {
-          var tab_id = '53cc7b70d2a57d14a1f58c5d'; // CHANGE
-          closeNewTabView(tab_id);        }
-      }
-    });
+    // $(this).ajaxSubmit({
+    //   success: function(responseText, statusText, xhr, $form) {
+    //     if (responseText === 'fail'){
+    //       window.alert('Tab failed to upload. Blame Vinay.');
+    //     } else {
+          var tab_id = '53cca6cdd2a57d3208d1bd8c'; // CHANGE
+          closeNewTabView(tab_id, false);
+    //     }
+    //   }
+    // });
   });
 
   $('#js-create-tab').click(function(){

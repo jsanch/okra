@@ -124,7 +124,7 @@
       </div>
     </div>
 
-    <div class="footer">
+    <div class="footer container-fluid">
       <div class="content_container pull-right">
         <button id="finish_button" class="btn btn-primary"></button>
       </div>
@@ -149,7 +149,7 @@
           </div>
         </div>
         <!-- <input type="text" val="75" class="payment_progress_chart"/> -->
-        <div class="content_container col_centered text-center">
+        <div class="text-center">
           <div>You owe $<span id="payment_amount"></span></div>
         </div>
         <div class="content_container col_centered text-center">
@@ -174,30 +174,38 @@
   <div id="new_tab_view" class="content_panel">
     <section id='new-tab-container'>
       <h1 id='new_tab_name'></h1>
+      <div class="container-fluid">
+        <!-- OCR button -->
+        <section id='camera-container'>
+          <img src="" alt="" id="show-picture" hidden>
+          <img id='camera' src='../static/img/camera.svg'>
+          <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
+            <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
+          </form>
+        </section>
 
-      <!-- OCR button -->
-      <section id='camera-container'>
-        <img src="" alt="" id="show-picture" hidden>
-        <img id='camera' src='../static/img/camera.svg'>
-        <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
-          <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
-        </form>
-      </section>
+        <!-- Add friends in new tab -->
+        <section id='new_tab_buttons'>
+          <table class="friend_group content_container">
+            <tbody>
+              <tr class="friend_group_row">
+                <td class="button_cell">
+                  <button id="open_add_friends" class="btn btn-primary btn-block btn-lg">+</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-      <!-- Add friends in new tab -->
-      <section id='new_tab_buttons'></section>
-        <table class="friend_group content_container">
-          <tbody>
-            <tr class="friend_group_row">
-              <td class="button_cell">
-                <button id="open_add_friends" class="btn btn-primary btn-block btn-lg">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+          <!-- Create Tab button -->
+          <button type='button' id='js-create-tab' class='btn btn-primary btn-block btn-lg create_tab_button'>Create Tab</button>
 
-        <!-- Create Tab button -->
-        <button type='button' id='js-create-tab' class='btn btn-primary btn-block btn-lg create_tab_button'>Create Tab</button>
+          <div class="footer">
+            <div class="content_container pull-left">
+              <button id="back_button" class="btn btn-primary">< Back</button>
+            </div>
+          </div>
+        </section>
+      </div>
     </section>
   </div>
 
@@ -279,10 +287,10 @@
   <li class="list-group-item tab_item" data-id={{@key}}>
   {{/if}}
     <div class="row">
-      <div class="item_name_block col-xs-7 pdull-left">
+      <div class="item_name_block col-xs-6 pdull-left">
         <div class="text_limit fill_width">{{name}}</div>
       </div>
-      <div class="col-xs-2 text-left">${{format_decimal price 2}}</div>
+      <div class="col-xs-3 text-left">${{format_decimal price 2}}</div>
       <div class="item_assigned_block col-xs-3 pull-right">
       {{#each assigned_to}}
         <div class="small_portrait pull-right" style="background-image: url({{get_pic_url this}})"></div>
