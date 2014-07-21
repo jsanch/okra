@@ -1,7 +1,7 @@
 // ---------------------- Global ----------------------
 
 var friendsToAdd = {},
-    POLL_DELAY = 5000, // ms
+    POLL_DELAY = 3000, // ms
     _tab = {},
     _group = {},
     db_poll_interval;
@@ -60,6 +60,7 @@ function showInvite(tab) {
   //   "total": 9.62,
   //   "subtotal": 8.99
   // }
+  console.log(tab);
   _tab = tab;
   $('#js-invite-modal .modal-title').text('New Tab Invite');
   $('#js-invite-modal .modal-body').text('You have been invited to ' + tab['title']);
