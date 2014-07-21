@@ -175,10 +175,8 @@
 
       <!-- OCR button -->
       <section id='camera-container'>
-        <div id='camera-button'>
-          <img id='camera' src='../static/img/camera.svg'>
-          <img src="" alt="" id="show-picture" hidden>
-        </div>
+        <img src="" alt="" id="show-picture" hidden>
+        <img id='camera' src='../static/img/camera.svg'>
         <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
           <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
         </form>
