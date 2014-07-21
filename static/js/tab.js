@@ -158,15 +158,15 @@ function setGroupUsers(group) {
     });
   });
 
-  // _group = {
-  //   1: {first_name: 'Barack', last_name: 'Obama'},
-  //   2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
-  //   3: {first_name: 'Michael', last_name: 'Vader'},
-  //   4: {first_name: 'Darth', last_name: 'Vader'},
-  //   5: {first_name: 'Darth', last_name: 'Vader'},
-  //   6: {first_name: 'Darth', last_name: 'Vader'},
-  //   7: {first_name: 'Darth', last_name: 'Vader'},
-  // };
+  _group = {
+    1: {first_name: 'Barack', last_name: 'Obama'},
+    2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
+    3: {first_name: 'Michael', last_name: 'Vader'},
+    4: {first_name: 'Darth', last_name: 'Vader'},
+    5: {first_name: 'Darth', last_name: 'Vader'},
+    6: {first_name: 'Darth', last_name: 'Vader'},
+    7: {first_name: 'Darth', last_name: 'Vader'},
+  };
 }
 
 function populatePage() {
@@ -244,8 +244,8 @@ function updatePayView() {
   getTab(_tab_id).done(function(data) {
     var new_tab = data;
 
-    // var paid = parseFloat(new_tab.paid) || 0;
-    var paid = 10;
+    var paid = parseFloat(new_tab.paid) || 0;
+    // var paid = 10;
     var total = parseFloat(new_tab.total) || 0;
     $('#payment_progress_chart').val((paid/total*100).toFixed(2) || 0.00).trigger('change');
     

@@ -10,6 +10,7 @@ $(function() {
 // get friends and populate the add friends modal
 function openAddFriends(user_id, friends_to_add) {
   var friends_list;
+  // user_id = '53ccbe9d04b7747717fcdfdf'; //change
   $.get('http://app.grasscat.org/get_friends', {user_id : user_id})
     .done(function(data) {
       var data = JSON.parse(data);
@@ -47,7 +48,7 @@ function updateFriend(friend, friends_to_add) {
   } else {
     var bg = $('.small_portrait', friend).css('background-image');
     bg = bg.replace('url(','').replace(')','');
-    friends_to_add[selectedID] = {first_name: $('.js-friend', friend).html(), pic_url: bg};
+    friends_to_add[selectedID] = {first_name: $('.js-friend', friend).html().split(' ')[0], pic_url: bg};
   }
 }
 

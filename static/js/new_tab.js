@@ -78,24 +78,24 @@ $(document).ready(function() {
     var group = Object.keys(friends_to_add);
     // also include the master in the group
     group.push($.cookie('user_id'));
-    if (!(typeof group !== 'undefined' && group.length > 0)) {
-      window.alert('Please add friends to tab.');
-      return;
-    }
-    $(this).ajaxSubmit({
-      success: function(responseText, statusText, xhr, $form) {
-        if (responseText === 'fail'){
-          window.alert('Tab failed to upload. Blame Vinay.');
-        } else {
-          // Send the other info like group, maste id, etc.
-          $.post('/create_invites', {group: group})
-          .done(function() {
-            closeNewTabView(responseText.tab_id, false);
-          });
-        }
-      }
-    });
-              // closeNewTabView(_tab_id, false);
+    // if (!(typeof group !== 'undefined' && group.length > 0)) {
+    //   window.alert('Please add friends to tab.');
+    //   return;
+    // }
+    // $(this).ajaxSubmit({
+    //   success: function(responseText, statusText, xhr, $form) {
+    //     if (responseText === 'fail'){
+    //       window.alert('Tab failed to upload. Blame Vinay.');
+    //     } else {
+    //       // Send the other info like group, maste id, etc.
+    //       $.post('/create_invites', {group: group})
+    //       .done(function() {
+    //         closeNewTabView(responseText.tab_id, false);
+    //       });
+    //     }
+    //   }
+    // });
+    closeNewTabView(_tab_id, false);
 
   });
 

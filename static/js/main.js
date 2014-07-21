@@ -13,7 +13,8 @@ var user = {
   last_name : $.cookie('last_name')
 }
 
-var _tab_id = '53cca6cdd2a57d3208d1bd8c';
+// var _tab_id = '53cca6cdd2a57d3208d1bd8c';
+var _tab_id;
 
 $(document).ready(function() {
   // start asking server for outstanding invites
