@@ -501,7 +501,7 @@ def oauth_authorized():
                     "second_name": session['last_name'],
                     "name" : session['first_name'] + ' ' + session['last_name'],
                     "friends" : ["user_id","user_id"],
-                    "phone": "",
+                    "phone": session['phone'],
                     "token": session['venmo_token'],
                     "pic_url": session['profile_picture_url']
                   }

@@ -122,23 +122,26 @@ function openNewTabView() {
   $('#page_title_view').fadeOut(200);
   $('#new_tab_view').fadeIn(200);
 }
-function closeNewTabView(tab_id) {
+function closeNewTabView(tab_id, back) {
   $('#new_tab_view').fadeOut(200, function() {
-    initTabView(tab_id);
-    openTabView();
+    if(back) {
+      openMainView();
+    } else {
+      initTabView(tab_id);
+      openTabView();
+    }
   });
 }
 
 function openMainView() {
   $('#main_view').fadeIn(200);
+  _tab = {};
 }
 function closeMainView() {
   $('#main_view').fadeOut(200, function() {
     openNewTabView();
   });
 }
-
-
 
 $('#js-start-tab').on('click', function() {
   closeMainView()
@@ -156,6 +159,10 @@ $('#tab_view #back_button').on('click', function(event) {
 
 $('#pay_view #back_button').on('click', function(event) {
   closePayView();
+});
+
+$('#new_tab_view #back_button').on('click', function(event) {
+  closeNewTabView(null, true);
 });
 
 $('#make_payment_button').on('click', function(){

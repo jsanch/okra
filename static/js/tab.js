@@ -7,7 +7,7 @@ var _group;
 var db_poll_interval;
 
 var user_id = 1;  // get from session
-var _tab_id = '53cc7b70d2a57d14a1f58c5d';
+var _tab_id = '53cca6cdd2a57d3208d1bd8c';
 
 var _cookie = document.cookie;
 
@@ -40,7 +40,7 @@ $(function() {
   });
 
   Handlebars.registerHelper('user_selected', function(assigned_to) {
-    return $.inArray(user_id, assigned_to) != -1;
+    return $.inArray(String(user_id), assigned_to) != -1;
   });
 
   Handlebars.registerHelper('check_paid', function(user_id, paid_users) {
@@ -68,11 +68,11 @@ $(function() {
     var item_id = $item.data('id');
     var item_assigned_to = _tab.items[item_id].assigned_to;
 
-    if($.inArray(user_id, item_assigned_to) == -1) {
-      $.post("http://app.grasscat.org/add_user_to_item", { user_id: user_id, tab_id: _tab.id, item_id: item_id });
+    if($.inArray(String(user_id), item_assigned_to) == -1) {
+      $.post("http://app.grasscat.org/add_user_to_item", { user_id: user_id, tab_id: _tab_id, item_id: item_id });
       $item.addClass('selected');
     } else {
-      $.post("http://app.grasscat.org/remove_user_from_item", { user_id: user_id, tab_id: _tab.id, item_id: item_id });
+      $.post("http://app.grasscat.org/remove_user_from_item", { user_id: user_id, tab_id: _tab_id, item_id: item_id });
       $item.removeClass('selected');
     }
   });
@@ -113,8 +113,8 @@ function initTabView(tab_id) {
 
   // Initially populate page
   populatePage();
+
   // Update page periodically
-  updateTabView();
   clearInterval(db_poll_interval);
   db_poll_interval = setInterval(function() { updateTabView() }, 1000);
 }
@@ -160,10 +160,11 @@ function initPayView() {
 
     // Populate list showing which users have paid
     $('.paid_user_list').html(PaidUserListTemplate({ users: _group, paid_users: _tab.paid_users }));
+  
+    updatePayView();
   });
 
   // Call pay view update function periodically
-  updatePayView();
   clearInterval(db_poll_interval);
   db_poll_interval = setInterval(function() { updatePayView() }, 1000);
 }
@@ -197,35 +198,6 @@ function populatePage() {
     if(!data) return;
     _tab = data;
 
-    // friends = {
-    //   1: {first_name: 'Barack', last_name: 'Obama'},
-    //   2: {first_name: 'Curioussssss', last_name: 'George'},
-    //   3: {first_name: 'Michael', last_name: 'Vader'},
-    //   4: {first_name: 'Darth', last_name: 'Vader'},
-    //   5: {first_name: 'Darth', last_name: 'Vader'},
-    //   6: {first_name: 'Darth', last_name: 'Vader'},
-    //   7: {first_name: 'Darth', last_name: 'Vader'},
-    // };
-
-    // _tab = {
-    //   id: 100,
-    //   title: "Dinner at Centerfolds",
-    //   group: [1, 2, 3, 4, 5, 6, 7],
-    //   currency: '$',
-    //   items: {
-    //     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
-    //     2: {name: 'Okra', price: '14.50', assigned_to: []},
-    //     3: {name: 'Okra', price: '14.50', assigned_to: [1, 2]},
-    //     4: {name: 'Okra', price: '14.50', assigned_to: [2]},
-    //     5: {name: 'Okra', price: '14.50', assigned_to: [2]}
-    //   },
-    //   tax: 14.44,
-    //   master_user_id: 1,
-    //   tip: 50.00,
-    //   total: 3234,
-    //   subtotal: 123,
-    // }
-
     // Set the group object
     setGroupUsers(_tab.group);
 
@@ -247,6 +219,7 @@ function populatePage() {
       $('#finish_button').text('Finish and Pay >');
     }
 
+    updateTabView();
   });
 }
 
@@ -274,26 +247,33 @@ function updateTabView() {
     // }
 
     // Update friends if it has changed
-    // new_tab.group.forEach(function(id) {
-    //   if($.inArray(id, _tab.group) == -1) {
-    //     getUser().done(function(data) {
-    //       var friend = JSON.parse(data);
-    //       $('.friend_group_row').prepend(FriendBlockTemplate(friend));
-    //     });
-    //   }
-    // });
-    // _tab.group.forEach(function(id) {
-    //   if($.inArray(id, new_tab.group) == -1) {
-    //     $('.friend_group_row .friend_block[data-id=' + id + ']').remove();
-    //   }
-    // });
+    new_tab.group.forEach(function(id) {
+      if($.inArray(id, _tab.group) == -1) {
+        getUser().done(function(data) {
+          var friend = JSON.parse(data);
+          $('.friend_group_row').prepend(FriendBlockTemplate(friend));
+        });
+      }
+    });
+    _tab.group.forEach(function(id) {
+      if($.inArray(id, new_tab.group) == -1) {
+        $('.friend_group_row .friend_block[data-id=' + id + ']').remove();
+      }
+    });
 
-    // // Update list items if it has changed
-    // for(var item_id in _tab.items) {
-    //   if(!_tab.items[item_id].assigned_to.is_same(new_tab.items[item_id].assigned_to)) {
-    //     $('.item_list .tab_item[data-id=' + item_id + ']').replaceWith(ItemTemplate(new_tab.items[item_id]));
-    //   }
-    // } 
+    // Update list items if it has changed
+    for(var item_id in _tab.items) {
+      if(!is_same(_tab.items[item_id].assigned_to, new_tab.items[item_id].assigned_to)) {
+        var item = {};
+        // var a = new_tab.items[item_id];
+        item[item_id] = new_tab.items[item_id];
+        $('.item_list .tab_item[data-id=' + item_id + ']').replaceWith(ItemListTemplate({items: item}))
+          .addClass('selected');
+      }
+    }
+
+    var payment_amt = getPaymentAmount(new_tab);
+    $('#user_pay_amt').text('$' + payment_amt.toFixed(2));
 
     // Update the global tab object
     _tab = new_tab;
@@ -351,14 +331,7 @@ function updatePayView() {
     var total = parseFloat(new_tab.total) || 0;
     $('#payment_progress_chart').val((paid/total*100).toFixed(2) || 0.00).trigger('change');
     
-    var payment_amt = 0;
-    for(var item_id in new_tab.items) {
-      var item = new_tab.items[item_id];
-      if($.inArray(user_id, item.assigned_to) != -1) {
-        payment_amt += parseFloat(item.price) / item.assigned_to.length;
-      }
-    }
-
+    var payment_amt = getPaymentAmount(new_tab);
     $('#payment_amount').text(payment_amt.toFixed(2));
     $('#payment_rem_amt').text('$' + (total - paid).toFixed(2));
     $('#payment_rem_tot').text('/$' + total.toFixed(2));
@@ -386,15 +359,26 @@ function updateTip(tip_val) {
   _tab.total = total_val;
 }
 
+function getPaymentAmount(tab) {
+  var payment_amt = 0;
+  for(var item_id in tab.items) {
+    var item = tab.items[item_id];
+    if($.inArray(String(user_id), item.assigned_to) != -1) {
+      payment_amt += parseFloat(item.price) / item.assigned_to.length;
+    }
+  }
+  return payment_amt;
+}
+
 // ---------------------- Prototype ----------------------
 
-Array.prototype.is_same = function(other) {
-  if (this.length != other.length) return false;
-  for (var i = 0; i < other.length; i++) {
-    if (this[i].compare) { 
-      if (!this[i].compare(other[i])) return false;
+function is_same(arr1, arr2) {
+  if (arr1.length != arr2.length) return false;
+  for (var i = 0; i < arr2.length; i++) {
+    if (arr1[i].compare) { 
+      if (!arr1[i].compare(arr2[i])) return false;
     }
-    if (this[i] !== other[i]) return false;
+    if (arr1[i] !== arr2[i]) return false;
   }
   return true;
 } 

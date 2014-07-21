@@ -88,7 +88,7 @@ $(document).ready(function() {
           // Send the other info like group, maste id, etc.
           $.post('/create_invites', {group: group})
           .done(function() {
-            closeNewTabView(tab_id);
+            closeNewTabView(tab_id, false);
           });
         }
       }
