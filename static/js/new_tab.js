@@ -70,16 +70,16 @@ $(document).ready(function() {
   });
 
   $('#uploadform').submit(function(e) {
+    e.preventDefault();
     var tab = {
       name : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
       file_url : showPicture.src
     };
     var group = Object.keys(friendsToAdd);
-    if (!group) {
+    if (!(typeof group !== 'undefined' && group.length > 0)) {
       window.alert('Please add friends to tab.');
       return;
     }
-    e.preventDefault();
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
         if (responseText === 'fail'){
@@ -88,7 +88,7 @@ $(document).ready(function() {
           // Send the other info like group, maste id, etc.
           $.post('/create_invites', {group: group})
           .done(function() {
-            closeNewTabView(tab_id, false);
+            closeNewTabView(responseText.tab_id, false);
           });
         }
       }

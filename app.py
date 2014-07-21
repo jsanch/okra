@@ -342,7 +342,7 @@ def create_invite_route():
 @app.route('/create_invites',  methods=['POST'])
 def create_invites_route():
     print "asdkjfhakgjha"
-    inv_group = request.form['group[]']
+    inv_group = request.values.getlist('group[]')
     print inv_group
     create_invites(inv_group, session['tab_id'])
     return 'success'
@@ -426,7 +426,8 @@ def upload():
             #INSERT TAB
             tab_id = okratabs.insert(insert_tabs)
             print 'SUCCESS'
-            return str({'tab_id' : tab_id})
+            session['tab_id'] = str(tab_id)
+            return jsonify({'tab_id' : str(tab_id)})
         return 'fail'
     except Exception as e:
         print e
@@ -438,6 +439,10 @@ def upload():
 ###############################################################################
 ################################## VENMO  #####################################
 ###############################################################################
+
+@app.route('/venmo_login')
+def venmo_login():
+    return redirect('/login')
 
 ### INIT 
 @app.route('/login')
