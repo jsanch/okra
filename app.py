@@ -469,10 +469,10 @@ def oauth_authorized():
 
 
     response = make_response(redirect('/'))
-    response.set_cookie('user_id',value="session['venmo_username']")
-    response.set_cookie('first_name',value="session['first_name']")
-    response.set_cookie('last_name',value="session['last_name']")
-    response.set_cookie('profile_picture_url',value="session['profile_picture_url']")
+    response.set_cookie('user_id',session['user_id'])
+    response.set_cookie('first_name',session['first_name'])
+    response.set_cookie('last_name',session['last_name'])
+    response.set_cookie('profile_picture_url',session['profile_picture_url'])
 
     #return  'fuck you %s' % session['venmo_token']
     # return 'You were signed in as %s' % session['venmo_token']
