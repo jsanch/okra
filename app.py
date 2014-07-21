@@ -359,6 +359,7 @@ def upload():
             #  CREATE NEW TAB WITH RECEIPT INFO
             okratabs = get_db_collection("tabs")   #get conncection
             insert_tabs = {}
+            insert_tabs['title'] = ''
             insert_tabs['total'] = float(parsed_tabs['meta']['total'])
             insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
             insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
@@ -378,7 +379,13 @@ def upload():
 
             #INSERT TAB
             tab_id = okratabs.insert(insert_tabs)
-
+            print 'SUCCESS'
+            print 'SUCCESS'
+            print 'SUCCESS'
+            print 'SUCCESS'
+            print 'SUCCESS'
+            print 'SUCCESS'
+            print 'SUCCESS'
             return str({'tab_id' : tab_id})
     except Exception:
         return 'fail'
