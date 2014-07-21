@@ -136,12 +136,10 @@ def get_tab():
 # NEEDS: tab_id, user_id, item_id
 @app.route('/add_user_to_item', methods=['POST'])
 def add_user_to_item():
-    print ''' add user to  items in a tab '''
+    print ''' ADD USER TO ITEM '''
     #get db collection
     tabs = get_db_collection('tabs')
     
-    print 'stage 1'
-
     #get args
     tab_id = request.form['tab_id']
     # print 'a', tab_id
@@ -153,13 +151,9 @@ def add_user_to_item():
     item_id = request.form['item_id']
     print item_id
 
-    print 'stage 2'
-
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     print str(le_tab)
-
-    print 'stage 3'
 
     if (le_tab == None):
         print 'fail'
@@ -180,7 +174,7 @@ def add_user_to_item():
 # NEEDS: tab_id, user_id, item_id
 @app.route('/remove_user_from_item', methods=['POST'])
 def remove_user_to_item():
-    ''' remove user of items in a tab '''
+    print ''' REMOVE USER FROM ITEM '''
     #get db collection
     tabs = get_db_collection('tabs')
     
