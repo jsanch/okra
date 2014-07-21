@@ -215,6 +215,9 @@ table td {
   right: 0; top: 3px; bottom: 0;
 }
 
+#tip_input {
+  color: #7EDEB1;
+}
 
 /* -------------- Style classes -------------- */
 
