@@ -333,15 +333,19 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
-@app.route('/create_invite')
+@app.route('/create_invite', methods=['POST'])
 def create_invite_route():
-    inv_user_id = request.args.get('user_id', '')
+    inv_user_id = request.form['user_id']
     create_invites([inv_user_id], session['tab_id'])
+    return 'success'
 
-@app.route('/create_invites')
+@app.route('/create_invites',  methods=['POST'])
 def create_invites_route():
-    inv_group = request.args.get('group', '')
+    print "asdkjfhakgjha"
+    inv_group = request.values.getlist('group[]')
+    print inv_group
     create_invites(inv_group, session['tab_id'])
+    return 'success'
 
 #poll invite
 @app.route('/poll_for_invite')
@@ -422,7 +426,8 @@ def upload():
             #INSERT TAB
             tab_id = okratabs.insert(insert_tabs)
             print 'SUCCESS'
-            return str({'tab_id' : tab_id})
+            session['tab_id'] = str(tab_id)
+            return jsonify({'tab_id' : str(tab_id)})
         return 'fail'
     except Exception as e:
         print e
@@ -435,9 +440,13 @@ def upload():
 ################################## VENMO  #####################################
 ###############################################################################
 
-### INIT 
 @app.route('/venmo_login')
 def venmo_login():
+    return redirect('/login')
+
+### INIT 
+@app.route('/login')
+def login():
     if session.get('venmo_token'):
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
@@ -493,16 +502,28 @@ def oauth_authorized():
     session['last_name'] = user['last_name']
     session['profile_picture_url'] = user['profile_picture_url']
 
-    user_id = users.insert( {
-                    "first_name" : session['first_name'],
-                    "second_name": session['last_name'],
-                    "name" : session['first_name'] + ' ' + session['last_name'],
-                    "friends" : ["user_id","user_id"],
-                    "phone": "",
-                    "token": session['venmo_token'],
-                    "pic_url": session['profile_picture_url']
-                  }
-        )
+    print user
+    possible_new_user = {
+            "first_name" : session['first_name'],
+            "second_name": session['last_name'],
+            "name" : session['first_name'] + ' ' + session['last_name'],
+            "friends" : [],
+            "phone": user['phone'],
+            "username": user['username'],
+            "token": session['venmo_token'],
+            "pic_url": session['profile_picture_url']}
+
+    user_id = users.update({"username": user['username']}, possible_new_user, True)
+    # user_id = users.insert( {
+    #                 "first_name" : session['first_name'],
+    #                 "second_name": session['last_name'],
+    #                 "name" : session['first_name'] + ' ' + session['last_name'],
+    #                 "friends" : ["user_id","user_id"],
+    #                 "phone": session['phone'],
+    #                 "token": session['venmo_token'],
+    #                 "pic_url": session['profile_picture_url']
+    #               }
+    #     )
     
     session['user_id'] = str(user_id)
     print 'stage 3'
