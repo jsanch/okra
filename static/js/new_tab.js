@@ -86,8 +86,11 @@ $(document).ready(function() {
 
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
-        console.log('poo');
-        closeNewTabPage();
+        if (responseText === 'fail'){
+          window.alert('Tab failed to upload. Blame Vinay.');
+        } else {
+          closeNewTabPage();
+        }
       }
     });
   });

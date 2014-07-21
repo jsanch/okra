@@ -115,8 +115,19 @@ def analyze_tab(tab_param):
 			tab['meta'] = {string_total : meta_total, string_subtotal : meta_subtotal, string_tax : 0}
 		else:
 			raise OkraParseException('7')
+	elif (avail_tax and avail_subtotal):
+		if not (meta_tax + meta_subtotal == item_total or meta_subtotal == item_total):
+			raise OkraParseException('8')
+		elif (meta_tax + meta_subtotal == item_total):
+			tab['meta'] = {string_total : item_total, string_subtotal : meta_subtotal, string_tax : meta_tax}
+		elif (meta_subtotal == item_total):
+			tab['meta'] = {string_total : item_total, string_subtotal : meta_subtotal, string_tax : 0}
+		else:
+			raise OkraParseException('9')
+	elif avail_tax:
+		tab['meta'] = {string_total : item_total, string_subtotal : item_total - meta_tax, string_tax : meta_tax}
 	else:
-		raise OkraParseException('8')
+		raise OkraParseException('Nuttin')
 
 	return tab
 
