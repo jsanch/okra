@@ -55,9 +55,8 @@ $(document).ready(function() {
           }
         }
       }
-      $('#camera-button').css('background-image', 'url(' + showPicture.src + ')');
-      // $(showPicture).show();
-      console.log(showPicture);
+      $(showPicture).show();
+      $('#camera-container').css('background-color', 'white');
     }
   };
 
