@@ -1,8 +1,9 @@
 from decimal import *
 import os
 import shutil
-import re
+from PIL import Image
 import tre
+import re
 import codecs
 import json
 
@@ -139,10 +140,20 @@ def price_fix(price_string_param):
 	return Decimal(final_price_string)
 
 def full_scan(image_name):
+	full_image_path = images_location + image_name
+
+	image = Image.open(full_image_path)
+	# if image.size[0] >= 1600:
+	ratio = float(1600)/float(image.size[0])
+	image = image.resize((1600, int(image.size[1]*ratio)))
+	image = image.transpose(Image.ROTATE_270)
+	image.save(full_image_path,'JPEG',quality=100)
+
 	try:
 		return basic_scan(image_name)
 	except OkraParseException:
 		return advanced_scan(image_name)
+
 
 def advanced_scan(image_name):
 	full_image_path = images_location + image_name
