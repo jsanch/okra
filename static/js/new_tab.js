@@ -72,7 +72,7 @@ $(document).ready(function() {
   $('#uploadform').submit(function(e) {
     e.preventDefault();
     var tab = {
-      title : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
+      title : $.cookie('first_name') + "'s Tab",
       file_url : showPicture.src
     };
     var group = Object.keys(friends_to_add);

@@ -60,6 +60,8 @@ $(function() {
     var item_id = $item.data('id');
     var item_assigned_to = _tab.items[item_id].assigned_to;
 
+  user_id = '53ccbe9d04b7747717fcdfdf'; //change
+
     if($.inArray(String(user_id), item_assigned_to) == -1) {
       $.post("http://app.grasscat.org/add_user_to_item", { user_id: user_id, tab_id: _tab_id, item_id: item_id });
       $item.addClass('selected');
@@ -158,15 +160,15 @@ function setGroupUsers(group) {
     });
   });
 
-  _group = {
-    1: {first_name: 'Barack', last_name: 'Obama'},
-    2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
-    3: {first_name: 'Michael', last_name: 'Vader'},
-    4: {first_name: 'Darth', last_name: 'Vader'},
-    5: {first_name: 'Darth', last_name: 'Vader'},
-    6: {first_name: 'Darth', last_name: 'Vader'},
-    7: {first_name: 'Darth', last_name: 'Vader'},
-  };
+  // _group = {
+  //   1: {first_name: 'Barack', last_name: 'Obama'},
+  //   2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
+  //   3: {first_name: 'Michael', last_name: 'Vader'},
+  //   4: {first_name: 'Darth', last_name: 'Vader'},
+  //   5: {first_name: 'Darth', last_name: 'Vader'},
+  //   6: {first_name: 'Darth', last_name: 'Vader'},
+  //   7: {first_name: 'Darth', last_name: 'Vader'},
+  // };
 }
 
 function populatePage() {
