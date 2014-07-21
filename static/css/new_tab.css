@@ -94,35 +94,13 @@ h1.page-header {
     }
 
   /* -------------- New Tab Buttons -------------- */
-  #new_tab_buttons {
-    background-color: #7EDEB1;
-    padding: 5% 0;
-  }
 
-  #new_tab_buttons .btn {
-    background-color: white;
-    color: #7EDEB1;
-    border-color: white;
-    border-width: 2px;
+  #open_add_friends {
+    margin: 0 auto;
+    width: 100%;
   }
-
-  #new_tab_buttons .btn:hover, .btn:focus {
-    background-color: #7EDEB1;
-    border-color: white;
-    border-width: 2px;
-    color: white;
-    outline: none;
-  }
-
-  .friend_group .friend_block {
-    min-width: 50px;
-  }
-
-    .glyphicon-ok-circle {
-      display: none;
-    }
 
   .create_tab_button {
-    margin: 0 auto;
+    margin: 5% auto;
     width: 50%;
   }
