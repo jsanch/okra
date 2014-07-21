@@ -224,6 +224,12 @@ table td {
   color: #7EDEB1;
 }
 
+#payment_success {
+  opacity: 0;
+  color: green;
+  padding-top: 5px;
+}
+
 /* -------------- Style classes -------------- */
 
 .inline_element {

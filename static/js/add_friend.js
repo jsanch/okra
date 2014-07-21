@@ -10,7 +10,7 @@ $(function() {
 // get friends and populate the add friends modal
 function openAddFriends(user_id, friends_to_add) {
   var friends_list;
-  $.get('/get_friends', {user_id : user_id})
+  $.get('http://app.grasscat.org/get_friends', {user_id : user_id})
     .done(function(data) {
       var data = JSON.parse(data);
       var friends_list = {};
@@ -28,7 +28,8 @@ function openAddFriends(user_id, friends_to_add) {
       });
 
       // bind add friend action to each friend
-      $('.js-add-friend').on('click', function() {
+      $('.js-add-friend').on('click', function(event) {
+        event.preventDefault();
         updateFriend($(this), friends_to_add);
       });
 
@@ -44,16 +45,17 @@ function updateFriend(friend, friends_to_add) {
   if (selectedID in friends_to_add) {
     delete friends_to_add[selectedID];
   } else {
-    friends_to_add[selectedID] = {first_name: $('.js-friend', friend).html()};
+    var bg = $('.small_portrait', friend).css('background-image');
+    bg = bg.replace('url(','').replace(')','');
+    friends_to_add[selectedID] = {first_name: $('.js-friend', friend).html(), pic_url: bg};
   }
 }
 
 // update the UI to show which friends added
 function updateAdded() {
-  console.log(friendsToAdd);
   // Populate friends list
   $('.friend_block').remove();
-  $('.friend_group_row').prepend(FriendRowTemplate({ friends: friendsToAdd }));
+  $('.friend_group_row').prepend(FriendRowTemplate({ friends: friends_to_add }));
 }
 
 

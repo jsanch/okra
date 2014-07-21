@@ -128,8 +128,6 @@ function initPayView() {
     }
   );
 
-  $('#payment_success').css({'opacity': 0});
-
   getTab(_tab_id).done(function(data) {
     if(!data) return;
     _tab = data;

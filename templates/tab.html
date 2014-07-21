@@ -175,6 +175,9 @@
         <div class="content_container pull-left">
           <button id="back_button" class="btn btn-primary">< Back</button>
         </div>
+        <div class="content_container pull-right">
+          <button id="back_button" class="btn btn-primary">Home</button>
+        </div>
       </div>
     </div>
   </div>
@@ -286,7 +289,11 @@
 <script id="friend_row_template" type="text/x-handlebars-template">
   {{#each friends}}
     <td class="friend_block" data-id={{@key}}>
+    {{#if pic_url}}
+      <div class="portrait" style="background-image: url({{pic_url}})"></div>
+    {{else}}
       <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
+    {{/if}}
       <div class="friend_name text_limit text-center">{{first_name}}</div>
     </td>
   {{/each}}

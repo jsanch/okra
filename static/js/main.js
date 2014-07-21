@@ -1,6 +1,6 @@
 // ---------------------- Global ----------------------
 
-var friendsToAdd = {},
+var friends_to_add = {},
     POLL_DELAY = 5000, // ms
     _tab = {},
     _group = {},
@@ -18,7 +18,7 @@ var user = {
 
 $(document).ready(function() {
   // start asking server for outstanding invites
-  pollForInvite();
+  // pollForInvite();
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
