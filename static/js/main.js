@@ -7,18 +7,17 @@ var friendsToAdd = {},
     db_poll_interval;
 
 var user_id = $.cookie('user_id');
-
-var _tab_id = '53cca6cdd2a57d3208d1bd8c';
-
 var user = {
   id: user_id,
   first_name : $.cookie('first_name'),
   last_name : $.cookie('last_name')
 }
 
+var _tab_id = '53cca6cdd2a57d3208d1bd8c';
+
 $(document).ready(function() {
   // start asking server for outstanding invites
-  pollForInvite();
+  var invitePoll = pollForInvite();
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
@@ -30,7 +29,7 @@ $(document).ready(function() {
 * Continuously poll the server for any tab invitations from this user
 */
 function pollForInvite(){
-  setInterval(function() {
+  return setInterval(function() {
     $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
       if (data) {
@@ -61,6 +60,7 @@ function showInvite(tab) {
   //   "total": 9.62,
   //   "subtotal": 8.99
   // }
+  _tab = tab;
   $('#js-invite-modal .modal-title').text('New Tab Invite');
   $('#js-invite-modal .modal-body').text('You have been invited to ' + tab['title']);
   $('#js-invite-modal').modal();
@@ -71,22 +71,18 @@ function showInvite(tab) {
 */
 function acceptInvite() {
   // global tab object must be set
-  if (!theTab) {
+  if (!_tab) {
     window.alert('Sorry there is no tab available to accept.');
   }
-  var acceptedTab = {
-    user_id : 999,
-    tab_id : theTab['tab_id']
-  }
   // post to server that tab was accepted
-  $.post('/accept', acceptedTab)
+  $.post('/accept_invite', {tab_id : _tab['_id']})
     .done(function(data) {
-        if (data.redirect) {
-          // data.redirect contains the string URL to redirect to the accepted tab page
-          window.location.href = data.redirect;
+        if (data === 'success') {
+          // kill polling
+          clearInterval(invitePoll);
+          // do mike's switch thing
         } else {
-          // data.form contains the HTML for the replacement form
-          $("#myform").replaceWith(data.form);
+          window.alert('Could not enter the tab');
         }
     });
 }
