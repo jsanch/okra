@@ -40,7 +40,6 @@ def new_tab_view():
 @app.route('/tab')
 def tab_view():
     resp = make_response(render_template('tab.html'))
-    resp.set_cookie('user_id', 'poo')
     return resp
 
 @app.route('/start')
@@ -60,10 +59,9 @@ def img_upload():
 def get_db_connection(db):
     client = MongoClient()
     return client[db]
+
 def get_db_collection(collection):
     return get_db_connection('okra')[collection]
-
-
 
 
 ###############################################################################
@@ -219,12 +217,12 @@ def add_user_to_item():
 
 
     if (le_tab == None):
-        return 'Fail'
+        return 'fail'
     else:
         le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
-        return "True"
+        return "success"
 
 # REMOVE USER 
 # NEEDS: tab_id, user_id, item_id
@@ -242,16 +240,13 @@ def remove_user_to_item():
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-
     if (le_tab == None):
-        return 'Fail'
+        return 'fail'
     else:
         le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
-        return "True"
-
-
+        return "success"
 
 
 ###############################################################################
@@ -296,7 +291,6 @@ def get_friends():
     for friend_id in friend_ids:
         friends[friend_id] = users_collection.find_one({'_id':friend_id})
     return friends
-
 
 
 ###############################################################################
@@ -346,59 +340,54 @@ def allowed_file(filename):
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
 def upload():
-    # try:
-    # Get the name of the uploaded file
-    file = request.files['file']
-    # Check if the file is one of the allowed types/extensions
-    if file and allowed_file(file.filename):
-        # Make the filename safe, remove unsupported chars
-        filename = secure_filename(file.filename)
-        # Move the file form the temporal folder to
-        # the upload folder we setup
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # Redirect the user to the uploaded_file route, which
-        # will basicaly show on the browser the uploaded file
-        
-        # OCR PARSING
-        parsed_tabs = scan.okraparser.full_scan(filename)
-        print parsed_tabs
-       
-        #  CREATE NEW TAB WITH RECEIPT INFO
-        okratabs = get_db_collection("tabs")   #get conncection
-        insert_tabs = {}
-        insert_tabs['title'] = ''
-        insert_tabs['total'] = float(parsed_tabs['meta']['total'])
-        insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
-        insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
-        insert_tabs['tip'] = float(0)
-        if 'user_id' in session:
-            insert_tabs['master_user_id'] = session['user_id']
-        else:
-            insert_tabs['master_user_id'] = None
-        insert_tabs['group'] = []
-        insert_tabs['items'] = {}
-        insert_tabs['paid_users'] = []
-        insert_tabs['paid'] = False
+    try:
+        # Get the name of the uploaded file
+        file = request.files['file']
+        # Check if the file is one of the allowed types/extensions
+        if file and allowed_file(file.filename):
+            # Make the filename safe, remove unsupported chars
+            filename = secure_filename(file.filename)
+            # Move the file form the temporal folder to
+            # the upload folder we setup
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # Redirect the user to the uploaded_file route, which
+            # will basicaly show on the browser the uploaded file
+            
+            # OCR PARSING
+            parsed_tabs = scan.okraparser.full_scan(filename)
+            print parsed_tabs
+           
+            #  CREATE NEW TAB WITH RECEIPT INFO
+            okratabs = get_db_collection("tabs")   #get conncection
+            insert_tabs = {}
+            insert_tabs['title'] = ''
+            insert_tabs['total'] = float(parsed_tabs['meta']['total'])
+            insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
+            insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
+            insert_tabs['tip'] = float(0)
+            if 'user_id' in session:
+                insert_tabs['master_user_id'] = session['user_id']
+            else:
+                insert_tabs['master_user_id'] = None
+            insert_tabs['group'] = []
+            insert_tabs['items'] = {}
+            insert_tabs['paid_users'] = []
+            insert_tabs['paid'] = False
 
-        index_id = 0
-        for parsed_item in parsed_tabs['items']:
-            insert_tabs['items'][str(index_id)] = parsed_item
-            index_id += 1
+            index_id = 0
+            for parsed_item in parsed_tabs['items']:
+                insert_tabs['items'][str(index_id)] = parsed_item
+                index_id += 1
 
-        print insert_tabs
+            print insert_tabs
 
-        #INSERT TAB
-        tab_id = okratabs.insert(insert_tabs)
-        print 'SUCCESS'
-        print 'SUCCESS'
-        print 'SUCCESS'
-        print 'SUCCESS'
-        print 'SUCCESS'
-        print 'SUCCESS'
-        print 'SUCCESS'
-        return str({'tab_id' : tab_id})
-    # except Exception:
-    #     return 'fail'
+            #INSERT TAB
+            tab_id = okratabs.insert(insert_tabs)
+            print 'SUCCESS'
+            return str({'tab_id' : tab_id})
+    except Exception as e:
+        print e
+        return 'fail'
 
 
 
