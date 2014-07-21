@@ -12,9 +12,16 @@ from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
+mongo_encoder = JSONEncoder()
+
 app = Flask(__name__)
 app.jinja_env.autoescape = False
-
 app.secret_key = APP_SECRET
 
 ###############################################################################
@@ -33,7 +40,6 @@ def new_tab_view():
 @app.route('/tab')
 def tab_view():
     resp = make_response(render_template('tab.html'))
-    resp.set_cookie('user_id', 'poo')
     return resp
 
 @app.route('/start')
@@ -53,10 +59,9 @@ def img_upload():
 def get_db_connection(db):
     client = MongoClient()
     return client[db]
+
 def get_db_collection(collection):
     return get_db_connection('okra')[collection]
-
-
 
 
 ###############################################################################
@@ -212,12 +217,12 @@ def add_user_to_item():
 
 
     if (le_tab == None):
-        return 'Fail'
+        return 'fail'
     else:
         le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
-        return "True"
+        return "success"
 
 # REMOVE USER 
 # NEEDS: tab_id, user_id, item_id
@@ -235,16 +240,13 @@ def remove_user_to_item():
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-
     if (le_tab == None):
-        return 'Fail'
+        return 'fail'
     else:
         le_tab['items'][str(item_id)]['assigned_to'].remove(user_id)
         print le_tab['items'][str(item_id)]['assigned_to']
         tabs.save(le_tab)
-        return "True"
-
-
+        return "success"
 
 
 ###############################################################################
@@ -266,7 +268,7 @@ def add_user():
         }
         user_mongo_id = users.insert(user)
 
-        return json.dumps({'user_id': user_mongo_id})
+        return JSONEncoder.encode(mongo_encoder, {'user_id': user_mongo_id})
 
 #GET USER
 @app.route('/get_user')
@@ -275,7 +277,7 @@ def get_user():
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
     user = users_collection.find_one({"_id":user_id})
-    return json.dumps(user)
+    return JSONEncoder.encode(mongo_encoder, user)
 
 #GET FRIENDS
 @app.route('/get_friends')
@@ -289,7 +291,6 @@ def get_friends():
     for friend_id in friend_ids:
         friends[friend_id] = users_collection.find_one({'_id':friend_id})
     return friends
-
 
 
 ###############################################################################
@@ -364,8 +365,11 @@ def upload():
             insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
             insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
             insert_tabs['tip'] = float(0)
-
-            insert_tabs['group'] = {}
+            if 'user_id' in session:
+                insert_tabs['master_user_id'] = session['user_id']
+            else:
+                insert_tabs['master_user_id'] = None
+            insert_tabs['group'] = []
             insert_tabs['items'] = {}
             insert_tabs['paid_users'] = []
             insert_tabs['paid'] = False
@@ -380,14 +384,9 @@ def upload():
             #INSERT TAB
             tab_id = okratabs.insert(insert_tabs)
             print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
             return str({'tab_id' : tab_id})
-    except Exception:
+    except Exception as e:
+        print e
         return 'fail'
 
 
@@ -404,7 +403,7 @@ def venmo_login():
         # return 'Your Venmo token is %s' % session.get('venmo_token')
         # venmo_token  = session.get('venmo_token')
         # charge_or_pay('charge',venmo_token,8576009129, 0.01,'')
-      return 'Jaime charged'
+      return redirect('/tab')
     else:
       return redirect('https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code' % CONSUMER_ID)
 
@@ -433,6 +432,8 @@ def oauth_authorized():
     db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
+    print 'stage 1'
+
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
         "client_id":CONSUMER_ID,
@@ -445,13 +446,15 @@ def oauth_authorized():
     access_token = response_dict.get('access_token')
     user = response_dict.get('user')
 
+    print 'stage 2'
+
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
     session['first_name'] = user['first_name']
     session['last_name'] = user['last_name']
     session['profile_picture_url'] = user['profile_picture_url']
 
-    users.insert( {
+    user_id = users.insert( {
                     "first_name" : session['first_name'],
                     "second_name": session['last_name'],
                     "name" : session['first_name'] + ' ' + session['last_name'],
@@ -462,11 +465,14 @@ def oauth_authorized():
                   }
         )
     
-    response = make_response(redirect('/'))
-    response.set_cookie('user_id',value="session['venmo_username']")
-    response.set_cookie('first_name',value="session['first_name']")
-    response.set_cookie('last_name',value="session['last_name']")
-    response.set_cookie('profile_picture_url',value="session['profile_picture_url']")
+    session['user_id'] = str(user_id)
+    print 'stage 3'
+
+    response = make_response(redirect('/tab'))
+    response.set_cookie('user_id',str(session['user_id']))
+    response.set_cookie('first_name',str(session['first_name']))
+    response.set_cookie('last_name',str(session['last_name']))
+    response.set_cookie('profile_picture_url',session['profile_picture_url'])
 
     #return  'fuck you %s' % session['venmo_token']
     # return 'You were signed in as %s' % session['venmo_token']
@@ -474,8 +480,9 @@ def oauth_authorized():
     
 
 ###############################################################################
-################################## FLASK  #####################################
-###############################################################################
+################################## FLASK  #########################
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)

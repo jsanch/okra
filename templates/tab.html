@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../static/css/tab.css">
   <link rel="stylesheet" type="text/css" href="../static/css/new_tab.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/modal.css">
 
   <link rel="import" href="../templates/new_tab.html">
 </head>
@@ -175,16 +176,14 @@
 
       <!-- OCR button -->
       <section id='camera-container'>
-        <div id='camera-button'>
-          <img id='camera' src='../static/img/camera.svg'>
-          <img src="" alt="" id="show-picture" hidden>
-        </div>
+        <img src="" alt="" id="show-picture" hidden>
+        <img id='camera' src='../static/img/camera.svg'>
         <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
           <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
         </form>
       </section>
 
-      <!-- Friends in tab -->
+      <!-- Add friends in new tab -->
       <table class="friend_group content_container">
         <tbody>
           <tr class="friend_group_row">
@@ -252,8 +251,8 @@
 <script id="friend_row_template" type="text/x-handlebars-template">
   {{#each friends}}
     <td class="friend_block" data-id={{@key}}>
-      <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
       <div class="friend_name text_limit text-center">{{first_name}}</div>
+      <div class="portrait" style="background-image: url({{get_pic_url @key}})"></div>
     </td>
   {{/each}}
 </script>
@@ -330,7 +329,7 @@
             <div class="small_portrait pull-left" style="background-image: url({{get_pic_url @key}})"></div>
           </div>
           <div class="col-xs-8">
-            <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
+            <span class="text-center js-friend" data-id={{@key}} data-name={{first_name}}>{{first_name}}</span>
           </div>
           <div class="col-xs-2">
             <i class="friend_add_icon fa fa-check text_green"></i>
@@ -342,27 +341,5 @@
 </script>
 
 <script id="new_tab_template" type='text/x-handlebars-template'>{{user_name}}</script>
-
-<script id="friend_block_template" type="text/x-handlebars-template">
-  {{#each friends}}
-    <td class="friend_block">
-      <img src="/static/img/face.jpeg" width='50px' height='50px'>
-      <div class="friend_name text-center">{{name}}</div>
-    </td>
-  {{/each}}
-</script>
-
-<script id='add_friends_template' type='text/x-handlebars-template'>
-  <table>
-    {{#each friends}}
-      <div class='list-group friend_block'>
-        <a href='#' class='list-group-item js-add-friend'>
-          <span class="text-center js-friend" data-id={{@key}} data-name={{name}}>{{name}}</span>
-          <span class='glyphicon glyphicon-ok-circle'></span>
-        </a>
-      </div>
-    {{/each}}
-  </table>
-</script>
 
 {% endraw %}
