@@ -73,7 +73,7 @@ def get_db_collection(collection):
 ###############################     TAB      ##################################
 ###############################################################################
 
-@app.route('/make_payment', methods=['POST'])
+@app.route('/make_payment', methods=['POST','GET'])
 def make_payment():
     print 'MAKE PAYMENTS'
     user_id = session['user_id']
@@ -242,18 +242,15 @@ def get_user():
 #GET FRIENDS
 @app.route('/get_friends')
 def get_friends():
+    print 'GET FRIENDS'
      # gets the list of friends with their ids and names for a given user id 
     users_collection = get_db_collection('users')
-    print 'stage 1'
     user_id = request.args.get('user_id')
     user = users_collection.find_one({'_id':ObjectId(user_id)})
-    print 'stage 2'
     friend_ids = user['friends']
     friends = {}
-    print 'stage 3'
     for friend_id in friend_ids:
         friends[friend_id] = users_collection.find_one({'_id':ObjectId(friend_id)})
-    print 'stage 4'
 
     print friends
     return JSONEncoder.encode(mongo_encoder, friends)
@@ -284,6 +281,21 @@ def create_invites_route():
     inv_group = request.values.getlist('group[]')
     print inv_group
     create_invites(inv_group, session['tab_id'])
+    return 'success'
+
+@app.route('/accept_invite',  methods=['POST'])
+def accept_invite_route():
+    print 'accept'
+    invites = get_db_collection('invites')
+    tab_id = request.form['tab_id']
+
+    if invites.find_one({'tab_id': str(tab_id), 'user_id': str(session['user_id'])}):
+        invites.remove({'tab_id': str(tab_id), 'user_id': str(session['user_id'])})
+        session['tab_id'] = tab_id
+    # inv_group = request.values.getlist('group[]')
+    # print inv_group
+    print tab_id
+    # create_invites(inv_group, session['tab_id'])
     return 'success'
 
 #poll invite
@@ -349,7 +361,7 @@ def upload():
                 insert_tabs['master_user_id'] = session['user_id']
             else:
                 insert_tabs['master_user_id'] = None
-            insert_tabs['group'] = []
+            insert_tabs['group'] = [str(session['user_id'])]
             insert_tabs['items'] = {}
             insert_tabs['paid_users'] = []
             insert_tabs['paid'] = False
@@ -416,10 +428,10 @@ def master_charge(master):
 
 @app.route('/oauth-authorized')
 def oauth_authorized():
+    print 'OAUTHORIZE'
     db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
-    print 'stage 1'
 
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
@@ -433,7 +445,6 @@ def oauth_authorized():
     access_token = response_dict.get('access_token')
     user = response_dict.get('user')
 
-    print 'stage 2'
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
@@ -473,7 +484,6 @@ def oauth_authorized():
     print user_id
 
     session['user_id'] = str(user_id)
-    print 'stage 3'
 
     response = make_response(redirect('/tab'))
     response.set_cookie('user_id',str(session['user_id']))
