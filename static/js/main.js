@@ -13,7 +13,7 @@ var _group;
 var POLL_DELAY = 500; // ms
 var db_poll_interval;
 
-var user_id = $.cookie('first_name');
+var user_id = $.cookie('user_id');
 
 var _tab_id = '53cca6cdd2a57d3208d1bd8c';
 

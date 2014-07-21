@@ -116,7 +116,7 @@ def create_tab():
         return 'error'
 
 # UPDATE TAB
-@app.route('/update_tab', methods=['POST', 'GET'])
+@app.route('/update_tab', methods=['POST'])
 def update_tab():
     '''Updates tab with JSON sent by client '''
     db = get_db_connection("okra") #get conncection
@@ -124,40 +124,37 @@ def update_tab():
     tabs = get_db_collection('tabs')
     # invites = db.invites #get invites collection
 
-    if request.method == 'POST':
-        #Get JSON
-        data = request.get_json(True)
+    #Get JSON
+    data = request.get_json(True)
 
-        #Get wanted data
-        tab_title = data['title']
-        tab_group = data['group'] #array of user ids
-        tab_items = data['items']
-        tab_subtotal = data['subtotal']
-        tab_total = data['total']
-        tab_tip = data['tip']
-        tab_tax = data['tax']
-        tab_paid_users = data['paid_users']
-        tab_paid = data['paid']
+    #Get wanted data
+    tab_title = data['title']
+    tab_group = data['group'] #array of user ids
+    tab_items = data['items']
+    tab_subtotal = data['subtotal']
+    tab_total = data['total']
+    tab_tip = data['tip']
+    tab_tax = data['tax']
+    tab_paid_users = data['paid_users']
+    tab_paid = data['paid']
 
-        # prepare data for db 
-        tab = {
-                "title" : tab_title,
-                "group" : tab_group,
-                "items" : tab_items,
-                "subtotal" : tab_subtotal,
-                "total" : tab_total,
-                "tip" : tab_tip,
-                "tax" : tab_tax,
-                "paid_users" : tab_paid_users,
-                "paid" : tab_paid,    
-            }
-        #get desired  tab
-        tab_id = request.args.get('tab_id', '')
-        le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    # prepare data for db 
+    tab = {
+            "title" : tab_title,
+            "group" : tab_group,
+            "items" : tab_items,
+            "subtotal" : tab_subtotal,
+            "total" : tab_total,
+            "tip" : tab_tip,
+            "tax" : tab_tax,
+            "paid_users" : tab_paid_users,
+            "paid" : tab_paid,    
+        }
+    #get desired  tab
+    tab_id = request.args.get('tab_id', '')
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
 
-        return "NOT IMPLEMENTED YET"
-    else:
-        return "not a post req"
+    return "NOT IMPLEMENTED YET"
 
 
 
@@ -303,7 +300,7 @@ def get_user():
      # gets a user_id and returns json info of user
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users_collection.find_one({"_id":user_id})
+    user = users_collection.find_one({"_id":ObjectId(user_id)})
     return JSONEncoder.encode(mongo_encoder, user)
 
 #GET FRIENDS
@@ -311,13 +308,19 @@ def get_user():
 def get_friends():
      # gets the list of friends with their ids and names for a given user id 
     users_collection = get_db_collection('users')
+    print 'stage 1'
     user_id = request.args.get('user_id')
-    user = users_collection.find_one({'_id':user_id})
+    user = users_collection.find_one({'_id':ObjectId(user_id)})
+    print 'stage 2'
     friend_ids = user['friends']
     friends = {}
+    print 'stage 3'
     for friend_id in friend_ids:
-        friends[friend_id] = users_collection.find_one({'_id':friend_id})
-    return friends
+        friends[friend_id] = users_collection.find_one({'_id':ObjectId(friend_id)})
+    print 'stage 4'
+
+    print friends
+    return JSONEncoder.encode(mongo_encoder, friends)
 
 
 ###############################################################################
@@ -465,7 +468,7 @@ def master_charge(master):
 
     for user in users:
       user_id = request.args.get('user_id', '')
-      le_user = tabs.find_one({"id" : user_id})
+      le_user = tabs.find_one({"_id" : ObjectId(user_id)})
       if (user_id != ""):
         charge_or_pay('pay', user.token, master.phone, master.amt, user.note)
 
@@ -513,7 +516,8 @@ def oauth_authorized():
             "token": session['venmo_token'],
             "pic_url": session['profile_picture_url']}
 
-    user_id = users.update({"username": user['username']}, possible_new_user, True)
+    if not users.find({"username": user['username']}):
+        users.update({"username": user['username']}, possible_new_user, True)
     # user_id = users.insert( {
     #                 "first_name" : session['first_name'],
     #                 "second_name": session['last_name'],
@@ -524,7 +528,14 @@ def oauth_authorized():
     #                 "pic_url": session['profile_picture_url']
     #               }
     #     )
-    
+
+    user = users.find_one({"username": user['username']})
+    # print possible_new_user
+    # print user_id
+    print user
+    user_id = user['_id']
+    print user_id
+
     session['user_id'] = str(user_id)
     print 'stage 3'
 
@@ -573,5 +584,4 @@ if __name__ == '__main__':
 ###############################################################################
 ###############################################################################
 ###############################################################################
-###############################################################################
-################################################
+###############################################
