@@ -20,6 +20,21 @@
 	<div class="container-fluid">
 		<div class="content_panel">
 
+      <!-- Main Page content -->
+      <div id="main_view">
+        <section class='main-content'>
+          <header class='main-header'>
+            <span class='vertical'><h1 class='page-header'>Okra</h1></span>
+          </header>
+
+          <!-- Main page buttons -->
+          <div id='start-buttons'>
+            <button type='button' class="btn btn-primary btn-lg btn-block">Profile</button>
+            <button type='button' id='js-start-tab' class="btn btn-primary btn-lg btn-block">Start Tab</button>
+          </div>
+        </section>
+      </div>
+
       <div id="page_title_view">
         <div class="header content_container text-center">
           <div id="title" class="title"></div>
@@ -196,6 +211,25 @@
         </div>
       </div>
       <div class="alert alert-success" role="alert" hidden></div>
+    </div>
+  </div>
+
+  <!-- Invitation Modal -->
+  <div class="modal fade" id="js-invite-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id='js-accept-tab' class="btn btn-primary">Accept Tab</button>
+        </div>
+      </div>
     </div>
   </div>
 

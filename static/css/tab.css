@@ -250,6 +250,10 @@ table td {
   display: none;
 }
 
+#new_tab_view {
+  display: none;
+}
+
 /* -------------- Overrides -------------- */
 
 .btn {

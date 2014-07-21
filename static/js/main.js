@@ -6,11 +6,6 @@ $(document).ready(function() {
   // start asking server for outstanding invites
   // pollForInvite();
 
-  // bind create tab event
-  $('#js-start-tab').on('click', function() {
-    console.log('dsds');
-  });
-
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
     acceptInvite()
@@ -91,10 +86,14 @@ function openTabView() {
   $('#tab_view').fadeIn(200);
   $('#page_title').fadeIn(200);
 }
-function closeTabView() {
+function closeTabView(back) {
   $('#add_friend_button').fadeOut(200);
   $('#tab_view').fadeOut(200, function() {
-    openPayView();
+    if(back) {
+      openNewTabView();
+    } else {
+      openPayView();
+    }
   });
 }
 
@@ -113,18 +112,35 @@ function openNewTabView() {
   $('#page_title').fadeOut(200);
   $('#new_tab_view').fadeIn(200);
 }
-function closeNewTabView() {
+function closeNewTabView(back) {
   $('#new_tab_view').fadeOut(200, function() {
     openTabView();
   });
 }
+
+function openMainView() {
+  $('#main_view').fadeIn(200);
+}
+function closeMainView() {
+  $('#main_view').fadeOut(200, function() {
+    openNewTabView();
+  });
+}
+
+
+
+$('#js-start-tab').on('click', function() {
+  closeMainView()
+});
 
 $('#tab_view #finish_button').on('click', function(event) {
   closeTabView();
 });
   
 $('#tab_view #back_button').on('click', function(event) {
+  //should clear tab
 
+  closeTabView(true);
 });
 
 $('#pay_view #back_button').on('click', function(event) {
