@@ -195,6 +195,10 @@ function populatePage() {
       $('#finish_button').text('Finish and Pay >');
     }
 
+    getUser(user_id).done(function(data) {
+      var friend = JSON.parse(data);
+      $('.friend_group_row').prepend(FriendBlockTemplate(friend));
+    });
     updateTabView();
   });
 }
