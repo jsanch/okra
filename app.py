@@ -242,18 +242,15 @@ def get_user():
 #GET FRIENDS
 @app.route('/get_friends')
 def get_friends():
+    print 'GET FRIENDS'
      # gets the list of friends with their ids and names for a given user id 
     users_collection = get_db_collection('users')
-    print 'stage 1'
     user_id = request.args.get('user_id')
     user = users_collection.find_one({'_id':ObjectId(user_id)})
-    print 'stage 2'
     friend_ids = user['friends']
     friends = {}
-    print 'stage 3'
     for friend_id in friend_ids:
         friends[friend_id] = users_collection.find_one({'_id':ObjectId(friend_id)})
-    print 'stage 4'
 
     print friends
     return JSONEncoder.encode(mongo_encoder, friends)
@@ -431,10 +428,10 @@ def master_charge(master):
 
 @app.route('/oauth-authorized')
 def oauth_authorized():
+    print 'OAUTHORIZE'
     db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
-    print 'stage 1'
 
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
@@ -448,7 +445,6 @@ def oauth_authorized():
     access_token = response_dict.get('access_token')
     user = response_dict.get('user')
 
-    print 'stage 2'
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
@@ -488,7 +484,6 @@ def oauth_authorized():
     print user_id
 
     session['user_id'] = str(user_id)
-    print 'stage 3'
 
     response = make_response(redirect('/tab'))
     response.set_cookie('user_id',str(session['user_id']))
