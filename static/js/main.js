@@ -15,14 +15,19 @@ var user = {
 
 // var _tab_id = '53cca6cdd2a57d3208d1bd8c';
 var _tab_id;
+var invitePoll;
 
 $(document).ready(function() {
   // start asking server for outstanding invites
-  var invitePoll = pollForInvite();
+  invitePoll = pollForInvite();
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
-    acceptInvite()
+    acceptInvite();
+  });
+  // bind reject tab event
+  $('#js-reject-tab').on('click', function() {
+    rejectInvite();
   });
 });
 
@@ -83,9 +88,18 @@ function acceptInvite() {
           // kill polling
           clearInterval(invitePoll);
           // do mike's switch thing
+          closeMainView
         } else {
+          closeMainView(_tab['_id']);
           window.alert('Could not enter the tab');
         }
+    });
+}
+
+function rejectInvite() {
+  $.post('/reject_invite', {tab_id : _tab['_id']})
+    .done(function(data) {
+      _tab = {};
     });
 }
 
@@ -146,9 +160,14 @@ function openMainView() {
   $('#main_view').fadeIn(200);
   _tab = {};
 }
-function closeMainView() {
+function closeMainView(tab_id) {
   $('#main_view').fadeOut(200, function() {
-    openNewTabView();
+    if (tab_id) {
+      initTabView(tab_id);
+      openTabView();
+    } else {
+      openNewTabView();
+    }
   });
 }
 
