@@ -7,7 +7,7 @@ import re
 import codecs
 import json
 
-DEBUG = True
+DEBUG = False
 
 def debug(x):
 	if DEBUG:
@@ -40,9 +40,9 @@ for key in reverse_name_map:
 	for letter in reverse_name_map[key]:
 		name_character_map[str(letter)] = str(key)		
 
-print config
-print character_map
-print reverse_name_map
+debug(config)
+debug(character_map)
+debug(reverse_name_map)
 
 ere_end_of_line_price = r'\$?[0-9]+[\.,][0-9]{2}$'
 
@@ -297,4 +297,4 @@ def basic_scan(image_name):
 
 	######################
 	######################
-	######################
+	##################
