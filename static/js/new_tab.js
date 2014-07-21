@@ -84,12 +84,11 @@ $(document).ready(function() {
   $('#uploadform').submit(function(e){
     e.preventDefault();
 
-    $(this).ajaxSubmit({
-      success: function(responseText, statusText, xhr, $form) {
-        console.log('poo');
-        closeNewTabPage();
-      }
-    });
+    // $(this).ajaxSubmit({
+    //   success: function(responseText, statusText, xhr, $form) {
+        closeNewTabView();
+    //   }
+    // });
   });
 
   $('#js-create-tab').click(function(){

@@ -77,6 +77,13 @@ function parseCookie(cookie) {
   return cookie_obj;
 }
 
+function getTab(id) {
+  return $.get('http://app.grasscat.org/get_tab?tab_id=' + id);
+};
+
+function getUser(id) {
+  return $.get('http://app.grasscat.org/get_user?user_id=' + id);
+};
 
 // ---------------------- Change Views ----------------------
 
