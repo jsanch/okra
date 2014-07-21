@@ -278,8 +278,10 @@ def create_invites_route():
     print "asdkjfhakgjha"
     inv_group = request.values.getlist('group[]')
     print inv_group
-    print session
-    create_invites(inv_group, str(session['tab_id']))
+    if 'tab_id' in session:
+        create_invites(inv_group, str(session['tab_id']))
+    else:
+        create_invites(inv_group, request.args.get('tab_id'))
     return 'success'
 
 @app.route('/accept_invite',  methods=['POST'])
