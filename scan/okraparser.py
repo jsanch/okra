@@ -76,7 +76,7 @@ def analyze_tab(tab_param):
 
 	item_total = Decimal()
 	for item in tab_param['tab_items']:
-		tab['items'].append({'name' : item['description'], 'price' : price_fix(item['value'])})
+		tab['items'].append({'name' : item['description'], 'price' : float(price_fix(item['value']))})
 		# tab['items'][item['description']] = price_fix(item['value'])
 		item_total += price_fix(item['value'])
 
