@@ -303,7 +303,7 @@ def get_user():
      # gets a user_id and returns json info of user
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users_collection.find_one({"_id":user_id})
+    user = users_collection.find_one({"_id":ObjectId(user_id)})
     return JSONEncoder.encode(mongo_encoder, user)
 
 #GET FRIENDS
@@ -312,11 +312,11 @@ def get_friends():
      # gets the list of friends with their ids and names for a given user id 
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
-    user = users_collection.find_one({'_id':user_id})
+    user = users_collection.find_one({'_id':ObjectId(user_id)})
     friend_ids = user['friends']
     friends = {}
     for friend_id in friend_ids:
-        friends[friend_id] = users_collection.find_one({'_id':friend_id})
+        friends[friend_id] = users_collection.find_one({'_id':ObjectId(friend_id)})
     return friends
 
 
@@ -465,7 +465,7 @@ def master_charge(master):
 
     for user in users:
       user_id = request.args.get('user_id', '')
-      le_user = tabs.find_one({"id" : user_id})
+      le_user = tabs.find_one({"_id" : ObjectId(user_id)})
       if (user_id != ""):
         charge_or_pay('pay', user.token, master.phone, master.amt, user.note)
 
@@ -513,7 +513,8 @@ def oauth_authorized():
             "token": session['venmo_token'],
             "pic_url": session['profile_picture_url']}
 
-    users.update({"username": user['username']}, possible_new_user, True)
+    if not users.find({"username": user['username']}):
+        users.update({"username": user['username']}, possible_new_user, True)
     # user_id = users.insert( {
     #                 "first_name" : session['first_name'],
     #                 "second_name": session['last_name'],

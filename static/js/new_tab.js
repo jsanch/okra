@@ -10,8 +10,6 @@ $(document).ready(function() {
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
-    console.log($.cookie('user_id'));
-    return;
     openAddFriends($.cookie('user_id'), friendsToAdd);
   });
 
@@ -74,7 +72,7 @@ $(document).ready(function() {
   $('#uploadform').submit(function(e) {
     e.preventDefault();
     var tab = {
-      name : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
+      title : $.cookie('first_name') + ' ' + $.cookie('last_name') + "'s Tab",
       file_url : showPicture.src
     };
     var group = Object.keys(friendsToAdd);
