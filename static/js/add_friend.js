@@ -1,10 +1,8 @@
 var AddFriendsTemplate;
 var FriendRowTemplate;
 var FriendBlockTemplate;
-var DanAddFriendsTemplate
 
 $(function() {
-  DanAddFriendsTemplate = Handlebars.compile($('#dan_add_friends_template').html());
   AddFriendsTemplate  = Handlebars.compile($('#add_friends_template').html());
   FriendRowTemplate = Handlebars.compile($('#friend_row_template').html());
 });
@@ -17,7 +15,7 @@ function openAddFriends(user_id, friends_to_add) {
 
       friends_list = data;
 
-      $('#add_friends_body').html(DanAddFriendsTemplate({friends : friends_list}));
+      $('#add_friends_body').html(AddFriendsTemplate({friends : friends_list}));
 
       // toggle friends already added to list
       $('.js-add-friend').each(function() {
