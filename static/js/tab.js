@@ -154,7 +154,7 @@ function setGroupUsers(group) {
     getUser(id).done(function(data) {
       if(!data) return;
       var user = JSON.parse(data);
-      _group[user.id] = user;
+      _group[user._id] = user;
     });
   });
 
