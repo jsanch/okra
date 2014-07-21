@@ -12,9 +12,16 @@ from constants import CONSUMER_ID, CONSUMER_SECRET, APP_SECRET
 import requests
 import scan.okraparser
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
+mongo_encoder = JSONEncoder()
+
 app = Flask(__name__)
 app.jinja_env.autoescape = False
-
 app.secret_key = APP_SECRET
 
 ###############################################################################
@@ -266,7 +273,7 @@ def add_user():
         }
         user_mongo_id = users.insert(user)
 
-        return json.dumps({'user_id': user_mongo_id})
+        return JSONEncoder.encode(mongo_encoder, {'user_id': user_mongo_id})
 
 #GET USER
 @app.route('/get_user')
@@ -275,7 +282,7 @@ def get_user():
     users_collection = get_db_collection('users')
     user_id = request.args.get('user_id')
     user = users_collection.find_one({"_id":user_id})
-    return json.dumps(user)
+    return JSONEncoder.encode(mongo_encoder, user)
 
 #GET FRIENDS
 @app.route('/get_friends')
@@ -436,6 +443,8 @@ def oauth_authorized():
     db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
+    print 'stage 1'
+
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
         "client_id":CONSUMER_ID,
@@ -447,6 +456,8 @@ def oauth_authorized():
     response_dict = response.json()
     access_token = response_dict.get('access_token')
     user = response_dict.get('user')
+
+    print 'stage 2'
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']
@@ -465,14 +476,14 @@ def oauth_authorized():
                   }
         )
     
-    session['user_id'] = user_id
-
+    session['user_id'] = str(user_id)
+    print 'stage 3'
 
     response = make_response(redirect('/'))
-    response.set_cookie('user_id',session['user_id'])
-    response.set_cookie('first_name',session['first_name'])
-    response.set_cookie('last_name',session['last_name'])
-    response.set_cookie('profile_picture_url',session['profile_picture_url'])
+    response.set_cookie('user_id',JSONEncoder.encode(mongo_encoder, session['user_id']))
+    response.set_cookie('first_name',str(session['first_name']))
+    response.set_cookie('last_name',str(session['last_name']))
+    response.set_cookie('profile_picture_url',str(session['profile_picture_url']))
 
     #return  'fuck you %s' % session['venmo_token']
     # return 'You were signed in as %s' % session['venmo_token']

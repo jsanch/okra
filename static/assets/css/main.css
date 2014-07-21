@@ -472,18 +472,18 @@ a:after {
 .img-circular {
 	width: 100px;
 	height: 100px;
-	background-image: url('http://strawberry-fest.org/wp-content/uploads/2012/01/Coca-Cola-logo.jpg');
 	background-size: cover;
 	display: block;
 	border-radius: 50px;
  	-webkit-border-radius: 50px;
  	-moz-border-radius: 50px;
+ 	text-align: center;
 }
 
 table {
-    height:400px;
-    width:400px;
-    table-layout:fixed;
+/*    height:600px;*/
+    width:800px;
+    text-align: center;
 }
 
 
