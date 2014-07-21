@@ -97,7 +97,7 @@ function acceptInvite() {
 
 function rejectInvite() {
   $.post('/reject_invite', {tab_id : _tab['_id']})
-    .done(function(data)) {
+    .done(function(data) {
       _tab = {};
     });
 }
