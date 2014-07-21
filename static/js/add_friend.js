@@ -12,9 +12,11 @@ function openAddFriends(user_id, friends_to_add) {
   var friends_list;
   $.get('/get_friends', {user_id : user_id})
     .done(function(data) {
-
-      friends_list = data;
-
+      var data = JSON.parse(data);
+      var friends_list = {};
+      $.each(data, function(id, friend) {
+        friends_list[id] = {name : friend['name'], pic_url : friend['pic_url']};
+      });
       $('#add_friends_body').html(AddFriendsTemplate({friends : friends_list}));
 
       // toggle friends already added to list
