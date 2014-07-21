@@ -77,7 +77,7 @@ $(function() {
   });
 
   $('#make_payment_button').on('click', function(event) {
-    $.post('http://app.grasscat.org/make_payment')
+    $.get('http://app.grasscat.org/make_payment')
       .done(function(result) {
 
     });
@@ -176,7 +176,7 @@ function populatePage() {
     // Populate item list
     $('.item_list').html(ItemListTemplate({ items: _tab.items }));
 
-    $('#title').text(_tab.title);
+    $('#title').text('Michael\'s Tab');//_tab.title);
     $('#tax').text('$' + parseFloat(_tab.tax).toFixed(2));
     $('#tip_input').val(_tab.tip);
     $('#subtotal').text('$' + parseFloat(_tab.subtotal));
