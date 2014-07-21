@@ -73,7 +73,7 @@ def get_db_collection(collection):
 ###############################     TAB      ##################################
 ###############################################################################
 
-@app.route('/make_payment', methods=['POST'])
+@app.route('/make_payment', methods=['POST','GET'])
 def make_payment():
     print 'MAKE PAYMENTS'
     user_id = session['user_id']
