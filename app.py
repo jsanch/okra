@@ -480,10 +480,10 @@ def oauth_authorized():
     print 'stage 3'
 
     response = make_response(redirect('/'))
-    response.set_cookie('user_id',JSONEncoder.encode(mongo_encoder, session['user_id']))
+    response.set_cookie('user_id',str(session['user_id']))
     response.set_cookie('first_name',str(session['first_name']))
     response.set_cookie('last_name',str(session['last_name']))
-    response.set_cookie('profile_picture_url',str(session['profile_picture_url']))
+    response.set_cookie('profile_picture_url',session['profile_picture_url'])
 
     #return  'fuck you %s' % session['venmo_token']
     # return 'You were signed in as %s' % session['venmo_token']
