@@ -6,10 +6,15 @@ body {
 
 .header {
   font-family: "Raleway";
-  color: white;
+  color: #7EDEB1;
   width: 400px;
   margin: auto;
   margin-top: 30px;
+}
+
+.header_wrapper {
+  background-color: white;
+  width: 100%;
 }
 
 .title {
@@ -53,9 +58,7 @@ body {
 .costs_panel {
   background-color: white;
   color: #7EDEB1;
-  font-size: 18px;
-  /*border: 2px solid white;*/
-  border-radius: 4px;
+  font-size: 16px;
 }
 
 .user_pay_amt_panel {
@@ -63,7 +66,6 @@ body {
   background-color: white;
   color: #7EDEB1;
   font-size: 24px;
-  border-radius: 4px;
 }
 
 .footer {
@@ -92,8 +94,10 @@ table td {
 .tab_item div {
   display: inline-block;
 }
+
 .tab_item.selected {
   border-color: #FFD9B3;
+  border-width: 2px;  
 }
 
 .friend_group {
@@ -174,6 +178,15 @@ table td {
   border-radius: 50%;
 }
 
+#payment_progress_empty {
+  border: 2px solid white;
+  border-radius: 50%;
+  position: absolute;
+  top: 35px; bottom: 5px; right: 0; left: 35px;
+  width: 135px;
+  height: 135px;
+}
+
 .payment_progress_wrapper {
   width: 200px;
   position: relative;
@@ -232,8 +245,13 @@ table td {
 .text_green {
   color: green;
 }
+
 .text_red {
   color: red;
+}
+
+.text_med {
+  font-size: 24px;
 }
 
 /* -------------- Views -------------- */
@@ -275,6 +293,19 @@ table td {
   color: white;
   border-color: white;
   border-width: 1px;
+  outline: none;
+}
+
+.btn.inverted {
+  background-color: #7EDEB1;
+  color: white;
+}
+
+.btn.inverted:hover {
+  background-color: white;
+  color: #7EDEB1;
+  border-color: #7EDEB1;
+  border-width: 2px;
   outline: none;
 }
 

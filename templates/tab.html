@@ -37,13 +37,15 @@
   <!-- View for page title -->
 
   <div id="page_title_view">
-    <div class="header content_container text-center">
-      <div id="title" class="title"></div>
-      <div class="border_line_white"></div>
-      <div class="sub_title">Tab</div>
+    <div class="header_wrapper">
+      <div class="header content_container text-center">
+        <div id="title" class="title"></div>
+        <div class="border_line_lime"></div>
+        <div class="sub_title">Tab</div>
+      </div>
     </div>
 
-    <div class="row content_container">
+    <div class="row content_container content_panel">
       <div class="col-xs-10 col_centered">
         <div class="friend_group">
           <table class="col_centered">
@@ -66,69 +68,68 @@
 
   <div id="tab_view">
     <div class="container-fluid">
-      <div class="content_container">
+      <div class="content_container content_panel">
         <ul class="item_list list-group"></ul>
       </div>
+    </div>
 
-      <div class="border_line_white content_container"></div>
+    <div class="costs_panel padded_panel"> 
+      <div class="row">
+        <div class="text-center text_med">Tab info</div>
+      </div>
 
       <div class="row content_container">
-        <div class="text-center">Tab info:</div>
+        <div class="col-xs-3 col-xs-offset-1 text-right inline_element">Subtotal:</div>
+        <div id="subtotal" class="col-xs-4 text-center"></div>
       </div>
+      <div class="border_line_lime"></div>
 
-      <div class="costs_panel padded_panel">
-        <div class="row content_container">
-          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Sub Total:</div>
-          <div id="subtotal" class="col-xs-8"></div>
-        </div>
-        <div class="border_line_lime content_container"></div>
+      <div class="row content_container">
+        <div class="col-xs-3 col-xs-offset-1 text-right inline_element">Tax:</div>
+        <div id="tax" class="col-xs-4 text-center"></div>
+      </div>
+      <div class="border_line_lime"></div>
 
-        <div class="row content_container">
-          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Tax:</div>
-          <div id="tax" class="col-xs-8"></div>
-        </div>
-        <div class="border_line_lime content_container"></div>
-
-        <div class="row content_container col_centered">
-          <div class="col-xs-2 text-right inline_element">Tip:</div>
-          <div class="col-xs-4">
-            <form class="form-inline inline_element pull-right" role="form">
-              <div class="form-group">
-                <div class="input-group">
-                  <div class="input-group-addon">$</div>
-                  <input type="text" class="form-control" id="tip_input" placeholder="Tip">
-                </div>
+      <div class="row content_container col_centered">
+        <div class="col-xs-3 col-xs-offset-1 text-right inline_element">Tip:</div>
+        <div class="col-xs-4">
+          <form class="form-inline pull-left" role="form">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">$</div>
+                <input type="text" class="form-control" id="tip_input" placeholder="Tip">
               </div>
-            </form>
-          </div>
-          <div class="col-xs-6">
-            <button class="tip_button btn btn-primary" data-percentage="0.15">15%</button>
-            <button class="tip_button btn btn-primary" data-percentage="0.18">18%</button>
-            <button class="tip_button btn btn-primary" data-percentage="0.20">20%</button>
-          </div>
+            </div>
+          </form>
         </div>
-        <div class="border_line_lime content_container"></div>
-
-        <div class="row">
-          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">Total:</div>
-          <div id="total" class="col-xs-8"></div>
+        <div class="col-xs-9 col-xs-offset-3 col-centered">
+          <button class="tip_button btn btn-primary inverted" data-percentage="0.15">15%</button>
+          <button class="tip_button btn btn-primary inverted" data-percentage="0.18">18%</button>
+          <button class="tip_button btn btn-primary inverted" data-percentage="0.20">20%</button>
         </div>
       </div>
 
-      <div class="user_pay_amt_panel padded_panel">
-        <div class="row">
-          <div class="col-xs-2 col-xs-offset-2 text-right inline_element">You Pay:</div>
-          <div id="user_pay_amt" class="col-xs-8"></div>
-        </div>
-      </div>
+      <div class="border_line_lime"></div>
 
-      <div class="footer">
-        <div class="content_container pull-right">
-          <button id="finish_button" class="btn btn-primary"></button>
-        </div>
-        <div class="content_container pull-left">
-          <button id="back_button" class="btn btn-primary">< Back</button>
-        </div>
+      <div class="row content_container">
+        <div class="col-xs-3 col-xs-offset-1 text-right inline_element">Total:</div>
+        <div id="total" class="col-xs-8"></div>
+      </div>
+    </div>
+
+    <div class="user_pay_amt_panel padded_panel">
+      <div class="row">
+        <div class="col-xs-4 text-right inline_element">You Pay:</div>
+        <div id="user_pay_amt" class="col-xs-8"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="content_container pull-right">
+        <button id="finish_button" class="btn btn-primary"></button>
+      </div>
+      <div class="content_container pull-left">
+        <button id="back_button" class="btn btn-primary">< Back</button>
       </div>
     </div>
   </div>
@@ -140,6 +141,7 @@
       <div class="row content_container">
         <div class="payment_progress_wrapper col_centered">
           <div id="payment_progress_chart"></div>
+          <div id="payment_progress_empty"></div>
           <div id="payment_rem_block">
             <div id="payment_rem_label">Remaining</div>
             <div id="payment_rem_amt"></div>
@@ -172,7 +174,6 @@
   <div id="new_tab_view" class="content_panel">
     <section id='new-tab-container'>
       <h1 id='new_tab_name'></h1>
-      <div><!-- user name here --></div>
 
       <!-- OCR button -->
       <section id='camera-container'>
@@ -278,11 +279,11 @@
   <li class="list-group-item tab_item" data-id={{@key}}>
   {{/if}}
     <div class="row">
-      <div class="item_name_block col-xs-5 pdull-left">
+      <div class="item_name_block col-xs-7 pdull-left">
         <div class="text_limit fill_width">{{name}}</div>
       </div>
-      <div class="col-xs-2 text-right">{{price}}</div>
-      <div class="item_assigned_block col-xs-5 pull-right">
+      <div class="col-xs-2 text-left">${{format_decimal price 2}}</div>
+      <div class="item_assigned_block col-xs-3 pull-right">
       {{#each assigned_to}}
         <div class="small_portrait pull-right" style="background-image: url({{get_pic_url this}})"></div>
       {{/each}}

@@ -60,19 +60,7 @@ $(document).ready(function() {
     }
   };
 
-  // send file url to backend to parse
-  function createTab() {
-    var newTab = {
-      master_id : user_id,
-      group : {},
-      file_url : ''
-    };
-    $.post('http://app.grasscat.org/create_tab', {tab: newTab})
-    .done(function(data) {
-    });
-  }
-
-  $('#uploadform').submit(function(e){
+  $('#uploadform').submit(function(e) {
     e.preventDefault();
 
     $(this).ajaxSubmit({
@@ -80,15 +68,14 @@ $(document).ready(function() {
         if (responseText === 'fail'){
           window.alert('Tab failed to upload. Blame Vinay.');
         } else {
-          closeNewTabPage();
-        }
+          var tab_id = '53cc7b70d2a57d14a1f58c5d'; // CHANGE
+          closeNewTabView(tab_id);        }
       }
     });
   });
 
   $('#js-create-tab').click(function(){
     $('#uploadform').submit();
-    // createTab();
   });
 
 });

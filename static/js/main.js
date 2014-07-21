@@ -92,9 +92,9 @@ function getUser(id) {
 
 function openTabView() {
   clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updateTabView() }, 100);
+  db_poll_interval = setInterval(function() { updateTabView() }, 1000);
   $('#tab_view').fadeIn(200);
-  $('#page_title').fadeIn(200);
+  $('#page_title_view').fadeIn(200);
 }
 function closeTabView(back) {
   $('#add_friend_button').fadeOut(200);
@@ -119,11 +119,12 @@ function closePayView() {
 }
 
 function openNewTabView() {
-  $('#page_title').fadeOut(200);
+  $('#page_title_view').fadeOut(200);
   $('#new_tab_view').fadeIn(200);
 }
-function closeNewTabView(back) {
+function closeNewTabView(tab_id) {
   $('#new_tab_view').fadeOut(200, function() {
+    initTabView(tab_id);
     openTabView();
   });
 }
