@@ -339,56 +339,59 @@ def allowed_file(filename):
 # Route that will process the file upload
 @app.route('/upload', methods=['POST'])
 def upload():
-    try:
-        # Get the name of the uploaded file
-        file = request.files['file']
-        # Check if the file is one of the allowed types/extensions
-        if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = secure_filename(file.filename)
-            # Move the file form the temporal folder to
-            # the upload folder we setup
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # Redirect the user to the uploaded_file route, which
-            # will basicaly show on the browser the uploaded file
-            
-            # OCR PARSING
-            parsed_tabs = scan.okraparser.full_scan(filename)
-            print parsed_tabs
-           
-            #  CREATE NEW TAB WITH RECEIPT INFO
-            okratabs = get_db_collection("tabs")   #get conncection
-            insert_tabs = {}
-            insert_tabs['title'] = ''
-            insert_tabs['total'] = float(parsed_tabs['meta']['total'])
-            insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
-            insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
-            insert_tabs['tip'] = float(0)
+    # try:
+    # Get the name of the uploaded file
+    file = request.files['file']
+    # Check if the file is one of the allowed types/extensions
+    if file and allowed_file(file.filename):
+        # Make the filename safe, remove unsupported chars
+        filename = secure_filename(file.filename)
+        # Move the file form the temporal folder to
+        # the upload folder we setup
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # Redirect the user to the uploaded_file route, which
+        # will basicaly show on the browser the uploaded file
+        
+        # OCR PARSING
+        parsed_tabs = scan.okraparser.full_scan(filename)
+        print parsed_tabs
+       
+        #  CREATE NEW TAB WITH RECEIPT INFO
+        okratabs = get_db_collection("tabs")   #get conncection
+        insert_tabs = {}
+        insert_tabs['title'] = ''
+        insert_tabs['total'] = float(parsed_tabs['meta']['total'])
+        insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
+        insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
+        insert_tabs['tip'] = float(0)
+        if 'user_id' in session:
+            insert_tabs['master_user_id'] = session['user_id']
+        else:
+            insert_tabs['master_user_id'] = None
+        insert_tabs['group'] = []
+        insert_tabs['items'] = {}
+        insert_tabs['paid_users'] = []
+        insert_tabs['paid'] = False
 
-            insert_tabs['group'] = {}
-            insert_tabs['items'] = {}
-            insert_tabs['paid_users'] = []
-            insert_tabs['paid'] = False
+        index_id = 0
+        for parsed_item in parsed_tabs['items']:
+            insert_tabs['items'][str(index_id)] = parsed_item
+            index_id += 1
 
-            index_id = 0
-            for parsed_item in parsed_tabs['items']:
-                insert_tabs['items'][str(index_id)] = parsed_item
-                index_id += 1
+        print insert_tabs
 
-            print insert_tabs
-
-            #INSERT TAB
-            tab_id = okratabs.insert(insert_tabs)
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            print 'SUCCESS'
-            return str({'tab_id' : tab_id})
-    except Exception:
-        return 'fail'
+        #INSERT TAB
+        tab_id = okratabs.insert(insert_tabs)
+        print 'SUCCESS'
+        print 'SUCCESS'
+        print 'SUCCESS'
+        print 'SUCCESS'
+        print 'SUCCESS'
+        print 'SUCCESS'
+        print 'SUCCESS'
+        return str({'tab_id' : tab_id})
+    # except Exception:
+    #     return 'fail'
 
 
 
@@ -451,7 +454,7 @@ def oauth_authorized():
     session['last_name'] = user['last_name']
     session['profile_picture_url'] = user['profile_picture_url']
 
-    users.insert( {
+    user_id = users.insert( {
                     "first_name" : session['first_name'],
                     "second_name": session['last_name'],
                     "name" : session['first_name'] + ' ' + session['last_name'],
@@ -462,11 +465,14 @@ def oauth_authorized():
                   }
         )
     
+    session['user_id'] = user_id
+
+
     response = make_response(redirect('/'))
-    response.set_cookie('user_id',value="session['venmo_username']")
-    response.set_cookie('first_name',value="session['first_name']")
-    response.set_cookie('last_name',value="session['last_name']")
-    response.set_cookie('profile_picture_url',value="session['profile_picture_url']")
+    response.set_cookie('user_id',session['user_id'])
+    response.set_cookie('first_name',session['first_name'])
+    response.set_cookie('last_name',session['last_name'])
+    response.set_cookie('profile_picture_url',session['profile_picture_url'])
 
     #return  'fuck you %s' % session['venmo_token']
     # return 'You were signed in as %s' % session['venmo_token']
@@ -474,8 +480,9 @@ def oauth_authorized():
     
 
 ###############################################################################
-################################## FLASK  #####################################
-###############################################################################
+################################## FLASK  #########################
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
