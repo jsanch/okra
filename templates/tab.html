@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../static/css/tab.css">
   <link rel="stylesheet" type="text/css" href="../static/css/new_tab.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/index.css">
   <link rel="stylesheet" type="text/css" href="../static/css/modal.css">
 
   <link rel="import" href="../templates/new_tab.html">
@@ -23,11 +24,16 @@
   <div id="main_view">
     <section class='main-content'>
       <header class='main-header'>
-        <span class='vertical'><h1 class='page-header'>Okra</h1></span>
+        <div class="main_title">
+          <span class='vertical'>Okra</span>
+        </div>
+        <div class="main_logo">
+          <img id="main_logo_img" src="../static/img/okra.png"></img>
+        </div>
       </header>
 
       <!-- Main page buttons -->
-      <div id='start-buttons'>
+      <div id='start_buttons'>
         <button type='button' class="btn btn-primary btn-lg btn-block">Profile</button>
         <button type='button' id='js-start-tab' class="btn btn-primary btn-lg btn-block">Start Tab</button>
       </div>
@@ -183,6 +189,7 @@
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
           </form>
         </section>
+        <div class="help-block">Take a picture of your receipt!</div>
 
         <!-- Add friends in new tab -->
         <section id='new_tab_buttons'>

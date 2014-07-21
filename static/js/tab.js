@@ -1,15 +1,7 @@
-// ---------------------- Global ----------------------
 
-var _tab;
-var _friends;
-var _group;
-
-var db_poll_interval;
 
 var user_id = 1;  // get from session
 var _tab_id = '53cca6cdd2a57d3208d1bd8c';
-
-var _cookie = document.cookie;
 
 var FriendRowTemplate;
 var FriendBlockTemplate;
@@ -116,7 +108,7 @@ function initTabView(tab_id) {
 
   // Update page periodically
   clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updateTabView() }, 1000);
+  db_poll_interval = setInterval(function() { updateTabView() }, POLL_DELAY);
 }
 
 // Initialize the pay view
@@ -136,26 +128,6 @@ function initPayView() {
     if(!data) return;
     _tab = data;
 
-    // var _tab = {
-    //   id: 100,
-    //   title: "Dinner at Centerfolds",
-    //   group: [1, 2, 3, 4, 5, 6, 7],
-    //   paid_users: [],
-    //   currency: '$',
-    //   items: {
-    //     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
-    //     2: {name: 'Okra', price: '32.45', assigned_to: [1]},
-    //     3: {name: 'Okra', price: '14.50', assigned_to: [4]},
-    //     4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
-    //     5: {name: 'Okra', price: '14.50', assigned_to: [4]}
-    //   },
-    //   tax: 14.40,
-    //   tip: 5012.00,
-    //   subtotal: 96.10,
-    //   total: 110.50,
-    //   paid: 72
-    // }; // TEMP -- REMOVE THIS LATER
-
     setGroupUsers(_tab.group);
 
     // Populate list showing which users have paid
@@ -166,7 +138,7 @@ function initPayView() {
 
   // Call pay view update function periodically
   clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updatePayView() }, 1000);
+  db_poll_interval = setInterval(function() { updatePayView() }, POLL_DELAY);
 }
 
 // ---------------------- Functions ----------------------
@@ -174,13 +146,13 @@ function initPayView() {
 // Get the group users from the list of ids
 function setGroupUsers(group) {
   _group = {};
-  // group.forEach(function(id) {
-  //   getUser(id).done(function(data) {
-  //     if(!data) return;
-  //     var user = JSON.parse(data);
-  //     _group[user.id] = user;
-  //   });
-  // });
+  group.forEach(function(id) {
+    getUser(id).done(function(data) {
+      if(!data) return;
+      var user = data;
+      _group[user.id] = user;
+    });
+  });
 
   _group = {
     1: {first_name: 'Barack', last_name: 'Obama'},
@@ -228,24 +200,6 @@ function updateTabView() {
   getTab(_tab_id).done(function(data) {
     var new_tab = data;
 
-    // new_tab = {
-    //   id: 100,
-    //   title: "Dinner at Centerfolds",
-    //   group: [1, 2, 3, 4, 5, 6, 7],
-    //   currency: '$',
-    //   items: {
-    //     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
-    //     2: {name: 'Okra', price: '14.50', assigned_to: [1]},
-    //     3: {name: 'Okra', price: '14.50', assigned_to: [4]},
-    //     4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
-    //     5: {name: 'Okra', price: '14.50', assigned_to: [4]}
-    //   },
-    //   tax: 14.44,
-    //   tip: 5012.00,
-    //   subtotal: 1000,
-    //   total: 3234,
-    // }
-
     // Update friends if it has changed
     new_tab.group.forEach(function(id) {
       if($.inArray(id, _tab.group) == -1) {
@@ -285,46 +239,6 @@ function updatePayView() {
   if(!_tab_id) return;
   getTab(_tab_id).done(function(data) {
     var new_tab = data;
-
-    // var _tab = {
-    //   id: 100,
-    //   title: "Dinner at Centerfolds",
-    //   group: [1, 2, 3, 4, 5, 6, 7],
-    //   paid_users: [],
-    //   currency: '$',
-    //   items: {
-    //     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
-    //     2: {name: 'Okra', price: '32.45', assigned_to: [1]},
-    //     3: {name: 'Okra', price: '14.50', assigned_to: [4]},
-    //     4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
-    //     5: {name: 'Okra', price: '14.50', assigned_to: [4]}
-    //   },
-    //   tax: 14.40,
-    //   tip: 5012.00,
-    //   subtotal: 96.10,
-    //   total: 110.50,
-    //   paid: 72
-    // }; // TEMP -- REMOVE THIS LATER
-
-    // var new_tab = {
-    //   id: 100,
-    //   title: "Dinner at Centerfolds",
-    //   group: [1, 2, 3, 4, 5, 6, 7],
-    //   paid_users: [2, 3, 4],
-    //   currency: '$',
-    //   items: {
-    //     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
-    //     2: {name: 'Okra', price: '32.45', assigned_to: [1]},
-    //     3: {name: 'Okra', price: '14.50', assigned_to: [4]},
-    //     4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
-    //     5: {name: 'Okra', price: '14.50', assigned_to: [4]}
-    //   },
-    //   tax: 14.40,
-    //   tip: 5012.00,
-    //   subtotal: 96.10,
-    //   total: 110.50,
-    //   paid: 72
-    // }; // TEMP -- REMOVE THIS LATER
 
     // var paid = parseFloat(new_tab.paid) || 0;
     var paid = 10;
@@ -383,6 +297,26 @@ function is_same(arr1, arr2) {
   return true;
 } 
 
+
+// var _tab = {
+//   id: 100,
+//   title: "Dinner at Centerfolds",
+//   group: [1, 2, 3, 4, 5, 6, 7],
+//   paid_users: [],
+//   currency: '$',
+//   items: {
+//     1: {name: 'Okra babadydoopityboopitydoo yeeeeeeeeee', price: '14.50', assigned_to: [1]},
+//     2: {name: 'Okra', price: '32.45', assigned_to: [1]},
+//     3: {name: 'Okra', price: '14.50', assigned_to: [4]},
+//     4: {name: 'Okra', price: '14.50', assigned_to: [3, 2]},
+//     5: {name: 'Okra', price: '14.50', assigned_to: [4]}
+//   },
+//   tax: 14.40,
+//   tip: 5012.00,
+//   subtotal: 96.10,
+//   total: 110.50,
+//   paid: 72
+// }; // TEMP -- REMOVE THIS LATER
 
 
 
