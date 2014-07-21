@@ -10,7 +10,7 @@ $(document).ready(function() {
 
   // Bind open add friends modal button
   $('#open_add_friends').on('click', function() {
-    openAddFriends($.cookie('user_id'), friendsToAdd);
+    openAddFriends($.cookie('user_id'), friends_to_add);
   });
 
   // Bind confirm add friends button
@@ -75,7 +75,7 @@ $(document).ready(function() {
       title : $.cookie('first_name') + "'s Tab",
       file_url : showPicture.src
     };
-    var group = Object.keys(friendsToAdd);
+    var group = Object.keys(friends_to_add);
     if (!(typeof group !== 'undefined' && group.length > 0)) {
       window.alert('Please add friends to tab.');
       return;
