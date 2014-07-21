@@ -60,8 +60,6 @@ $(function() {
     var item_id = $item.data('id');
     var item_assigned_to = _tab.items[item_id].assigned_to;
 
-  user_id = '53ccbe9d04b7747717fcdfdf'; //change
-
     if($.inArray(String(user_id), item_assigned_to) == -1) {
       $.post("http://app.grasscat.org/add_user_to_item", { user_id: user_id, tab_id: _tab_id, item_id: item_id });
       $item.addClass('selected');
