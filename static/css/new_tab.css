@@ -59,10 +59,10 @@ h1.page-header {
     border-radius: 4px;
     cursor: hand;
     cursor: pointer;
-    height: 270px;
+    height: 220px;
     margin: 5% auto;
     position: relative;
-    width: 90%;
+    width: 80%;
   }
 
     #show-picture {
@@ -83,7 +83,7 @@ h1.page-header {
       border: 0px;
       border-radius: 50%;
       display: inline-block;
-      margin-top: 60px;
+      margin-top: 45px;
       position: relative;
       width: 40%;
       z-index: 1;

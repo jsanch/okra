@@ -18,7 +18,8 @@
   color: #7EDEB1;
 }
 
-.modal-title, .text-center {
+.modal-content .modal-title,
+.modal-content .text-center {
   color: #000;
   opacity: .5;
 }
