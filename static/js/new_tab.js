@@ -82,11 +82,12 @@ $(document).ready(function() {
     }
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
-        if (responseText === 'fail'){
+        if (responseText === 'fail') {
           window.alert('Tab failed to upload. Blame Vinay.');
         } else {
+          console.log(group);
           // Send the other info like group, maste id, etc.
-          $.post('/create_invites', {group: group})
+          $.post('/create_invites', {group: group, tab_id : responseText.tab_id})
           .done(function() {
             closeNewTabView(responseText.tab_id, false);
           });
