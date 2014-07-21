@@ -334,7 +334,7 @@ def upload():
             #  CREATE NEW TAB WITH RECEIPT INFO
             okratabs = get_db_collection("tabs")   #get conncection
             insert_tabs = {}
-            insert_tabs['title'] = ''
+            insert_tabs['title'] = session['first_name'] + '\'s tab'
             insert_tabs['total'] = float(parsed_tabs['meta']['total'])
             insert_tabs['subtotal'] = float(parsed_tabs['meta']['subtotal'])
             insert_tabs['tax'] = float(parsed_tabs['meta']['tax'])
