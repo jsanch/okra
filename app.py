@@ -341,7 +341,8 @@ def create_invite_route():
 
 @app.route('/create_invites',  methods=['POST'])
 def create_invites_route():
-    inv_group = request.form['group']
+    print "asdkjfhakgjha"
+    inv_group = request.form['group[]']
     print inv_group
     create_invites(inv_group, session['tab_id'])
     return 'success'
@@ -496,16 +497,28 @@ def oauth_authorized():
     session['last_name'] = user['last_name']
     session['profile_picture_url'] = user['profile_picture_url']
 
-    user_id = users.insert( {
-                    "first_name" : session['first_name'],
-                    "second_name": session['last_name'],
-                    "name" : session['first_name'] + ' ' + session['last_name'],
-                    "friends" : ["user_id","user_id"],
-                    "phone": session['phone'],
-                    "token": session['venmo_token'],
-                    "pic_url": session['profile_picture_url']
-                  }
-        )
+    print user
+    possible_new_user = {
+            "first_name" : session['first_name'],
+            "second_name": session['last_name'],
+            "name" : session['first_name'] + ' ' + session['last_name'],
+            "friends" : [],
+            "phone": user['phone'],
+            "username": user['username'],
+            "token": session['venmo_token'],
+            "pic_url": session['profile_picture_url']}
+
+    user_id = users.update({"username": user['username']}, possible_new_user, True)
+    # user_id = users.insert( {
+    #                 "first_name" : session['first_name'],
+    #                 "second_name": session['last_name'],
+    #                 "name" : session['first_name'] + ' ' + session['last_name'],
+    #                 "friends" : ["user_id","user_id"],
+    #                 "phone": session['phone'],
+    #                 "token": session['venmo_token'],
+    #                 "pic_url": session['profile_picture_url']
+    #               }
+    #     )
     
     session['user_id'] = str(user_id)
     print 'stage 3'
