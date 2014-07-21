@@ -86,12 +86,13 @@ def make_payment():
     print le_tab
 
     tip_and_tax = float(le_tab['tax']) + float(le_tab['tip'])
+    total = float(le_tab['total'])
 
     for item in le_tab['items']:
         print item
         if str(user_id) in le_tab['items'][item]['assigned_to']:
-            le_tab['paid'] += float(le_tab['items'][item]['price'])
-
+            item_price = float(le_tab['items'][item]['price'])
+            le_tab['paid'] += item_price + (tip_and_tax/total) * item_price
     print le_tab
     print 'stage 3'
     tabs.save(le_tab)
