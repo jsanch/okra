@@ -309,7 +309,10 @@ def poll_for_invite():
     if ( invite == None ):
         return 'null'
     else:
-        return invite['tab_id']
+        tabs = get_db_collection('tabs')
+        le_tab = tabs.find_one({'_id' : ObjectId(invite['tab_id'])})
+        # return invite['tab_id']
+        return JSONEncoder.encode(mongo_encoder, le_tab)
 
 ###############################################################################
 ################################## OCR  #####################################

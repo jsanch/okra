@@ -1,24 +1,23 @@
 // ---------------------- Global ----------------------
 
 var friends_to_add = {},
-    POLL_DELAY = 5000, // ms
+    POLL_DELAY = 3000, // ms
     _tab = {},
     _group = {},
     db_poll_interval;
 
 var user_id = $.cookie('user_id');
-
-var _tab_id = '53cca6cdd2a57d3208d1bd8c';
-
 var user = {
   id: user_id,
   first_name : $.cookie('first_name'),
   last_name : $.cookie('last_name')
 }
 
+var _tab_id = '53cca6cdd2a57d3208d1bd8c';
+
 $(document).ready(function() {
   // start asking server for outstanding invites
-  // pollForInvite();
+  var invitePoll = pollForInvite();
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
@@ -30,14 +29,14 @@ $(document).ready(function() {
 * Continuously poll the server for any tab invitations from this user
 */
 function pollForInvite(){
-  setInterval(function() {
+  return setInterval(function() {
     $.get('/poll_for_invite', {user_id:user_id})
     .done(function(data) {
-      // check for tab invite
-      if (data) {
-        showInvite(data);
-      } else {
+      console.log(data);
+      if (!data) {
         console.log('no new tabs');
+      } else {
+        showInvite(JSON.parse(data));
       }
     });
   }, POLL_DELAY);
@@ -47,8 +46,25 @@ function pollForInvite(){
 * create modal with the tab request
 */
 function showInvite(tab) {
-  theTab = tab['tab'];
-  $('.modal-body').text(theTab['user_id'] + ' has invited you to ' + theTab['tab_name']);
+  // {
+  //   "paid_users": [],
+  //   "_id": "53ccd703d2a57d6ec8ebded6",
+  //   "group": [],
+  //   "title": "Michael's tab",
+  //   "tip": 0.0,
+  //   "tax": 0.63,
+  //   "paid": false,
+  //   "master_user_id": "53ccbe9d04b7747717fcdfdf",
+  //   "items": {"0": {"price": 8.99,
+  //   "name": "1 summer big bowl",
+  //   "assigned_to": ["53ccbe9d04b7747717fcdfdf"]}},
+  //   "total": 9.62,
+  //   "subtotal": 8.99
+  // }
+  console.log(tab);
+  _tab = tab;
+  $('#js-invite-modal .modal-title').text('New Tab Invite');
+  $('#js-invite-modal .modal-body').text('You have been invited to ' + tab['title']);
   $('#js-invite-modal').modal();
 }
 
@@ -57,22 +73,18 @@ function showInvite(tab) {
 */
 function acceptInvite() {
   // global tab object must be set
-  if (!theTab) {
+  if (!_tab) {
     window.alert('Sorry there is no tab available to accept.');
   }
-  var acceptedTab = {
-    user_id : 999,
-    tab_id : theTab['tab_id']
-  }
   // post to server that tab was accepted
-  $.post('/accept', acceptedTab)
+  $.post('/accept_invite', {tab_id : _tab['_id']})
     .done(function(data) {
-        if (data.redirect) {
-          // data.redirect contains the string URL to redirect to the accepted tab page
-          window.location.href = data.redirect;
+        if (data === 'success') {
+          // kill polling
+          clearInterval(invitePoll);
+          // do mike's switch thing
         } else {
-          // data.form contains the HTML for the replacement form
-          $("#myform").replaceWith(data.form);
+          window.alert('Could not enter the tab');
         }
     });
 }
