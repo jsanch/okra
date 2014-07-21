@@ -1,6 +1,7 @@
 var AddFriendsTemplate;
 var FriendRowTemplate;
 var FriendBlockTemplate;
+var DanAddFriendsTemplate
 
 $(function() {
   DanAddFriendsTemplate = Handlebars.compile($('#dan_add_friends_template').html());
