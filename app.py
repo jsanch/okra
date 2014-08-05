@@ -333,8 +333,11 @@ def poll_for_invite():
     else:
         tabs = get_db_collection('tabs')
         le_tab = tabs.find_one({'_id' : ObjectId(invite['tab_id'])})
-        # return invite['tab_id']
-        return JSONEncoder.encode(mongo_encoder, le_tab)
+        
+	if(not le_tab):
+            invites.remove({'tab_id': invite['tab_id'], 'user_id':req_user_id})
+
+	return JSONEncoder.encode(mongo_encoder, le_tab)
 
 ###############################################################################
 ################################## OCR  #####################################
@@ -348,7 +351,7 @@ app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif
 # For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 # Route that will process the file upload

@@ -78,7 +78,7 @@ $(document).ready(function() {
     var group = Object.keys(friends_to_add);
     if (!(typeof group !== 'undefined' && group.length > 0)) {
       window.alert('Please add friends to tab.');
-      return;
+      //return;
     }
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
