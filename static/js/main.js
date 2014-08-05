@@ -3,6 +3,7 @@
 var friends_to_add = {},
     POLL_DELAY = 2000, // ms
     _tab = {},
+    _tab_id,
     _group = {},
     db_poll_interval;
 
@@ -13,7 +14,6 @@ var user = {
   last_name : $.cookie('last_name')
 }
 
-var _tab_id;
 var invitePoll;
 
 $(document).ready(function() {
@@ -51,21 +51,6 @@ function pollForInvite(){
 * create modal with the tab request
 */
 function showInvite(tab) {
-  // {
-  //   "paid_users": [],
-  //   "_id": "53ccd703d2a57d6ec8ebded6",
-  //   "group": [],
-  //   "title": "Michael's tab",
-  //   "tip": 0.0,
-  //   "tax": 0.63,
-  //   "paid": false,
-  //   "master_user_id": "53ccbe9d04b7747717fcdfdf",
-  //   "items": {"0": {"price": 8.99,
-  //   "name": "1 summer big bowl",
-  //   "assigned_to": ["53ccbe9d04b7747717fcdfdf"]}},
-  //   "total": 9.62,
-  //   "subtotal": 8.99
-  // }
   console.log(tab);
   _tab = tab;
   $('#js-invite-modal .modal-title').text('New Tab Invite');

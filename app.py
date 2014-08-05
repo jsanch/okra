@@ -133,6 +133,29 @@ def get_tab():
 
         return  jsonify(tab)
 
+# Update the tip amount for a tab
+@app.route('/update_tip', methods=['POST'])
+def update_tip():
+    tab_id = request.form['tab_id']
+    tip_val = request.form['tip_val']
+
+    try:
+        tip_val = float(tip_val)
+    except (ValueError, TypeError) as e:
+        print e
+        return 'Invalid tip amount'
+
+    tabs = get_db_collection('tabs')
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )    
+
+    if(le_tab):
+        le_tab['tip'] = tip_val
+        le_tab['total'] = le_tab['subtotal'] + tip_val
+        tabs.save(le_tab)
+        return 'success'
+    else:
+        return 'Invalid tab ' + tab_id
+
 ###############################################################################
 ################################## ITEMS  #####################################
 ###############################################################################
@@ -221,9 +244,9 @@ def add_user():
         user_friends = request.form['friends'] #list
 
         user = {
-                'phone' : user_phone,
-                'name' : user_name,
-                'friends' : user_friends
+            'phone' : user_phone,
+            'name' : user_name,
+            'friends' : user_friends
         }
         user_mongo_id = users.insert(user)
 
@@ -333,11 +356,11 @@ def poll_for_invite():
     else:
         tabs = get_db_collection('tabs')
         le_tab = tabs.find_one({'_id' : ObjectId(invite['tab_id'])})
-        
-	if(not le_tab):
+
+        if(not le_tab):
             invites.remove({'tab_id': invite['tab_id'], 'user_id':req_user_id})
 
-	return JSONEncoder.encode(mongo_encoder, le_tab)
+        return JSONEncoder.encode(mongo_encoder, le_tab)
 
 ###############################################################################
 ################################## OCR  #####################################

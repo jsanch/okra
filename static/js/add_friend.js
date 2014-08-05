@@ -17,8 +17,8 @@ function openAddFriends(user_id, friends_to_add) {
       var friends_list = {};
       $.each(data, function(id, friend) {
         if(friend) {
-	  friends_list[id] = {name : friend['name'], pic_url : friend['pic_url']};
-      	}
+          friends_list[id] = {name : friend['name'], pic_url : friend['pic_url']};
+        }
       });
       $('#add_friends_body').html(AddFriendsTemplate({friends : friends_list}));
 

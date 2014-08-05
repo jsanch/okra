@@ -281,6 +281,8 @@ function updateTip(tip_val) {
   var total_val = (parseFloat(_tab.subtotal) + parseFloat(_tab.tax) + tip_val).toFixed(2);
   $('#total').text('$' + total_val);
   _tab.total = total_val;
+
+  $.post("http://app.grasscat.org/update_tip", { tab_id: _tab_id, tip_val: tip_val });
 }
 
 function getPaymentAmount(tab) {
@@ -291,6 +293,8 @@ function getPaymentAmount(tab) {
       payment_amt += parseFloat(item.price) / item.assigned_to.length;
     }
   }
+
+  payment_amt += (parseFloat(tab.tax) + parseFloat(tab.tip)) * (payment_amt / parseFloat(tab.subtotal));
   return payment_amt;
 }
 
