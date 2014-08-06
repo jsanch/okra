@@ -1,11 +1,12 @@
 // ---------------------- Global ----------------------
 
-var friends_to_add = {},
-    POLL_DELAY = 2000, // ms
+var POLL_DELAY = 2000, // ms
+    _current_page = 'MAIN' // start on MAIN page
     _tab = {},
     _tab_id,
     _group = {},
-    db_poll_interval;
+    db_poll_interval,
+    friends_to_add = {};
 
 var user_id = $.cookie('user_id');
 var user = {
@@ -99,6 +100,7 @@ function getUser(id) {
 // ---------------------- Change Views ----------------------
 
 function openTabView() {
+  _current_page = 'TAB';
   clearInterval(db_poll_interval);
   db_poll_interval = setInterval(function() { updateTabView() }, POLL_DELAY);
   $('#tab_view').fadeIn(200);
@@ -116,6 +118,7 @@ function closeTabView(back) {
 }
 
 function openPayView() {
+  _current_page = 'PAY';
   initPayView();
   $('#pay_view').fadeIn(200);
 }
@@ -127,6 +130,7 @@ function closePayView() {
 }
 
 function openNewTabView() {
+  _current_page = 'NEW_TAB'
   $('#page_title_view').fadeOut(200);
   $('#new_tab_view').fadeIn(200);
 }
@@ -142,6 +146,7 @@ function closeNewTabView(tab_id, back) {
 }
 
 function openMainView() {
+  _current_page = 'MAIN'
   $('#main_view').fadeIn(200);
   _tab = {};
 }

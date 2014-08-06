@@ -45,15 +45,6 @@ $(function() {
 
   // ---------------------- Event Bindings ----------------------
 
-  //Add a user to the group
-  $('#add_friend_button').on('click', function() {
-    var friends = get_friends(user_id);
-    //activate modal 
-
-    // dont prepend
-    $('.friend_group_row').prepend(FriendBlockTemplate({ friends: friends }));
-  });
-
   // Submit an item select
   $(document).on('click', '.item_list .tab_item', function(event) {
     $item = $(this);
@@ -82,12 +73,7 @@ $(function() {
 
   // Bind open add friends modal button
   $('#tab_open_add_friends').on('click', function() {
-    openAddFriends(user_id, _group);
-  });
-
-   // Bind confirm add friends button
-  $('#tab_add_friends_button').on('click', function() {
-    updateAdded();
+    openAddFriends(user_id, friends_to_add);
   });
 
 });

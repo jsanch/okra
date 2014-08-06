@@ -76,15 +76,18 @@ def get_db_collection(collection):
 @app.route('/add_friends_to_tab', methods=['POST'])
 def add_friends_to_tab():
     print 'ADDING FRIENDS'
-    friends_to_add = request.form['friends_to_add']
-    tab_id = session['tab_id']
+    friends_to_add = json.loads(request.form['friends_to_add'])
+
+    tab_id = request.form['tab_id']
+    tabs = get_db_collection('tabs')
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     if (le_tab == None):
         return 'Tab not found'
 
     le_tab['group'].extend(friends_to_add)
     print le_tab
-    tab.save(le_tab);
+    tabs.save(le_tab);
+    return 'success'
 
 @app.route('/make_payment', methods=['POST','GET'])
 def make_payment():
@@ -127,7 +130,6 @@ def get_tab():
 
     # Construct tab json
     tab = {
-        "_id": le_tab['_id'],
         "title" : le_tab['title'],
         "group" : le_tab['group'], #array of user ids
         "items" : le_tab['items'],
@@ -136,7 +138,7 @@ def get_tab():
         "tip" : le_tab['tip'],
         "tax" : le_tab['tax'],
         "paid_users" : le_tab['paid_users'],
-        "paid" : e_tab['paid'],
+        "paid" : le_tab['paid'],
     }
 
     return  jsonify(tab)
