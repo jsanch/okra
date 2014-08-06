@@ -1,7 +1,7 @@
 // ---------------------- Global ----------------------
 
 var POLL_DELAY = 2000, // ms
-    _current_page = 'MAIN' // start on MAIN page
+    _current_page = 'MAIN', // start on MAIN page
     _tab = {},
     _tab_id,
     _group = {},
