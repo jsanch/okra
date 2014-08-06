@@ -73,29 +73,46 @@ def get_db_collection(collection):
 ###############################     TAB      ##################################
 ###############################################################################
 
+@app.route('/add_friends_to_tab', methods=['POST'])
+def add_friends_to_tab():
+    print 'ADDING FRIENDS'
+    friends_to_add = request.form['friends_to_add']
+    tab_id = session['tab_id']
+    le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
+    if (le_tab == None):
+        return 'Tab not found'
+
+    le_tab['group'].extend(friends_to_add)
+    print le_tab
+    tab.save(le_tab);
+
 @app.route('/make_payment', methods=['POST','GET'])
 def make_payment():
     print 'MAKE PAYMENTS'
     print session
     user_id = session['user_id']
     tab_id = session['tab_id']
-    print 'stage 1'
+
     tabs = get_db_collection('tabs')
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     le_tab['paid_users'].append(user_id)
-    print 'stage 2'
     print le_tab
 
     tip_and_tax = float(le_tab['tax']) + float(le_tab['tip'])
-    total = float(le_tab['total'])
+    subtotal = float(le_tab['subtotal'])
 
+    user_payment = 0
     for item in le_tab['items']:
-        print item
         if str(user_id) in le_tab['items'][item]['assigned_to']:
             item_price = float(le_tab['items'][item]['price'])
-            le_tab['paid'] += item_price + (tip_and_tax/total) * item_price
+            user_payment += item_price
+
+    user_payment += tip_and_tax * (user_payment/subtotal)
+    
+    print 'PAYING ' + user_payment
+    le_tab['paid'] += user_payment
+
     print le_tab
-    print 'stage 3'
     tabs.save(le_tab)
     return 'success'
 
@@ -107,31 +124,22 @@ def get_tab():
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
     if (le_tab == None):
         return 'Tab not found'
-    else: 
-        #Get wanted data
-        tab_title = le_tab['title']
-        tab_group = le_tab['group'] #array of user ids
-        tab_items = le_tab['items']
-        tab_subtotal = le_tab['subtotal']
-        tab_total = le_tab['total']
-        tab_tip = le_tab['tip']
-        tab_tax = le_tab['tax']
-        tab_paid_users = le_tab['paid_users']
-        tab_paid = le_tab['paid']
 
-        tab = {
-            "title" : tab_title,
-            "group" : tab_group,
-            "items" : tab_items,
-            "subtotal" : tab_subtotal,
-            "total" : tab_total,
-            "tip" : tab_tip,
-            "tax" : tab_tax,
-            "paid_users" : tab_paid_users,
-            "paid" : tab_paid,    
-        }
+    # Construct tab json
+    tab = {
+        "_id": le_tab['_id'],
+        "title" : le_tab['title'],
+        "group" : le_tab['group'], #array of user ids
+        "items" : le_tab['items'],
+        "subtotal" : le_tab['subtotal'],
+        "total" : le_tab['total'],
+        "tip" : le_tab['tip'],
+        "tax" : le_tab['tax'],
+        "paid_users" : le_tab['paid_users'],
+        "paid" : e_tab['paid'],
+    }
 
-        return  jsonify(tab)
+    return  jsonify(tab)
 
 # Update the tip amount for a tab
 @app.route('/update_tip', methods=['POST'])
@@ -150,7 +158,7 @@ def update_tip():
 
     if(le_tab):
         le_tab['tip'] = tip_val
-        le_tab['total'] = le_tab['subtotal'] + tip_val
+        le_tab['total'] = le_tab['subtotal'] + le_tab['tax'] + tip_val
         tabs.save(le_tab)
         return 'success'
     else:
@@ -171,32 +179,30 @@ def add_user_to_item():
     #get args
     tab_id = request.form['tab_id']
     # print 'a', tab_id
-    print tab_id
+    print 'TAB: ' + tab_id
 
     user_id = request.form['user_id']
-    print user_id
+    print 'USER: ' + user_id
     # print 'b'
     item_id = request.form['item_id']
-    print item_id
+    print 'ITEM: ' + item_id
 
     #get tab 
     le_tab = tabs.find_one( { "_id" : ObjectId(tab_id) } )
-    print str(le_tab)
 
     if (le_tab == None):
-        print 'fail'
         return 'fail'
+
+    if not 'assigned_to' in le_tab['items'][str(item_id)]:
+        le_tab['items'][str(item_id)]['assigned_to'] = []
+    if not user_id in le_tab['items'][str(item_id)]['assigned_to']:
+        le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
     else:
-        if not 'assigned_to' in le_tab['items'][str(item_id)]:
-            le_tab['items'][str(item_id)]['assigned_to'] = []
-        if not user_id in le_tab['items'][str(item_id)]['assigned_to']:
-            le_tab['items'][str(item_id)]['assigned_to'].append(user_id)
-        else:
-            return 'already'
-        print le_tab['items'][str(item_id)]['assigned_to']
-        tabs.save(le_tab)
-        print 'add_user_to_item success'
-        return "success"
+        return 'already'
+    print le_tab['items'][str(item_id)]['assigned_to']
+    tabs.save(le_tab)
+    print 'add_user_to_item success'
+    return "success"
 
 # REMOVE USER 
 # NEEDS: tab_id, user_id, item_id
@@ -512,18 +518,7 @@ def oauth_authorized():
             "token": session['venmo_token'],
             "pic_url": session['profile_picture_url']}
 
-    if not users.find({"username": user['username']}):
-        users.update({"username": user['username']}, possible_new_user, True)
-    # user_id = users.insert( {
-    #                 "first_name" : session['first_name'],
-    #                 "second_name": session['last_name'],
-    #                 "name" : session['first_name'] + ' ' + session['last_name'],
-    #                 "friends" : ["user_id","user_id"],
-    #                 "phone": session['phone'],
-    #                 "token": session['venmo_token'],
-    #                 "pic_url": session['profile_picture_url']
-    #               }
-    #     )
+    users.update({"username": user['username']}, possible_new_user, True)
 
     user = users.find_one({"username": user['username']})
     # print possible_new_user

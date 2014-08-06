@@ -59,6 +59,8 @@ function updateAdded() {
   // Populate friends list
   $('.friend_block').remove();
   $('.friend_group_row').prepend(FriendRowTemplate({ friends: friends_to_add }));
+
+  $.post("http://app.grasscat.org/add_friends_to_tab", { tab_id: _tab_id, friends_to_add: friends_to_add });
 }
 
 

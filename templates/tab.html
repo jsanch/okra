@@ -278,6 +278,7 @@
 
 <script type="text/javascript" src="../static/js/main.js"></script>
 <script type="text/javascript" src="../static/js/tab.js"></script>
+<script type="text/javascript" src="../static/js/payment.js"></script>
 <script type="text/javascript" src="../static/js/new_tab.js"></script>
 <script type="text/javascript" src="../static/js/add_friend.js"></script>
 </body>
@@ -350,7 +351,7 @@
       </div>
       <div class="col-xs-4">
         <div class="paid_indicator_block">
-        {{#if (check_paid this ../paid_users)}}
+        {{#if (check_paid _id ../paid_users)}}
           <i class="paid_icon fa fa-check text_green"></i>
           <div class="paid_text text_green">Paid</div>
         {{else}}
