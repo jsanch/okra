@@ -94,7 +94,12 @@
         <div id="tax" class="col-xs-4 text-center"></div>
       </div>
 
-      <div class="tip_panel">
+      <div id="tip_panel_user" class="row content_container">
+        <div class="col-xs-4 text-right inline_padding">Tip:</div>
+        <div id="tip" class="col-xs-4 text-center"></div>
+      </div>
+
+      <div id="tip_panel_master" class="tip_panel">
         <div class="row col_centered content_container">
           <div class="col-sm-4 col-xs-4 text-right">Tip:</div>
           <div class="col-xs-4 no_padding">
@@ -196,7 +201,7 @@
         <section id='camera-container'>
           <img src="" alt="" id="show-picture" hidden>
           <img id='camera' src='../static/img/camera.svg'>
-          <form action="/upload" id='uploadform' method="post" enctype="multipart/form-data">
+          <form action="http://app.grasscat.org/upload" id='uploadform' method="post" enctype="multipart/form-data">
             <input type='file' name='file' id='take-picture' accept='image/*;capture=camera'>
           </form>
         </section>
@@ -387,5 +392,6 @@
 <script id="new_tab_template" type='text/x-handlebars-template'>
   <span>{{first_name}}'s Tab</span>
 </script>
+
 
 {% endraw %}

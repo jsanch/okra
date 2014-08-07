@@ -5,7 +5,8 @@ var POLL_DELAY = 2000, // ms
     _tab = {},
     _tab_id,
     _group = {},
-    db_poll_interval,
+    _server_poll_tab,
+    _server_poll_invite,
     friends_to_add = {};
 
 var user_id = $.cookie('user_id');
@@ -15,11 +16,11 @@ var user = {
   last_name : $.cookie('last_name')
 }
 
-var invitePoll;
+// user_id = '53e2888cefa5af0d3b678008';
 
 $(document).ready(function() {
   // start asking server for outstanding invites
-  invitePoll = pollForInvite();
+  _server_poll_invite = setInterval(pollForInvite, POLL_DELAY);
 
   // bind accept tab event
   $('#js-accept-tab').on('click', function() {
@@ -32,20 +33,18 @@ $(document).ready(function() {
 });
 
 /**
-* Continuously poll the server for any tab invitations from this user
+* Poll server for an invite
 */
-function pollForInvite(){
-  return setInterval(function() {
-    $.get('/poll_for_invite', {user_id:user_id})
-    .done(function(data) {
-      if (data === 'fail') {
-        console.log('no new tabs');
-      } else {
-        console.log(data);
-        showInvite(JSON.parse(data));
-      }
-    });
-  }, POLL_DELAY);
+function pollForInvite() {
+  $.get('http://app.grasscat.org/poll_for_invite', {user_id:user_id})
+      .done(function(data) {
+        if (data === 'fail') {
+          console.log('no new tabs');
+        } else {
+          console.log(data);
+          showInvite(JSON.parse(data));
+        }
+      });
 }
 
 /**
@@ -72,7 +71,7 @@ function acceptInvite() {
     .done(function(data) {
         if (data === 'success') {
           // kill polling
-          clearInterval(invitePoll);
+          clearInterval(_server_poll_invite);
           // do mike's switch thing
           $('#modal').modal('toggle');
           closeMainView(_tab['_id']);
@@ -83,7 +82,7 @@ function acceptInvite() {
 }
 
 function rejectInvite() {
-  $.post('/reject_invite', {tab_id : _tab['_id']})
+  $.post('http://app.grasscat.org/reject_invite', {tab_id : _tab['_id']})
     .done(function(data) {
       _tab = {};
     });
@@ -101,8 +100,6 @@ function getUser(id) {
 
 function openTabView() {
   _current_page = 'TAB';
-  clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updateTabView() }, POLL_DELAY);
   $('#tab_view').fadeIn(200);
   $('#page_title_view').fadeIn(200);
 }
@@ -151,6 +148,7 @@ function openMainView() {
   _tab = {};
 }
 function closeMainView(tab_id) {
+  clearInterval(_server_poll_invite);
   $('#main_view').fadeOut(200, function() {
     if (tab_id) {
       initTabView(tab_id);

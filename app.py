@@ -299,17 +299,12 @@ def create_invites(group, tab_id): #used by create tab to invite users that are 
         invite = { 'user_id': user_id, 'tab_id' : tab_id }
         invite_id = invites.insert(invite)
 
-@app.route('/create_invite', methods=['POST'])
-def create_invite_route():
-    inv_user_id = request.form['user_id']
-    create_invites([inv_user_id], session['tab_id'])
-    return 'success'
-
 @app.route('/create_invites',  methods=['POST'])
 def create_invites_route():
-    print "asdkjfhakgjha"
+    print 'CREATE INVITES'
     inv_group = request.values.getlist('group[]')
     print inv_group
+
     if 'tab_id' in session:
         create_invites(inv_group, str(session['tab_id']))
     else:
@@ -404,7 +399,7 @@ def upload():
             # OCR PARSING
             parsed_tabs = scan.okraparser.full_scan(filename)
             print parsed_tabs
-           
+
             #  CREATE NEW TAB WITH RECEIPT INFO
             okratabs = get_db_collection("tabs")   #get conncection
             insert_tabs = {}
@@ -463,7 +458,6 @@ def login():
     else:
       return redirect('https://api.venmo.com/v1/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code' % CONSUMER_ID)
 
-
 #### CHARGE
 @app.route('/master_charge')
 def master_charge(master):
@@ -489,7 +483,6 @@ def oauth_authorized():
     db = get_db_connection("okra")   #get conncection
     users = get_db_collection('users')
 
-
     AUTHORIZATION_CODE = request.args.get('code')
     data = {
         "client_id":CONSUMER_ID,
@@ -501,7 +494,6 @@ def oauth_authorized():
     response_dict = response.json()
     access_token = response_dict.get('access_token')
     user = response_dict.get('user')
-
 
     session['venmo_token'] = access_token
     session['venmo_username'] = user['username']

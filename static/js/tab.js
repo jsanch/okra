@@ -7,6 +7,11 @@ var PaidUserListTemplate;
 
 $(function() {
 
+// DEBUG ========
+// _tab_id = '53cd4180d2a57d0c25147813';
+// $.post("http://app.grasscat.org/login", { debug: 'true' });
+// ==============
+
   // ---------------------- Handlebars helpers ----------------------
   
   FriendRowTemplate = Handlebars.compile($('#friend_row_template').html());
@@ -87,8 +92,8 @@ function initTabView(tab_id) {
   populatePage();
 
   // Update page periodically
-  clearInterval(db_poll_interval);
-  db_poll_interval = setInterval(function() { updateTabView() }, POLL_DELAY);
+  clearInterval(_server_poll_tab);
+  _server_poll_tab = setInterval(updateTabView, POLL_DELAY);
 }
 
 // ---------------------- Functions ----------------------
@@ -103,16 +108,6 @@ function setGroupUsers(group) {
       _group[user._id] = user;
     });
   });
-
-  // _group = {
-  //   1: {first_name: 'Barack', last_name: 'Obama'},
-  //   2: {first_name: 'Curioussssss omgomgomgomgomgomgomgogm', last_name: 'George'},
-  //   3: {first_name: 'Michael', last_name: 'Vader'},
-  //   4: {first_name: 'Darth', last_name: 'Vader'},
-  //   5: {first_name: 'Darth', last_name: 'Vader'},
-  //   6: {first_name: 'Darth', last_name: 'Vader'},
-  //   7: {first_name: 'Darth', last_name: 'Vader'},
-  // };
 }
 
 function populatePage() {
@@ -131,14 +126,15 @@ function populatePage() {
 
     $('#title').text(_tab.title);
     $('#tax').text('$' + parseFloat(_tab.tax).toFixed(2));
-    $('#tip_input').val(_tab.tip);
-    $('#subtotal').text('$' + parseFloat(_tab.subtotal));
-    $('#total').text('$' + parseFloat(_tab.total));
+    $('#tip').text(parseFloat(_tab.tip).toFixed(2))
+    $('#tip_input').val(parseFloat(_tab.tip).toFixed(2));
+    $('#subtotal').text('$' + parseFloat(_tab.subtotal).toFixed(2));
+    $('#total').text('$' + parseFloat(_tab.total).toFixed(2));
 
     if(user_id == _tab.master_user_id) {
-      $('#finish_button').text('View Payments >');
+      $('#tip_panel_user').hide();
     } else {
-      $('#finish_button').text('Finish and Pay >');
+      $('#tip_panel_master').hide();
     }
 
     getUser(user_id).done(function(data) {

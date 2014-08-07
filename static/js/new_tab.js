@@ -76,10 +76,7 @@ $(document).ready(function() {
       file_url : showPicture.src
     };
     var group = Object.keys(friends_to_add);
-    if (!(typeof group !== 'undefined' && group.length > 0)) {
-      window.alert('Please add friends to tab.');
-      //return;
-    }
+    
     $(this).ajaxSubmit({
       success: function(responseText, statusText, xhr, $form) {
         if (responseText === 'fail') {
@@ -87,7 +84,7 @@ $(document).ready(function() {
         } else {
           console.log(group);
           // Send the other info like group, maste id, etc.
-          $.post('/create_invites', {group: group, tab_id : responseText.tab_id})
+          $.post('http://app.grasscat.org/create_invites', {group: group, tab_id : responseText.tab_id})
           .done(function() {
             closeNewTabView(responseText.tab_id, false);
           });
