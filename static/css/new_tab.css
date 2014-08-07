@@ -1,5 +1,5 @@
 html,body {
-  background-color: #7edeb1;
+  background-color: #7EDEB1;
   height: 100%;
   font-family: Helvetica, Arial, Sans-Serif;
   font-size: 16px;
@@ -8,10 +8,13 @@ html,body {
   width: 100%
 }
 
-.content_container {
+.new_tab_content_container {
   position: relative;
-  margin: auto;
   padding: 15px 0;
+}
+
+.new_tab_center {
+  margin: auto;
 }
 
 .help-block {
@@ -24,72 +27,74 @@ html,body {
 }
 
 /* -------------- New Tab -------------- */
+
 #new-tab-container {
   margin: 0 auto;
   text-align: center;
 }
 
-  #new_tab_name {
-    background-color: white;
-    color: #7EDEB1;
-    display: inline-block;
-    font-size: 32px;
-    margin: 0 auto;
-    width: 100%;
-  }
+#new_tab_name {
+  background-color: white;
+  color: #7EDEB1;
+  display: inline-block;
+  font-size: 32px;
+  margin: 0 auto;
+  width: 100%;
+}
 
-  /* -------------- Camera button -------------- */
-  #camera-container {
-    background-color: #7EDEB1;
-    border: 1px solid white;
-    border-radius: 4px 4px 0 0;
-    cursor: hand;
-    cursor: pointer;
-    height: 220px;
-    margin: 0 auto;
-    margin-top: 5%;
-    position: relative;
-    width: 80%;
-  }
+/* -------------- Camera button -------------- */
 
-    #show-picture {
-      height: 100%;
-      width: 100%;
-      opacity: .4;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 0;
-    }
+#camera-container {
+  background-color: #7EDEB1;
+  border: 1px solid white;
+  border-radius: 4px 4px 0 0;
+  cursor: hand;
+  cursor: pointer;
+  height: 220px;
+  margin: 0 auto;
+  margin-top: 5%;
+  position: relative;
+  width: 80%;
+}
 
-    #camera {
-      background-color: white;
-      border: 0px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-top: 45px;
-      max-width: 150px;
-      position: relative;
-      width: 40%;
-      z-index: 1;
-    }
+#show-picture {
+  height: 100%;
+  width: 100%;
+  opacity: .4;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+}
 
-    #take-picture {
-      display: none;
-    }
+#camera {
+  background-color: white;
+  border: 0px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 45px;
+  max-width: 150px;
+  position: relative;
+  width: 40%;
+  z-index: 1;
+}
 
-  /* -------------- New Tab Buttons -------------- */
+#take-picture {
+  display: none;
+}
 
-  #open_add_friends {
-    margin: 0 auto;
-    width: 100%;
-  }
+/* -------------- New Tab Buttons -------------- */
 
-  .create_tab_button {
-    margin: 5% auto;
-    margin-bottom: 0;
-    width: 50%;
-  }
+#open_add_friends {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.create_tab_button {
+  margin: 5% auto;
+  margin-bottom: 0;
+  width: 50%;
+}
